@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Копирование символов</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .symbol {
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin: 5px;
+            display: inline-block;
+        }
+        .symbol:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Копируйте символы</h1>
+    <div class="symbol" onclick="copyToClipboard('→')">→</div>
+    <div class="symbol" onclick="copyToClipboard('★')">★</div>
+    <div class="symbol" onclick="copyToClipboard('♥')">♥</div>
+    <div class="symbol" onclick="copyToClipboard('✓')">✓</div>
+
+    <script>
+    function copyToClipboard(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        alert('Символ "' + text + '" скопирован!');
+    }
+    </script>
+</body>
+</html>
