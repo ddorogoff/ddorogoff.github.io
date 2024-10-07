@@ -1,258 +1,58 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Универсальная шпаргалка</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            min-height: 100vh;
-            margin: 0;
-        }
+import requests
+from bs4 import BeautifulSoup
+import tkinter as tk
+from tkinter import ttk
 
-        /* Стили для боковой панели */
-        .sidebar {
-            background-color: #f4f4f4;
-            padding: 20px;
-            width: 250px;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-        }
-        .sidebar h2 {
-            margin-top: 0;
-        }
-        .sidebar .nav-button {
-            display: block;
-            padding: 10px 15px;
-            margin: 10px 0;
-            background-color: #007BFF; /* Синий цвет */
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .sidebar .nav-button:hover {
-            background-color: #0056b3; /* Темно-синий */
-        }
+# Функция для парсинга сайта
+def parse_site(url):
+    try:
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        # Пример: для TASS возьмём заголовок и краткое описание
+        title = soup.find('title').text
+        description = soup.find('meta', attrs={'name': 'description'})['content']
+        return title, description
+    except Exception as e:
+        return None, f"Ошибка при парсинге: {e}"
 
-        /* Основной контент */
-        .content {
-            flex-grow: 1;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+# Функция для обновления списка сайтов
+def update_site_list():
+    for site in sites:
+        title, description = parse_site(site['url'])
+        if title and description:
+            site['title'] = title
+            site['description'] = description
+        else:
+            site['description'] = "Не удалось загрузить данные."
 
-        /* Стили для скрытых блоков */
-        .toggle-arrow {
-            cursor: pointer;
-            display: inline-block;
-            margin-left: 10px;
-            transition: transform 0.3s ease;
-        }
-        .toggle-arrow.collapsed {
-            transform: rotate(-90deg);
-        }
-        .hidden {
-            display: none;
-        }
+# Интерфейс
+root = tk.Tk()
+root.title("Парсер новостных сайтов")
+root.geometry("800x600")
 
-        /* Стили для символов */
-        .symbol {
-            cursor: pointer;
-            padding: 10px;
-            border: 1px solid #ccc;
-            margin: 5px;
-            display: inline-block;
-            transition: background-color 0.3s ease;
-        }
-        .symbol:hover {
-            background-color: #f0f0f0;
-        }
+# Список сайтов
+sites = [
+    {"url": "https://tass.ru/", "title": "TASS", "description": "Российское информационное агентство."},
+    {"url": "https://www.kommersant.ru/", "title": "Коммерсант", "description": "Ежедневная деловая газета."},
+    {"url": "https://www.theverge.com/", "title": "The Verge", "description": "Американский технологический сайт."}
+]
 
-        /* Стиль для текстовой области */
-        #text-area {
-            width: 100%;
-            height: 100px;
-            margin: 10px 0;
-        }
+# Левый фрейм для списка сайтов
+left_frame = ttk.Frame(root, width=400, height=600)
+left_frame.pack(side="left", fill="both", expand=True)
 
-        /* Стили для переключателя */
-        .switch {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .switch input {
-            display: none;
-        }
-        .switch-label {
-            width: 50px;
-            height: 25px;
-            background: #ccc;
-            border-radius: 15px;
-            position: relative;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .switch-label:before {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            top: 2.5px;
-            left: 2.5px;
-            transition: transform 0.3s;
-        }
-        input:checked + .switch-label {
-            background: #4caf50;
-        }
-        input:checked + .switch-label:before {
-            transform: translateX(25px);
-        }
-    </style>
-</head>
-<body>
+# Правый фрейм для настроек
+right_frame = ttk.Frame(root, width=400, height=600)
+right_frame.pack(side="right", fill="both", expand=True)
 
-    <!-- Боковая панель -->
-    <div class="sidebar">
-        <h2>Навигация</h2>
-        <a href="#copy-section" class="nav-button" onclick="toggleSection('copy-section')">Копирование символов</a>
-        <a href="#politics-section" class="nav-button" onclick="toggleSection('politics-section')">Памятник редполитике</a>
-        <a href="#tov-section" class="nav-button" onclick="toggleSection('tov-section')">TOV</a>
-        <a href="#char-counter-section" class="nav-button" onclick="toggleSection('char-counter-section')">Счётчики символов</a>
-    </div>
+# Обновить список сайтов
+update_site_list()
 
-    <!-- Основной контент -->
-    <div class="content">
-        <!-- Раздел с копированием символов -->
-        <section id="copy-section" class="hidden">
-            <h1>Копируйте символы</h1>
-            <div class="symbol" onclick="copyToClipboard('→')">→</div>
-            <div class="symbol" onclick="copyToClipboard('«')">«</div>
-            <div class="symbol" onclick="copyToClipboard('»')">»</div>
-            <div class="symbol" onclick="copyToClipboard('₽')">₽</div>
-            <div class="symbol" onclick="copyToClipboard('—')">—</div>
-            <div class="symbol" onclick="copyToClipboard('•')">•</div>
-            <div class="symbol" onclick="copyToClipboard('–')">–</div>
-        </section>
+# Выводим сайты в левом фрейме
+for site in sites:
+    site_frame = ttk.LabelFrame(left_frame, text=site['title'])
+    site_frame.pack(fill="x", padx=5, pady=5)
+    title_label = ttk.Label(site_frame, text=site['description'])
+    title_label.pack()
 
-        <!-- Раздел с текстом про политику -->
-        <section id="politics-section" class="hidden">
-            <h1>Памятник редполитике</h1>
-            <p>Тут будет старая редполитика. Остро. Больно. Навсегда.</p>
-        </section>
-
-        <!-- Раздел TOV -->
-        <section id="tov-section" class="hidden">
-            <h1>Блок TOV</h1>
-            <p>Всё про пуши.</p>
-        </section>
-
-        <!-- Раздел с счётчиком символов -->
-        <section id="char-counter-section" class="hidden">
-            <h1>Счётчики символов</h1>
-            <textarea id="text-area" oninput="countCharacters()" placeholder="Введите или вставьте текст..."></textarea>
-            <p>Количество символов (включая пробелы): <span id="with-spaces">0</span></p>
-            <p>Количество символов (без пробелов): <span id="without-spaces">0</span></p>
-
-            <!-- Блок для символов пуша и поп-апа -->
-            <div>
-                <h2>Символы для пушей/поп-апов</h2>
-                <div class="switch">
-                    <input type="checkbox" id="toggle-mode" onchange="toggleMode()">
-                    <label class="switch-label" for="toggle-mode"></label>
-                </div>
-
-                <div id="push-settings" style="display: block;">
-                    <h3>Пуш</h3>
-                    <h4>Заголовок (макс. 21 символ):</h4>
-                    <input type="text" id="push-title" maxlength="21" oninput="countPushCharacters()">
-                    <p id="push-title-count">Осталось: 21</p>
-
-                    <h4>Подзаголовок (макс. 108 символов):</h4>
-                    <input type="text" id="push-subtitle" maxlength="108" oninput="countPushCharacters()">
-                    <p id="push-subtitle-count">Осталось: 108</p>
-                </div>
-
-                <div id="popup-settings" style="display: none;">
-                    <h3>Поп-ап</h3>
-                    <h4>Заголовок (макс. 26 символов):</h4>
-                    <input type="text" id="popup-title" maxlength="26" oninput="countPopupCharacters()">
-                    <p id="popup-title-count">Осталось: 26</p>
-
-                    <h4>Подзаголовок (макс. 108 символов):</h4>
-                    <input type="text" id="popup-subtitle" maxlength="108" oninput="countPopupCharacters()">
-                    <p id="popup-subtitle-count">Осталось: 108</p>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <script>
-        // Функция для копирования символа в буфер обмена
-        function copyToClipboard(symbol) {
-            navigator.clipboard.writeText(symbol);
-        }
-
-        // Функция для переключения режима пуш/поп-ап
-        function toggleMode() {
-            const pushSettings = document.getElementById('push-settings');
-            const popupSettings = document.getElementById('popup-settings');
-            const toggleMode = document.getElementById('toggle-mode');
-
-            if (toggleMode.checked) {
-                pushSettings.style.display = 'none';
-                popupSettings.style.display = 'block';
-            } else {
-                pushSettings.style.display = 'block';
-                popupSettings.style.display = 'none';
-            }
-        }
-
-        // Счётчик символов для текста
-        function countCharacters() {
-            const textArea = document.getElementById('text-area').value;
-            const withSpaces = textArea.length;
-            const withoutSpaces = textArea.replace(/\s/g, '').length;
-
-            document.getElementById('with-spaces').textContent = withSpaces;
-            document.getElementById('without-spaces').textContent = withoutSpaces;
-        }
-
-        // Счётчик символов для пушей
-        function countPushCharacters() {
-            const title = document.getElementById('push-title').value.length;
-            const subtitle = document.getElementById('push-subtitle').value.length;
-
-            document.getElementById('push-title-count').textContent = `Осталось: ${21 - title}`;
-            document.getElementById('push-subtitle-count').textContent = `Осталось: ${108 - subtitle}`;
-        }
-
-        // Счётчик символов для поп-апов
-        function countPopupCharacters() {
-            const title = document.getElementById('popup-title').value.length;
-            const subtitle = document.getElementById('popup-subtitle').value.length;
-
-            document.getElementById('popup-title-count').textContent = `Осталось: ${26 - title}`;
-            document.getElementById('popup-subtitle-count').textContent = `Осталось: ${108 - subtitle}`;
-        }
-
-        // Функция для показа/скрытия секций и скрытия других
-        function toggleSection(sectionId) {
-            const sections = document.querySelectorAll('section');
-            sections.forEach(section => {
-                if (section.id === sectionId) {
-                    section.classList.toggle('hidden');
-                } else {
-                    section.classList.add('hidden');
-                }
-            });
-        }
-    </script>
-</body>
-</html>
+root.mainloop()
