@@ -209,38 +209,105 @@
     </details>
 </section>
 
-        <!-- Раздел с счётчиками символов -->
+           <!-- Раздел с счётчиком символов -->
         <section id="char-counter-section" class="hidden">
-            <h1>Счётчик символов</h1>
-            <textarea id="text-area" placeholder="Введите текст здесь..."></textarea>
-            <div id="char-count">Количество символов: 0</div>
+            <h1>Счётчики символов</h1>
+            <textarea id="text-area" oninput="countCharacters()" placeholder="Введите или вставьте текст..."></textarea>
+            <p>Количество символов (включая пробелы): <span id="with-spaces">0</span></p>
+            <p>Количество символов (без пробелов): <span id="without-spaces">0</span></p>
+
+            <!-- Блок для символов пуша и поп-апа -->
+            <div>
+                <h2>Символы для пушей/поп-апов</h2>
+                <div class="switch">
+                    <input type="checkbox" id="toggle-mode" onchange="toggleMode()">
+                    <label class="switch-label" for="toggle-mode"></label>
+                </div>
+
+                <div id="push-settings" style="display: block;">
+                    <h3>Пуш</h3>
+                    <h4>Заголовок (макс. 21 символ):</h4>
+                    <input type="text" id="push-title" maxlength="21" oninput="countPushCharacters()">
+                    <p id="push-title-count">Осталось: 21</p>
+
+                    <h4>Подзаголовок (макс. 108 символов):</h4>
+                    <input type="text" id="push-subtitle" maxlength="108" oninput="countPushCharacters()">
+                    <p id="push-subtitle-count">Осталось: 108</p>
+                </div>
+
+                <div id="popup-settings" style="display: none;">
+                    <h3>Поп-ап</h3>
+                    <h4>Заголовок (макс. 26 символов):</h4>
+                    <input type="text" id="popup-title" maxlength="26" oninput="countPopupCharacters()">
+                    <p id="popup-title-count">Осталось: 26</p>
+
+                    <h4>Подзаголовок (макс. 108 символов):</h4>
+                    <input type="text" id="popup-subtitle" maxlength="108" oninput="countPopupCharacters()">
+                    <p id="popup-subtitle-count">Осталось: 108</p>
+                </div>
+            </div>
         </section>
     </div>
 
     <script>
-        // Функция для переключения между секциями
+        // Функция для копирования символа в буфер обмена
+        function copyToClipboard(symbol) {
+            navigator.clipboard.writeText(symbol);
+        }
+
+        // Функция для переключения режима пуш/поп-ап
+        function toggleMode() {
+            const pushSettings = document.getElementById('push-settings');
+            const popupSettings = document.getElementById('popup-settings');
+            const toggleMode = document.getElementById('toggle-mode');
+
+            if (toggleMode.checked) {
+                pushSettings.style.display = 'none';
+                popupSettings.style.display = 'block';
+            } else {
+                pushSettings.style.display = 'block';
+                popupSettings.style.display = 'none';
+            }
+        }
+
+        // Счётчик символов для текста
+        function countCharacters() {
+            const textArea = document.getElementById('text-area').value;
+            const withSpaces = textArea.length;
+            const withoutSpaces = textArea.replace(/\s/g, '').length;
+
+            document.getElementById('with-spaces').textContent = withSpaces;
+            document.getElementById('without-spaces').textContent = withoutSpaces;
+        }
+
+        // Счётчик символов для пушей
+        function countPushCharacters() {
+            const title = document.getElementById('push-title').value.length;
+            const subtitle = document.getElementById('push-subtitle').value.length;
+
+            document.getElementById('push-title-count').textContent = `Осталось: ${21 - title}`;
+            document.getElementById('push-subtitle-count').textContent = `Осталось: ${108 - subtitle}`;
+        }
+
+        // Счётчик символов для поп-апов
+        function countPopupCharacters() {
+            const title = document.getElementById('popup-title').value.length;
+            const subtitle = document.getElementById('popup-subtitle').value.length;
+
+            document.getElementById('popup-title-count').textContent = `Осталось: ${26 - title}`;
+            document.getElementById('popup-subtitle-count').textContent = `Осталось: ${108 - subtitle}`;
+        }
+
+        // Функция для показа/скрытия секций и скрытия других
         function toggleSection(sectionId) {
-            const sections = document.querySelectorAll('.content > section');
+            const sections = document.querySelectorAll('section');
             sections.forEach(section => {
-                section.classList.add('hidden');
-            });
-            document.getElementById(sectionId).classList.remove('hidden');
-        }
-
-        // Функция для копирования текста в буфер обмена
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text)
-                .catch(err => {
-                    console.error('Ошибка при копировании: ', err);
-                });
-        }
-
-        // Функция для обновления счётчика символов
-        document.getElementById('text-area').addEventListener('input', function() {
-            const charCount = this.value.length;
-            document.getElementById('char-count').innerText = `Количество символов: ${charCount}`;
-        });
-
+                if (section.id === sectionId) {
+                    section.classList.toggle('hidden');
+                } else {
+                    section.classList.add('hidden');
+       }
+       
         // Функция для переключения ночного режима
         function toggleNightMode() {
             const body = document.body;
