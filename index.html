@@ -11,6 +11,7 @@
             min-height: 100vh;
             margin: 0;
         }
+
         /* Стили для боковой панели */
         .sidebar {
             background-color: #f4f4f4;
@@ -32,8 +33,9 @@
             border-radius: 5px;
         }
         .sidebar .nav-button:hover {
-            background-color: #0056b3; /* Более тёмный синий цвет */
+            background-color: #0056b3; /* Темно-синий */
         }
+
         /* Основной контент */
         .content {
             flex-grow: 1;
@@ -42,6 +44,21 @@
             flex-direction: column;
             gap: 20px;
         }
+
+        /* Стили для скрытых блоков */
+        .toggle-arrow {
+            cursor: pointer;
+            display: inline-block;
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+        .toggle-arrow.collapsed {
+            transform: rotate(-90deg);
+        }
+        .hidden {
+            display: none;
+        }
+
         /* Стили для символов */
         .symbol {
             cursor: pointer;
@@ -54,23 +71,14 @@
         .symbol:hover {
             background-color: #f0f0f0;
         }
-        /* Стрелочка */
-        .toggle-arrow {
-            cursor: pointer;
-            display: inline-block;
-            margin-left: 10px;
-            transition: transform 0.3s ease;
-        }
-        /* Скрытый контент */
-        .hidden {
-            display: none;
-        }
+
         /* Стиль для текстовой области */
         #text-area {
             width: 100%;
             height: 100px;
             margin: 10px 0;
         }
+
         /* Стили для переключателя */
         .switch {
             display: flex;
@@ -113,10 +121,10 @@
     <!-- Боковая панель -->
     <div class="sidebar">
         <h2>Навигация</h2>
-        <a href="#copy-section" class="nav-button">Копирование символов <span class="toggle-arrow">&#9660;</span></a>
-        <a href="#politics-section" class="nav-button">Памятник редполитике <span class="toggle-arrow">&#9660;</span></a>
-        <a href="#tov-section" class="nav-button">TOV <span class="toggle-arrow">&#9660;</span></a>
-        <a href="#char-counter-section" class="nav-button">Счётчик символов <span class="toggle-arrow">&#9660;</span></a>
+        <a href="#copy-section" class="nav-button" onclick="toggleSection('copy-section')">Копирование символов</a>
+        <a href="#politics-section" class="nav-button" onclick="toggleSection('politics-section')">Памятник редполитике</a>
+        <a href="#tov-section" class="nav-button" onclick="toggleSection('tov-section')">TOV</a>
+        <a href="#char-counter-section" class="nav-button" onclick="toggleSection('char-counter-section')">Счётчики символов</a>
     </div>
 
     <!-- Основной контент -->
@@ -136,23 +144,18 @@
         <!-- Раздел с текстом про политику -->
         <section id="politics-section" class="hidden">
             <h1>Памятник редполитике</h1>
-            <p>
-                Тут будет старая редполитику. Остро. Больно. Навсегда.
-            </p>
+            <p>Тут будет старая редполитика. Остро. Больно. Навсегда.</p>
         </section>
 
-        <!-- Раздел TOV с скрывающимися подразделами -->
+        <!-- Раздел TOV -->
         <section id="tov-section" class="hidden">
-            <h1>Блок TOV <span class="toggle-arrow" onclick="toggleSection(event)">&#9660;</span></h1>
-            <div id="tov-content" class="hidden">
-                <p>TOV.</p>
-                <p>Всё про пуши.</p>
-            </div>
+            <h1>Блок TOV</h1>
+            <p>Всё про пуши.</p>
         </section>
 
-        <!-- Объединённый раздел "Счетчики символов" -->
+        <!-- Раздел с счётчиком символов -->
         <section id="char-counter-section" class="hidden">
-            <h1>Счетчики символов</h1>
+            <h1>Счётчики символов</h1>
             <textarea id="text-area" oninput="countCharacters()" placeholder="Введите или вставьте текст..."></textarea>
             <p>Количество символов (включая пробелы): <span id="with-spaces">0</span></p>
             <p>Количество символов (без пробелов): <span id="without-spaces">0</span></p>
@@ -191,44 +194,18 @@
     </div>
 
     <script>
+        // Функция для копирования символа в буфер обмена
         function copyToClipboard(symbol) {
-            navigator.clipboard.writeText(symbol).then(() => {
-                alert(`Символ "${symbol}" скопирован в буфер обмена!`);
-            });
+            navigator.clipboard.writeText(symbol);
         }
 
-        function countCharacters() {
-            const text = document.getElementById('text-area').value;
-            document.getElementById('with-spaces').textContent = text.length;
-            document.getElementById('without-spaces').textContent = text.replace(/\s+/g, '').length;
-        }
-
-        function countPushCharacters() {
-            const pushTitle = document.getElementById('push-title').value;
-            const pushSubtitle = document.getElementById('push-subtitle').value;
-            document.getElementById('push-title-count').textContent = `Осталось: ${21 - pushTitle.length}`;
-            document.getElementById('push-subtitle-count').textContent = `Осталось: ${108 - pushSubtitle.length}`;
-        }
-
-        function countPopupCharacters() {
-            const popupTitle = document.getElementById('popup-title').value;
-            const popupSubtitle = document.getElementById('popup-subtitle').value;
-            document.getElementById('popup-title-count').textContent = `Осталось: ${26 - popupTitle.length}`;
-            document.getElementById('popup-subtitle-count').textContent = `Осталось: ${108 - popupSubtitle.length}`;
-        }
-
-        function toggleSection(event) {
-            const content = document.getElementById('tov-content');
-            content.classList.toggle('hidden');
-            const arrow = event.currentTarget;
-            arrow.classList.toggle('collapsed');
-            arrow.innerHTML = arrow.classList.contains('collapsed') ? '&#9650;' : '&#9660;'; // Меняем стрелку
-        }
-
+        // Функция для переключения режима пуш/поп-ап
         function toggleMode() {
             const pushSettings = document.getElementById('push-settings');
             const popupSettings = document.getElementById('popup-settings');
-            if (document.getElementById('toggle-mode').checked) {
+            const toggleMode = document.getElementById('toggle-mode');
+
+            if (toggleMode.checked) {
                 pushSettings.style.display = 'none';
                 popupSettings.style.display = 'block';
             } else {
@@ -237,20 +214,45 @@
             }
         }
 
-        // Функция для показа/скрытия секций
-        document.querySelectorAll('.nav-button').forEach(button => {
-            button.addEventListener('click', function(event) {
-                const targetId = this.getAttribute('href').substring(1);
-                // Скрыть все разделы
-                document.querySelectorAll('.content > section').forEach(section => {
+        // Счётчик символов для текста
+        function countCharacters() {
+            const textArea = document.getElementById('text-area').value;
+            const withSpaces = textArea.length;
+            const withoutSpaces = textArea.replace(/\s/g, '').length;
+
+            document.getElementById('with-spaces').textContent = withSpaces;
+            document.getElementById('without-spaces').textContent = withoutSpaces;
+        }
+
+        // Счётчик символов для пушей
+        function countPushCharacters() {
+            const title = document.getElementById('push-title').value.length;
+            const subtitle = document.getElementById('push-subtitle').value.length;
+
+            document.getElementById('push-title-count').textContent = `Осталось: ${21 - title}`;
+            document.getElementById('push-subtitle-count').textContent = `Осталось: ${108 - subtitle}`;
+        }
+
+        // Счётчик символов для поп-апов
+        function countPopupCharacters() {
+            const title = document.getElementById('popup-title').value.length;
+            const subtitle = document.getElementById('popup-subtitle').value.length;
+
+            document.getElementById('popup-title-count').textContent = `Осталось: ${26 - title}`;
+            document.getElementById('popup-subtitle-count').textContent = `Осталось: ${108 - subtitle}`;
+        }
+
+        // Функция для показа/скрытия секций и скрытия других
+        function toggleSection(sectionId) {
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                if (section.id === sectionId) {
+                    section.classList.toggle('hidden');
+                } else {
                     section.classList.add('hidden');
-                });
-                // Показать только выбранный раздел
-                const targetSection = document.getElementById(targetId);
-                targetSection.classList.remove('hidden');
-                event.preventDefault(); // предотвращаем переход по ссылке
+                }
             });
-        });
+        }
     </script>
 </body>
 </html>
