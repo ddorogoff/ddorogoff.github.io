@@ -8,6 +8,7 @@
         body {
             font-family: Arial, sans-serif;
             display: flex;
+            flex-direction: column;
             min-height: 100vh;
             margin: 0;
         }
@@ -38,6 +39,8 @@
         .content {
             flex-grow: 1;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
         }
         /* Стили для символов */
         .symbol {
@@ -71,15 +74,45 @@
             height: 100px;
             margin: 10px 0;
         }
-        /* Стили для блока Пуш и поп-ап */
-        .push-popup-container {
-            display: flex;
-            flex-direction: column;
-            margin-left: 20px;
+        /* Стили для блока "Счётчик символов" и "Пуш и попап" */
+        .char-counter, .push-popup {
+            margin-right: 20px; /* Уменьшил отступ между блоками */
+            width: 300px; /* Задайте ширину, если нужно */
         }
         /* Стили для переключателя */
         .switch {
+            display: flex;
+            align-items: center;
             margin-bottom: 10px;
+        }
+        .switch input {
+            display: none;
+        }
+        .slider {
+            width: 50px;
+            height: 24px;
+            background-color: #ccc;
+            border-radius: 50px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .slider:before {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.2s;
+        }
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
         }
     </style>
 </head>
@@ -121,42 +154,38 @@
             <h1>Блок TOV <span class="toggle-arrow" onclick="toggleSection()">&#9660;</span></h1>
             <div id="tov-content" class="hidden">
                 <p>TOV.</p>
-                <p>Всё про пуши.</p>
+                <p>Нюансы TOV.</p>
             </div>
         </section>
 
-        <!-- Контейнер для Счётчика символов и Пуш и поп-ап -->
-        <div style="display: flex; justify-content: space-between;">
+        <!-- Раздел с счётчиком символов и пуш и попап -->
+        <div style="display: flex;">
             <!-- Раздел с счётчиком символов -->
-            <section id="char-counter-section">
+            <section id="char-counter-section" class="char-counter">
                 <h1>Счётчик символов</h1>
                 <textarea id="text-area" oninput="countCharacters()" placeholder="Введите или вставьте текст..."></textarea>
                 <p>Количество символов (включая пробелы): <span id="with-spaces">0</span></p>
                 <p>Количество символов (без пробелов): <span id="without-spaces">0</span></p>
             </section>
 
-            <!-- Блок Пуш и поп-ап -->
-            <div class="push-popup-container">
+            <!-- Раздел с пушем и попапом -->
+            <section id="push-popup-section" class="push-popup">
                 <h1>Пуш и поп-ап</h1>
-                <label class="switch">
-                    <input type="checkbox" id="modeSwitch" onchange="toggleMode()">
-                    <span>Пуш / Поп-ап</span>
-                </label>
-                <div id="push-section">
-                    <h2>Пуш</h2>
-                    <input type="text" id="push-title" maxlength="21" placeholder="Заголовок (до 21 символа)" oninput="countPushCharacters()">
-                    <p id="push-title-count">Осталось: 21</p>
-                    <input type="text" id="push-subtitle" maxlength="108" placeholder="Подзаголовок (до 108 символов)" oninput="countPushCharacters()">
-                    <p id="push-subtitle-count">Осталось: 108</p>
+                <div class="switch">
+                    <label>
+                        <input type="checkbox" id="push-popup-toggle" onchange="togglePushPopup()">
+                        <span class="slider"></span>
+                    </label>
                 </div>
-                <div id="popup-section" class="hidden">
-                    <h2>Поп-ап</h2>
-                    <input type="text" id="popup-title" maxlength="26" placeholder="Заголовок (до 26 символов)" oninput="countPopupCharacters()">
-                    <p id="popup-title-count">Осталось: 26</p>
-                    <input type="text" id="popup-subtitle" maxlength="108" placeholder="Подзаголовок (до 108 символов)" oninput="countPopupCharacters()">
-                    <p id="popup-subtitle-count">Осталось: 108</p>
-                </div>
-            </div>
+                <p id="push-title-label">Заголовок для пуша (до 21 символов):</p>
+                <input type="text" id="push-title" maxlength="21" oninput="updatePushPopup()">
+                <p id="push-subtitle-label">Подзаголовок для пуша (до 108 символов):</p>
+                <input type="text" id="push-subtitle" maxlength="108" oninput="updatePushPopup()">
+                <p id="popup-title-label" class="hidden">Заголовок для поп-апа (до 26 символов):</p>
+                <input type="text" id="popup-title" class="hidden" maxlength="26" oninput="updatePushPopup()">
+                <p id="popup-subtitle-label" class="hidden">Подзаголовок для поп-апа (до 108 символов):</p>
+                <input type="text" id="popup-subtitle" class="hidden" maxlength="108" oninput="updatePushPopup()">
+            </section>
         </div>
     </div>
 
@@ -185,26 +214,25 @@
         document.getElementById('without-spaces').textContent = withoutSpaces;
     }
 
-    function toggleMode() {
-        const isPushMode = document.getElementById('modeSwitch').checked;
-        document.getElementById('push-section').classList.toggle('hidden', !isPushMode);
-        document.getElementById('popup-section').classList.toggle('hidden', isPushMode);
+    function togglePushPopup() {
+        const isChecked = document.getElementById('push-popup-toggle').checked;
+        document.getElementById('push-title-label').classList.toggle('hidden', isChecked);
+        document.getElementById('push-title').classList.toggle('hidden', isChecked);
+        document.getElementById('push-subtitle-label').classList.toggle('hidden', isChecked);
+        document.getElementById('push-subtitle').classList.toggle('hidden', isChecked);
+        document.getElementById('popup-title-label').classList.toggle('hidden', !isChecked);
+        document.getElementById('popup-title').classList.toggle('hidden', !isChecked);
+        document.getElementById('popup-subtitle-label').classList.toggle('hidden', !isChecked);
+        document.getElementById('popup-subtitle').classList.toggle('hidden', !isChecked);
     }
 
-    function countPushCharacters() {
-        const title = document.getElementById('push-title');
-        const subtitle = document.getElementById('push-subtitle');
+    function updatePushPopup() {
+        const isChecked = document.getElementById('push-popup-toggle').checked;
+        const title = isChecked ? document.getElementById('popup-title').value : document.getElementById('push-title').value;
+        const subtitle = isChecked ? document.getElementById('popup-subtitle').value : document.getElementById('push-subtitle').value;
 
-        document.getElementById('push-title-count').textContent = 'Осталось: ' + (21 - title.value.length);
-        document.getElementById('push-subtitle-count').textContent = 'Осталось: ' + (108 - subtitle.value.length);
-    }
-
-    function countPopupCharacters() {
-        const title = document.getElementById('popup-title');
-        const subtitle = document.getElementById('popup-subtitle');
-
-        document.getElementById('popup-title-count').textContent = 'Осталось: ' + (26 - title.value.length);
-        document.getElementById('popup-subtitle-count').textContent = 'Осталось: ' + (108 - subtitle.value.length);
+        // Здесь можно обновить отображение пуша или попапа, если это необходимо
+        console.log(`Текущий заголовок: ${title}, Подзаголовок: ${subtitle}`);
     }
     </script>
 </body>
