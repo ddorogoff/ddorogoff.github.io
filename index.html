@@ -81,6 +81,16 @@
             font-size: 0.9em;
             color: gray;
         }
+
+        #copyButton {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -91,6 +101,7 @@
             <textarea id="textInput" rows="5" cols="40" placeholder="Введите или вставьте текст..."></textarea>
             <p>Количество символов (включая пробелы): <span id="totalChars">0</span></p>
             <p>Количество символов (без пробелов): <span id="nonSpaceChars">0</span></p>
+            <button id="copyButton">Скопировать текст</button>
         </div>
 
         <div class="push-popup">
@@ -171,6 +182,14 @@
 
         popupSubtitle.addEventListener('input', () => {
             remainingPopupSubtitle.textContent = 108 - popupSubtitle.value.length;
+        });
+
+        const copyButton = document.getElementById('copyButton');
+        
+        copyButton.addEventListener('click', () => {
+            textInput.select();
+            document.execCommand('copy');
+            alert('Текст скопирован в буфер обмена!');
         });
     </script>
 </body>
