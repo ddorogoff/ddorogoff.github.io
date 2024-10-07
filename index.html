@@ -39,8 +39,7 @@
             flex-grow: 1;
             padding: 20px;
             display: flex;
-            flex-direction: column;
-            gap: 20px;
+            gap: 20px; /* Отступ между текстом и iPhone */
         }
         /* Стили для символов */
         .symbol {
@@ -74,67 +73,60 @@
             height: 100px;
             margin: 10px 0;
         }
-        /* Стили для переключателя */
-        .switch {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .switch input {
-            display: none;
-        }
-        .switch-label {
-            width: 50px;
-            height: 25px;
-            background: #ccc;
-            border-radius: 15px;
-            position: relative;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .switch-label:before {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            top: 2.5px;
-            left: 2.5px;
-            transition: transform 0.3s;
-        }
-        input:checked + .switch-label {
-            background: #4caf50;
-        }
-        input:checked + .switch-label:before {
-            transform: translateX(25px);
-        }
-        /* Стиль для эмулятора iPhone 15 Pro */
-        .iphone-emulator {
+        /* Стили для iPhone */
+        .iphone {
             width: 300px;
             height: 600px;
-            border: 16px solid black;
+            border: 16px solid #ccc;
             border-radius: 36px;
+            background-color: #000;
             position: relative;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        .screen {
+            background-color: #fff;
+            height: calc(100% - 40px);
+            border-radius: 20px;
+            position: absolute;
+            top: 40px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .status-bar {
+            height: 20px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5px;
+            border-radius: 10px;
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+        }
+        .status-bar div {
+            font-size: 14px;
+            color: #000;
+        }
+        .app-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #007BFF;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        }
-        .iphone-emulator h4 {
-            position: absolute;
-            top: 20px;
-            left: 10px;
-            font-size: 16px;
-            margin: 0;
-        }
-        .iphone-emulator h5 {
-            position: absolute;
-            top: 50px;
-            left: 10px;
-            font-size: 14px;
-            margin: 0;
+            margin: 10px;
+            color: white;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -176,7 +168,18 @@
             <h1>Блок TOV <span class="toggle-arrow" onclick="toggleSection()">&#9660;</span></h1>
             <div id="tov-content" class="hidden">
                 <p>TOV.</p>
-                <p>Всё про пуши.</p>
+                <p>Нюансы TOV</p>
+                <p><span style="color:red;"><strong>Поспели арбузы!</strong></span><br> Мы знаем, что вы будете делать сегодня вечером.</p>
+                <div style="display: flex; gap: 20px;">
+                    <div style="background-color: lightcoral; padding: 10px; border-radius: 5px;">
+                        <strong>Поспели арбузы!</strong>
+                        <p>Заказывайте из нашей подборки с доставкой от получаса.</p>
+                    </div>
+                    <div style="background-color: lightgreen; padding: 10px; border-radius: 5px;">
+                        <strong>Поспели арбузы!</strong>
+                        <p>Заказывайте из нашей подборки с доставкой от получаса.</p>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -186,43 +189,40 @@
             <textarea id="text-area" oninput="countCharacters()" placeholder="Введите или вставьте текст..."></textarea>
             <p>Количество символов (включая пробелы): <span id="with-spaces">0</span></p>
             <p>Количество символов (без пробелов): <span id="without-spaces">0</span></p>
+        </section>
 
-            <!-- Блок для символов пуша и поп-апа -->
-            <div>
-                <h2>Символы для пушей/поп-апов</h2>
-                <div class="switch">
-                    <input type="checkbox" id="toggle-mode" onchange="toggleMode()">
-                    <label class="switch-label" for="toggle-mode"></label>
-                </div>
-
-                <div id="push-settings" style="display: block;">
-                    <h3>Пуш</h3>
-                    <h4>Заголовок (макс. 21 символ):</h4>
-                    <input type="text" id="push-title" maxlength="21" oninput="countPushCharacters()">
-                    <p id="push-title-count">Осталось: 21</p>
-
-                    <h4>Подзаголовок (макс. 108 символов):</h4>
-                    <input type="text" id="push-subtitle" maxlength="108" oninput="countPushCharacters()">
-                    <p id="push-subtitle-count">Осталось: 108</p>
-                </div>
-
-                <div id="popup-settings" style="display: none;">
-                    <h3>Поп-ап</h3>
-                    <h4>Заголовок (макс. 26 символов):</h4>
-                    <input type="text" id="popup-title" maxlength="26" oninput="countPopupCharacters()">
-                    <p id="popup-title-count">Осталось: 26</p>
-
-                    <h4>Подзаголовок (макс. 108 символов):</h4>
-                    <input type="text" id="popup-subtitle" maxlength="108" oninput="countPopupCharacters()">
-                    <p id="popup-subtitle-count">Осталось: 108</p>
-                </div>
+        <!-- Раздел с пушами и поп-апами -->
+        <section id="push-popup-section">
+            <h1>Пуши и Поп-апы</h1>
+            <label>
+                <input type="checkbox" id="toggle-mode" onchange="toggleMode()">
+                <span>Переключить на поп-ап</span>
+            </label>
+            <div id="push-settings">
+                <h2>Настройки Пуша</h2>
+                <input type="text" id="push-title" oninput="countPushCharacters()" placeholder="Заголовок (макс. 21 символ)" maxlength="21">
+                <p id="push-title-count">Осталось: 21</p>
+                <input type="text" id="push-subtitle" oninput="countPushCharacters()" placeholder="Подзаголовок (макс. 108 символов)" maxlength="108">
+                <p id="push-subtitle-count">Осталось: 108</p>
             </div>
-
-            <!-- Модель iPhone 15 Pro -->
-            <div class="iphone-emulator">
-                <h4 id="preview-title">Заголовок</h4>
-                <h5 id="preview-subtitle">
-                <h5 id="preview-subtitle">Подзаголовок</h5>
+            <div id="popup-settings" style="display: none;">
+                <h2>Настройки Поп-апа</h2>
+                <input type="text" id="popup-title" oninput="countPopupCharacters()" placeholder="Заголовок (макс. 26 символов)" maxlength="26">
+                <p id="popup-title-count">Осталось: 26</p>
+                <input type="text" id="popup-subtitle" oninput="countPopupCharacters()" placeholder="Подзаголовок (макс. 108 символов)" maxlength="108">
+                <p id="popup-subtitle-count">Осталось: 108</p>
+            </div>
+            <div class="iphone">
+                <div class="status-bar">
+                    <div>09:30</div>
+                    <div>4G</div>
+                    <div>🔔</div> <!-- Символ пуша -->
+                </div>
+                <div class="screen">
+                    <div class="app-icon">Пуш</div>
+                    <h5 id="preview-title">Заголовок</h5>
+                    <h5 id="preview-subtitle">Подзаголовок</h5>
+                </div>
             </div>
         </section>
     </div>
@@ -299,4 +299,3 @@
     </script>
 </body>
 </html>
-
