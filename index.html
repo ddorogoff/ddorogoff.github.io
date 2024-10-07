@@ -7,214 +7,251 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #ffffff;
-            color: #000000;
-            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #ffffff; /* Цвет фона для светлого режима */
+            color: #000000; /* Цвет текста для светлого режима */
+            transition: background-color 0.3s, color 0.3s; /* Плавный переход для ночного режима */
         }
 
         /* Ночной режим */
         body.night-mode {
-            background-color: #2e2e2e;
-            color: #ffffff;
+            background-color: #121212; /* Цвет фона для ночного режима */
+            color: #ffffff; /* Цвет текста для ночного режима */
         }
 
+        /* Стили для боковой панели */
+        .sidebar {
+            background-color: #f4f4f4;
+            padding: 20px;
+            width: 250px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            transition: background-color 0.3s; /* Плавный переход для боковой панели */
+        }
+        .sidebar.night-mode {
+            background-color: #1e1e1e; /* Цвет фона для боковой панели в ночном режиме */
+        }
+        .sidebar h2 {
+            margin-top: 0;
+        }
+        .sidebar .nav-button {
+            display: block;
+            padding: 10px 15px;
+            margin: 10px 0;
+            background-color: #007BFF; /* Синий цвет */
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .sidebar .nav-button:hover {
+            background-color: #0056b3; /* Темно-синий */
+        }
+
+        /* Основной контент */
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Стили для скрытых блоков */
+        .toggle-arrow {
+            cursor: pointer;
+            display: inline-block;
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+        .toggle-arrow.collapsed {
+            transform: rotate(-90deg);
+        }
         .hidden {
             display: none;
         }
 
-        .content {
-            padding: 20px;
-        }
-
-        /* Мобильная адаптация */
-        @media (max-width: 600px) {
-            .content {
-                padding: 10px;
-            }
-
-            textarea {
-                width: 100%;
-                height: 150px;
-            }
-
-            .counter {
-                font-size: 14px;
-            }
-        }
-
-        /* Кнопка переключателя */
-        .switch {
+        /* Стили для символов */
+        .symbol {
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin: 5px;
             display: inline-block;
-            position: relative;
-            height: 24px;
-            width: 50px;
+            transition: background-color 0.3s ease;
+        }
+        .symbol:hover {
+            background-color: #f0f0f0;
         }
 
+        /* Стиль для текстовой области */
+        #text-area {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+        }
+
+        /* Стили для переключателя */
+        .switch {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
         .switch input {
             display: none;
         }
-
         .switch-label {
+            width: 50px;
+            height: 25px;
+            background: #ccc;
+            border-radius: 15px;
+            position: relative;
             cursor: pointer;
-            background-color: #ccc;
-            border-radius: 50px;
-            display: block;
-            height: 100%;
-            transition: background-color 0.3s;
+            transition: background 0.3s;
         }
-
-        .switch input:checked + .switch-label {
-            background-color: #4CAF50;
-        }
-
-        .switch-label:after {
+        .switch-label:before {
             content: '';
             position: absolute;
-            left: 0;
-            bottom: 4px;
-            height: 16px;
-            width: 16px;
-            background-color: white;
+            width: 20px;
+            height: 20px;
+            background: white;
             border-radius: 50%;
+            top: 2.5px;
+            left: 2.5px;
             transition: transform 0.3s;
         }
-
-        .switch input:checked + .switch-label:after {
-            transform: translateX(26px);
+        input:checked + .switch-label {
+            background: #4caf50;
         }
-
-        /* Фон для выделенных текстов */
-        .highlight {
-            background-color: #fff3cd;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        h3, h4 {
-            margin-top: 20px;
+        input:checked + .switch-label:before {
+            transform: translateX(25px);
         }
     </style>
 </head>
 <body>
+
+    <!-- Боковая панель -->
     <div class="sidebar">
-        <button onclick="toggleSection('politics-section')">Политика</button>
-        <button onclick="toggleSection('tov-section')">TOV</button>
-        <button onclick="toggleSection('char-counter-section')">Счётчик символов</button>
-        <button onclick="toggleSection('notification-section')">Пуш-уведомления</button>
-        <label class="switch">
-            <input type="checkbox" id="night-mode-toggle" onclick="toggleNightMode()">
-            <label for="night-mode-toggle" class="switch-label"></label>
-        </label>
+        <h2>Навигация</h2>
+        <a href="#copy-section" class="nav-button" onclick="toggleSection('copy-section')">Копирование символов</a>
+        <a href="#char-counter-section" class="nav-button" onclick="toggleSection('char-counter-section')">Счётчики символов</a>
+        <a href="#tov-section" class="nav-button" onclick="toggleSection('tov-section')">TOV</a>
+        <a href="#politics-section" class="nav-button" onclick="toggleSection('politics-section')">Памятник редполитике</a>
+        
+        <!-- Переключатель для ночного режима -->
+        <div class="switch">
+            <input type="checkbox" id="night-mode-toggle" onchange="toggleNightMode()">
+            <label class="switch-label" for="night-mode-toggle"></label>
+            <span>Ночной режим</span>
+        </div>
     </div>
 
+    <!-- Основной контент -->
     <div class="content">
+        <!-- Раздел с копированием символов -->
+        <section id="copy-section" class="hidden">
+            <h1>Копируйте символы</h1>
+            <div class="symbol" onclick="copyToClipboard('→')">→</div>
+            <div class="symbol" onclick="copyToClipboard('«')">«</div>
+            <div class="symbol" onclick="copyToClipboard('»')">»</div>
+            <div class="symbol" onclick="copyToClipboard('₽')">₽</div>
+            <div class="symbol" onclick="copyToClipboard('—')">—</div>
+            <div class="symbol" onclick="copyToClipboard('•')">•</div>
+            <div class="symbol" onclick="copyToClipboard('–')">–</div>
+        </section>
+
         <!-- Раздел с текстом про политику -->
         <section id="politics-section" class="hidden">
             <h1>Памятник редполитике</h1>
             <p>Тут будет старая редполитика. Остро. Больно. Навсегда.</p>
-            
-            <details>
-                <summary>Что учитываем, когда публикуем</summary>
-                <p>Учитываем разницу во времени — города присутствия сервиса находятся в разных часовых поясах по всей стране. <strong>В канал и в директ Телеграм не присылаем ничего раньше 8:00–9:00 и позднее 21:00. </strong> И даже в 8–9 публикуем редко и желательно приятное.
-                Для ленты Яндекс Про время суток не так важно — она не разбудит. Если нужно быстро обратить внимание читателей, успеваем публиковать в течение светового дня.
-                Интервалы во времени — для одного города между новостями должно пройти не меньше 1,5–2 часов. За исключением срочных технических новостей о сбоях на сервисе или в выплатах.
-                Частоту определенных форматов — например, не присылаем опросы на одну аудиторию чаще, чем раз в 2–3 дня. Дозируем и перемешиваем темы равномерно: чтобы не было целого дня с «рефералкой», заботой или новостями о новых фичах.</p>
-            </details>
-
-            <details>
-                <summary>Согласование с коллегами</summary>
-                <h3>Гарантии спокойствия</h3>
-                <div class="highlight">
-                    <p><strong>Мы транслируем важную информацию, которая напрямую касается репутации и доходов сервиса, поэтому ничего не оставляем просто «на своё усмотрение» и всё согласуем с коллегами.</strong></p>
-                </div>
-                <ol>
-                    <li>С юристами — на новых проектах и если заказчик не сделал этого заранее. Сокращаем риски, знакомим коллег с замыслом. Если что-то не так, дальше задача в работу не идёт.</li>
-                    <li>С заказчиком — чтобы текст точно отражал замысел и все данные были верными.</li>
-                    <li>С ответственными за проект коллегами — чтобы они были в курсе, могли дополнить или исправить неточность, учесть в своих процессах.</li>
-                    <li>С пиаром — чтобы сократить риски до минимума, подобрать самые осторожные и этичные формулировки, если потребуется.</li>
-                </ol>
-                <p>Также показываем тексты друг другу и коллегам, когда нужен свежий взгляд и оценка. Тексты, которые решают типовую задачу, или построены на утверждённом шаблоне, не требуют согласований — только проверки редактором.</p>
-            </details>
-
-            <details>
-                <summary>Как мы общаемся</summary>
-                <p><strong>Это первое и самое важное:</strong></p>
-                <ul>
-                    <li>если сообщаем о проблеме, обязательно предлагаем решение;</li>
-                    <li>если что-то не работает, объясняем, как это можно исправить, или сообщаем, когда исправим сами;</li>
-                    <li>если рассказываем о какой-то новой фиче или изменении в процессе, объясняем, какой от них толк курьеру, сервису и пользователям, как правильно её использовать.</li>
-                </ul>
-                <div class="highlight">
-                    <p><strong>Если очевидной пользы нет, текст писать не надо — читатели зря потратят своё время и в следующий раз просто проигнорируют даже полезное сообщение.</strong></p>
-                </div>
-
-                <h4>Уважение</h4>
-                <p>Говорим как живые люди, на равных и показываем, что понимаем будни и заботы курьеров. Перед тем, как начинаем писать, думаем, в каком состоянии человек это прочитает, поэтому выбираем сдержанное настроение текста. Повелительное наклонение не используем для призывов слишком часто — так оно теряет эффективность.</p>
-                
-                <h4>Важно (с антипримерами и примерами):</h4>
-                <div class="highlight">
-                    <p>❌ Если вы до сих пор не запомнили стандарты сервиса, настоятельно рекомендуем повторить их вот тут.<br>
-                    ✅ От соблюдения стандартов сервиса зависит ваш доход, поэтому важно хорошо их знать.</p>
-                </div>
-
-                <h4>Не пытаемся навязать — просто рекомендуем</h4>
-                <div class="highlight">
-                    <p>❌ Обязательно подключите этот тариф от партнёров, он самый выгодный на рынке — мы проверяли.<br>
-                    ✅ Партнёры сервиса предлагают этот тариф на особых условиях — для вас он на 50% выгоднее.</p>
-                </div>
-
-                <h4>Не допускаем сексизма и расизма</h4>
-                <div class="highlight">
-                    <p>❌ Поздравляем с 8 марта всех наших девочек-курьеров! Пускай вы не такие сильные, как парни, зато обаятельные.<br>
-                    ✅ Поздравляем с 8 марта всех курьеров! Знайте, ваша работа важна и ценится, а мы стремимся поддерживать равные условия для всех.</p>
-                </div>
-            </details>
+              <details>
+        <summary>Что учитываем, когда публикуем</summary>
+        <p>Учитываем разницу во времени — города присутствия сервиса находятся в разных часовых поясах по всей стране. <strong>В канал и в директ Телеграм не присылаем ничего раньше 8:00–9:00 и позднее 21:00. </strong> И даже в 8–9 публикуем редко и желательно приятное.
+Для ленты Яндекс Про время суток не так важно — она не разбудит. Если нужно быстро обратить внимание читателей, успеваем публиковать в течение светового дня.
+Интервалы во времени — для одного города между новостями должно пройти не меньше 1,5–2 часов. За исключением срочных технических новостей о сбоях на сервисе или в выплатах.
+Частоту определенных форматов — например, не присылаем опросы на одну аудиторию чаще, чем раз в 2–3 дня. Дозируем и перемешиваем темы равномерно: чтобы не было целого дня с «рефералкой», заботой или новостями о новых фичах.</p>
+</details>
         </section>
+        
 
-        <!-- Раздел с TOV -->
-        <section id="tov-section" class="hidden">
-            <h1>TOV</h1>
-            <p>Это новое решение для улучшения пользовательского опыта. Мы стремимся предоставлять только актуальную и важную информацию.</p>
-        </section>
+        <!-- Раздел TOV -->
+<section id="tov-section" class="hidden">
+    <h1>Блок TOV</h1>
 
-        <!-- Раздел со счётчиком символов -->
+    <details>
+        <summary>Всё про пуши</summary>
+        <p>Текст, который будет отображаться при нажатии на Заголовок 1. Здесь можно разместить любую информацию, связанную с этим разделом.</p>
+     <!-- Контейнер для горизонтального расположения блоков -->
+    <div style="display: flex; gap: 10px;">
+        <!-- Блок с блеклым красным фоном -->
+        <div style="background-color: #f8d7da; padding: 10px; border-radius: 5px; flex: 1;">
+            <p><strong>Поспели арбузы!</strong></p>
+                <p>Мы знаем, что вы будете делать сегодня вечером</p>
+        </div>
+
+        <!-- Блок с блеклым зеленым фоном -->
+        <div style="background-color: #d4edda; padding: 10px; border-radius: 5px; flex: 1;">
+            <p><strong>Поспели арбузы</strong></p>
+                <p>Заказывайте из нашей подборки с доставкой от получаса</p>
+        </div>
+    </div>
+</details>
+
+    <details>
+        <summary>Всё про знаки</summary>
+        <p>Текст, который будет отображаться при нажатии на Заголовок 2. Здесь можно разместить другую информацию.</p>
+    </details>
+
+    <details>
+        <summary>Всё про сторис</summary>
+        <p>Текст, который будет отображаться при нажатии на Заголовок 3. Здесь можно разместить другую информацию.</p>
+    </details>
+</section>
+
+        <!-- Раздел с счётчиками символов -->
         <section id="char-counter-section" class="hidden">
             <h1>Счётчик символов</h1>
-            <textarea id="text-input" placeholder="Введите текст..."></textarea>
-            <div class="counter">
-                <p>Количество символов: <span id="char-count">0</span></p>
-            </div>
-        </section>
-
-        <!-- Раздел с пуш-уведомлениями -->
-        <section id="notification-section" class="hidden">
-            <h1>Пуш-уведомления</h1>
-            <p>Здесь будет информация о пуш-уведомлениях.</p>
+            <textarea id="text-area" placeholder="Введите текст здесь..."></textarea>
+            <div id="char-count">Количество символов: 0</div>
         </section>
     </div>
 
     <script>
+        // Функция для переключения между секциями
         function toggleSection(sectionId) {
             const sections = document.querySelectorAll('.content > section');
             sections.forEach(section => {
-                if (section.id === sectionId) {
-                    section.classList.toggle('hidden');
-                } else {
-                    section.classList.add('hidden');
-                }
+                section.classList.add('hidden');
             });
+            document.getElementById(sectionId).classList.remove('hidden');
         }
 
-        // Обработчик для счётчика символов
-        document.getElementById('text-input').addEventListener('input', function() {
+        // Функция для копирования текста в буфер обмена
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    alert(`Символ "${text}" скопирован в буфер обмена!`);
+                })
+                .catch(err => {
+                    console.error('Ошибка при копировании: ', err);
+                });
+        }
+
+        // Функция для обновления счётчика символов
+        document.getElementById('text-area').addEventListener('input', function() {
             const charCount = this.value.length;
-            document.getElementById('char-count').textContent = charCount;
+            document.getElementById('char-count').innerText = `Количество символов: ${charCount}`;
         });
 
-        // Переключатель ночного режима
+        // Функция для переключения ночного режима
         function toggleNightMode() {
-            document.body.classList.toggle('night-mode');
+            const body = document.body;
+            const sidebar = document.querySelector('.sidebar');
+            body.classList.toggle('night-mode');
+            sidebar.classList.toggle('night-mode');
         }
     </script>
+
 </body>
 </html>
