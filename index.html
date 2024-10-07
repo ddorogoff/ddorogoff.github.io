@@ -230,9 +230,6 @@
         // Функция для копирования текста в буфер обмена
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text)
-                .then(() => {
-                    alert(`Символ "${text}" скопирован в буфер обмена!`);
-                })
                 .catch(err => {
                     console.error('Ошибка при копировании: ', err);
                 });
