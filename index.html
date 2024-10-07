@@ -7,173 +7,218 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        
-        h1, h2 {
-            color: #333;
-        }
-        
-        .container {
             display: flex;
-            justify-content: space-between;
-            width: 100%;
+            min-height: 100vh;
+            margin: 0;
         }
-        
-        .counter, .push-popup {
-            border: 1px solid #ccc;
+        /* Стили для боковой панели */
+        .sidebar {
+            background-color: #f4f4f4;
             padding: 20px;
-            margin-right: 20px;
-            width: 45%;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
         }
-        
-        .text-input {
+        .sidebar h2 {
+            margin-top: 0;
+        }
+        .sidebar .nav-button {
             display: block;
-            margin: 10px 0 5px;
+            padding: 10px 15px;
+            margin: 10px 0;
+            background-color: #007BFF; /* Синий цвет */
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
         }
-        
-        .remaining-chars {
-            font-size: 0.9em;
-            color: #666;
+        .sidebar .nav-button:hover {
+            background-color: #e6c200;
         }
-        
+        /* Основной контент */
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        /* Стили для символов */
+        .symbol {
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin: 5px;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+        .symbol:hover {
+            background-color: #f0f0f0;
+        }
+        /* Стрелочка */
+        .toggle-arrow {
+            cursor: pointer;
+            display: inline-block;
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+        .toggle-arrow.collapsed {
+            transform: rotate(-90deg);
+        }
+        /* Скрытый контент */
+        .hidden {
+            display: none;
+        }
+        /* Стиль для текстовой области */
+        #text-area {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+        }
+        /* Стили для переключателя */
         .switch {
             display: flex;
             align-items: center;
-            margin: 10px 0;
+            margin-bottom: 10px;
         }
-
+        .switch input {
+            display: none;
+        }
         .switch-label {
-            width: 40px;
-            height: 20px;
-            background-color: #ccc;
-            border-radius: 20px;
-            cursor: pointer;
+            width: 50px;
+            height: 25px;
+            background: #ccc;
+            border-radius: 15px;
             position: relative;
-            transition: background-color 0.3s;
+            cursor: pointer;
+            transition: background 0.3s;
         }
-
-        .switch-label:after {
+        .switch-label:before {
             content: '';
             position: absolute;
-            width: 18px;
-            height: 18px;
-            background-color: white;
+            width: 20px;
+            height: 20px;
+            background: white;
             border-radius: 50%;
-            top: 1px;
-            left: 1px;
+            top: 2.5px;
+            left: 2.5px;
             transition: transform 0.3s;
         }
-
-        input[type="checkbox"]:checked + .switch-label {
-            background-color: #66bb6a;
+        input:checked + .switch-label {
+            background: #4caf50;
         }
-
-        input[type="checkbox"]:checked + .switch-label:after {
-            transform: translateX(20px);
+        input:checked + .switch-label:before {
+            transform: translateX(25px);
+        }
+        /* Стиль для эмулятора iPhone 15 Pro */
+        .iphone-emulator {
+            width: 300px;
+            height: 600px;
+            border: 16px solid black;
+            border-radius: 36px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .iphone-emulator h4 {
+            position: absolute;
+            top: 20px;
+            left: 10px;
+            font-size: 16px;
+            margin: 0;
+        }
+        .iphone-emulator h5 {
+            position: absolute;
+            top: 50px;
+            left: 10px;
+            font-size: 14px;
+            margin: 0;
         }
     </style>
 </head>
 <body>
-    <h1>Универсальная шпаргалка</h1>
-    
-    <div class="container">
-        <div class="counter">
-            <h2>Счётчик символов</h2>
-            <textarea id="textInput" rows="5" cols="40" placeholder="Введите или вставьте текст..."></textarea>
-            <p>Количество символов (включая пробелы): <span id="totalChars">0</span></p>
-            <p>Количество символов (без пробелов): <span id="nonSpaceChars">0</span></p>
-            <button id="copyButton">Скопировать текст</button>
-        </div>
 
-        <div class="push-popup">
-            <h2>Пуш и поп-ап</h2>
-            <div class="switch">
-                <input type="checkbox" id="toggle" />
-                <label class="switch-label" for="toggle"></label>
-            </div>
-            <div id="pushSection">
-                <label for="pushTitle" class="text-input">Заголовок для пуша (до 21 символа):</label>
-                <input type="text" id="pushTitle" maxlength="21" placeholder="Заголовок (до 21 символа)" />
-                <p class="remaining-chars">Осталось: <span id="remainingPushTitle">21</span></p>
-                
-                <label for="pushSubtitle" class="text-input">Подзаголовок для пуша (до 108 символов):</label>
-                <input type="text" id="pushSubtitle" maxlength="108" placeholder="Подзаголовок (до 108 символов)" />
-                <p class="remaining-chars">Осталось: <span id="remainingPushSubtitle">108</span></p>
-            </div>
-            <div id="popupSection" style="display:none;">
-                <label for="popupTitle" class="text-input">Поп-ап</label>
-                <input type="text" id="popupTitle" maxlength="26" placeholder="Заголовок (до 26 символов)" />
-                <p class="remaining-chars">Осталось: <span id="remainingPopupTitle">26</span></p>
-                
-                <label for="popupSubtitle" class="text-input">Подзаголовок</label>
-                <input type="text" id="popupSubtitle" maxlength="108" placeholder="Подзаголовок (до 108 символов)" />
-                <p class="remaining-chars">Осталось: <span id="remainingPopupSubtitle">108</span></p>
-            </div>
-        </div>
+    <!-- Боковая панель -->
+    <div class="sidebar">
+        <h2>Навигация</h2>
+        <a href="#copy-section" class="nav-button">Копирование символов</a>
+        <a href="#politics-section" class="nav-button">Памятник редполитике</a>
+        <a href="#tov-section" class="nav-button">TOV</a>
+        <a href="#char-counter-section" class="nav-button">Счётчик символов</a>
     </div>
 
-    <script>
-        const textInput = document.getElementById('textInput');
-        const totalChars = document.getElementById('totalChars');
-        const nonSpaceChars = document.getElementById('nonSpaceChars');
+    <!-- Основной контент -->
+    <div class="content">
+        <!-- Раздел с копированием символов -->
+        <section id="copy-section">
+            <h1>Копируйте символы</h1>
+            <div class="symbol" onclick="copyToClipboard('→')">→</div>
+            <div class="symbol" onclick="copyToClipboard('«')">«</div>
+            <div class="symbol" onclick="copyToClipboard('»')">»</div>
+            <div class="symbol" onclick="copyToClipboard('₽')">₽</div>
+            <div class="symbol" onclick="copyToClipboard('—')">—</div>
+            <div class="symbol" onclick="copyToClipboard('•')">•</div>
+            <div class="symbol" onclick="copyToClipboard('–')">–</div>
+        </section>
 
-        textInput.addEventListener('input', () => {
-            const text = textInput.value;
-            totalChars.textContent = text.length;
-            nonSpaceChars.textContent = text.replace(/\s/g, '').length;
-        });
+        <!-- Раздел с текстом про политику -->
+        <section id="politics-section">
+            <h1>Памятник редполитике</h1>
+            <p>
+                Тут будет старая редполитика. Остро. Больно. Навсегда.
+            </p>
+        </section>
 
-        const toggle = document.getElementById('toggle');
-        const pushSection = document.getElementById('pushSection');
-        const popupSection = document.getElementById('popupSection');
+        <!-- Раздел TOV с скрывающимися подразделами -->
+        <section id="tov-section">
+            <h1>Блок TOV <span class="toggle-arrow" onclick="toggleSection()">&#9660;</span></h1>
+            <div id="tov-content" class="hidden">
+                <p>TOV.</p>
+                <p>Всё про пуши.</p>
+            </div>
+        </section>
 
-        toggle.addEventListener('change', () => {
-            if (toggle.checked) {
-                pushSection.style.display = 'none';
-                popupSection.style.display = 'block';
-            } else {
-                pushSection.style.display = 'block';
-                popupSection.style.display = 'none';
-            }
-        });
+        <!-- Раздел с счётчиком символов -->
+        <section id="char-counter-section">
+            <h1>Счётчик символов</h1>
+            <textarea id="text-area" oninput="countCharacters()" placeholder="Введите или вставьте текст..."></textarea>
+            <p>Количество символов (включая пробелы): <span id="with-spaces">0</span></p>
+            <p>Количество символов (без пробелов): <span id="without-spaces">0</span></p>
 
-        const pushTitle = document.getElementById('pushTitle');
-        const remainingPushTitle = document.getElementById('remainingPushTitle');
+            <!-- Блок для символов пуша и поп-апа -->
+            <div>
+                <h2>Символы для пушей/поп-апов</h2>
+                <div class="switch">
+                    <input type="checkbox" id="toggle-mode" onchange="toggleMode()">
+                    <label class="switch-label" for="toggle-mode"></label>
+                </div>
 
-        pushTitle.addEventListener('input', () => {
-            remainingPushTitle.textContent = 21 - pushTitle.value.length;
-        });
+                <div id="push-settings" style="display: block;">
+                    <h3>Пуш</h3>
+                    <h4>Заголовок (макс. 21 символ):</h4>
+                    <input type="text" id="push-title" maxlength="21" oninput="countPushCharacters()">
+                    <p id="push-title-count">Осталось: 21</p>
 
-        const pushSubtitle = document.getElementById('pushSubtitle');
-        const remainingPushSubtitle = document.getElementById('remainingPushSubtitle');
+                    <h4>Подзаголовок (макс. 108 символов):</h4>
+                    <input type="text" id="push-subtitle" maxlength="108" oninput="countPushCharacters()">
+                    <p id="push-subtitle-count">Осталось: 108</p>
+                </div>
 
-        pushSubtitle.addEventListener('input', () => {
-            remainingPushSubtitle.textContent = 108 - pushSubtitle.value.length;
-        });
+                <div id="popup-settings" style="display: none;">
+                    <h3>Поп-ап</h3>
+                    <h4>Заголовок (макс. 26 символов):</h4>
+                    <input type="text" id="popup-title" maxlength="26" oninput="countPopupCharacters()">
+                    <p id="popup-title-count">Осталось: 26</p>
 
-        const popupTitle = document.getElementById('popupTitle');
-        const remainingPopupTitle = document.getElementById('remainingPopupTitle');
+                    <h4>Подзаголовок (макс. 108 символов):</h4>
+                    <input type="text" id="popup-subtitle" maxlength="108" oninput="countPopupCharacters()">
+                    <p id="popup-subtitle-count">Осталось: 108</p>
+                </div>
+            </div>
 
-        popupTitle.addEventListener('input', () => {
-            remainingPopupTitle.textContent = 26 - popupTitle.value.length;
-        });
-
-        const popupSubtitle = document.getElementById('popupSubtitle');
-        const remainingPopupSubtitle = document.getElementById('remainingPopupSubtitle');
-
-        popupSubtitle.addEventListener('input', () => {
-            remainingPopupSubtitle.textContent = 108 - popupSubtitle.value.length;
-        });
-
-        const copyButton = document.getElementById('copyButton');
-
-        copyButton.addEventListener('click', () => {
-            textInput.select();
-            document.execCommand('copy');
-            alert('Текст скопирован в буфер обмена!');
-        });
-    </script>
-</body>
-</html>
+            <!-- Модель iPhone 15 Pro -->
+            <div class="iphone-emulator">
+                <h4 id="preview-title">Заголовок</h4>
+                <h5 id="preview-subtitle">
