@@ -32,7 +32,7 @@
             border-radius: 5px;
         }
         .sidebar .nav-button:hover {
-            background-color: #e6c200;
+            background-color: #0056b3; /* Более тёмный синий цвет */
         }
         /* Основной контент */
         .content {
@@ -116,16 +116,16 @@
     <!-- Боковая панель -->
     <div class="sidebar">
         <h2>Навигация</h2>
-        <a href="#copy-section" class="nav-button">Копирование символов</a>
-        <a href="#politics-section" class="nav-button">Памятник редполитике</a>
-        <a href="#tov-section" class="nav-button">TOV</a>
-        <a href="#char-counter-section" class="nav-button">Счётчик символов</a>
+        <a href="#copy-section" class="nav-button">Копирование символов <span class="toggle-arrow">&#9654;</span></a>
+        <a href="#politics-section" class="nav-button">Памятник редполитике <span class="toggle-arrow">&#9654;</span></a>
+        <a href="#tov-section" class="nav-button">TOV <span class="toggle-arrow">&#9654;</span></a>
+        <a href="#char-counter-section" class="nav-button">Счётчик символов <span class="toggle-arrow">&#9654;</span></a>
     </div>
 
     <!-- Основной контент -->
     <div class="content">
         <!-- Раздел с копированием символов -->
-        <section id="copy-section">
+        <section id="copy-section" class="hidden">
             <h1>Копируйте символы</h1>
             <div class="symbol" onclick="copyToClipboard('→')">→</div>
             <div class="symbol" onclick="copyToClipboard('«')">«</div>
@@ -137,7 +137,7 @@
         </section>
 
         <!-- Раздел с текстом про политику -->
-        <section id="politics-section">
+        <section id="politics-section" class="hidden">
             <h1>Памятник редполитике</h1>
             <p>
                 Тут будет старая редполитику. Остро. Больно. Навсегда.
@@ -145,8 +145,8 @@
         </section>
 
         <!-- Раздел TOV с скрывающимися подразделами -->
-        <section id="tov-section">
-            <h1>Блок TOV <span class="toggle-arrow" onclick="toggleSection()">&#9660;</span></h1>
+        <section id="tov-section" class="hidden">
+            <h1>Блок TOV <span class="toggle-arrow" onclick="toggleSection()">&#9654;</span></h1>
             <div id="tov-content" class="hidden">
                 <p>TOV.</p>
                 <p>Всё про пуши.</p>
@@ -154,7 +154,7 @@
         </section>
 
         <!-- Объединённый раздел "Счетчики символов" -->
-        <section id="char-counter-section">
+        <section id="char-counter-section" class="hidden">
             <h1>Счетчики символов</h1>
             <textarea id="text-area" oninput="countCharacters()" placeholder="Введите или вставьте текст..."></textarea>
             <p>Количество символов (включая пробелы): <span id="with-spaces">0</span></p>
@@ -237,6 +237,16 @@
                     popupSettings.style.display = 'none';
                 }
             }
+
+            // Функция для показа/скрытия секций
+            document.querySelectorAll('.nav-button').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    targetSection.classList.toggle('hidden');
+                    event.preventDefault(); // предотвращаем переход по ссылке
+                });
+            });
         </script>
 </body>
 </html>
