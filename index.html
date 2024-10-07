@@ -129,6 +129,11 @@
         <div style="display: flex; justify-content: space-between;">
             <!-- Раздел с счётчиком символов -->
             <section id="char-counter-section">
+                .puspopup {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Устанавливаем расстояние между элементами внутри блока */
+}
                 <h1>Счётчик символов</h1>
                 <textarea id="text-area" oninput="countCharacters()" placeholder="Введите или вставьте текст..."></textarea>
                 <p>Количество символов (включая пробелы): <span id="with-spaces">0</span></p>
