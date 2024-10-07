@@ -38,6 +38,8 @@
         .content {
             flex-grow: 1;
             padding: 20px;
+            display: flex;
+            flex-direction: column; /* Вертикальная структура */
         }
         /* Стили для символов */
         .symbol {
@@ -71,15 +73,11 @@
             height: 100px;
             margin: 10px 0;
         }
-        /* Стили для блока Пуш и поп-ап */
-        .push-popup-container {
+        /* Пуш и поп-ап стили */
+        .puspopup {
             display: flex;
             flex-direction: column;
-            margin-left: 20px;
-        }
-        /* Стили для переключателя */
-        .switch {
-            margin-bottom: 10px;
+            margin-top: 0; /* Убираем отступ */
         }
     </style>
 </head>
@@ -125,39 +123,42 @@
             </div>
         </section>
 
-        <!-- Контейнер для Счётчика символов и Пуш и поп-ап -->
-        <div style="display: flex; justify-content: space-between;">
-            <!-- Раздел с счётчиком символов -->
-            <section id="char-counter-section">
-                <h1>Счётчик символов</h1>
-                <textarea id="text-area" oninput="countCharacters()" placeholder="Введите или вставьте текст..."></textarea>
-                <p>Количество символов (включая пробелы): <span id="with-spaces">0</span></p>
-                <p>Количество символов (без пробелов): <span id="without-spaces">0</span></p>
-            </section>
+        <!-- Раздел с счётчиком символов -->
+        <section id="char-counter-section">
+            <h1>Счётчик символов</h1>
+            <textarea id="text-area" oninput="countCharacters()" placeholder="Введите или вставьте текст..."></textarea>
+            <p>Количество символов (включая пробелы): <span id="with-spaces">0</span></p>
+            <p>Количество символов (без пробелов): <span id="without-spaces">0</span></p>
+        </section>
 
-            <!-- Блок Пуш и поп-ап -->
-            <div class="push-popup-container">
-                <h1>Пуш и поп-ап</h1>
-                <label class="switch">
-                    <input type="checkbox" id="modeSwitch" onchange="toggleMode()">
-                    <span>Пуш / Поп-ап</span>
-                </label>
-                <div id="push-section">
-                    <h2>Пуш</h2>
-                    <input type="text" id="push-title" maxlength="21" placeholder="Заголовок (до 21 символа)" oninput="countPushCharacters()">
-                    <p id="push-title-count">Осталось: 21</p>
-                    <input type="text" id="push-subtitle" maxlength="108" placeholder="Подзаголовок (до 108 символов)" oninput="countPushCharacters()">
-                    <p id="push-subtitle-count">Осталось: 108</p>
-                </div>
-                <div id="popup-section" class="hidden">
-                    <h2>Поп-ап</h2>
-                    <input type="text" id="popup-title" maxlength="26" placeholder="Заголовок (до 26 символов)" oninput="countPopupCharacters()">
-                    <p id="popup-title-count">Осталось: 26</p>
-                    <input type="text" id="popup-subtitle" maxlength="108" placeholder="Подзаголовок (до 108 символов)" oninput="countPopupCharacters()">
-                    <p id="popup-subtitle-count">Осталось: 108</p>
-                </div>
+        <!-- Блок Пуш и Поп-ап -->
+        <section class="puspopup">
+            <h1>Пуш и поп-ап</h1>
+            <label>
+                <input type="checkbox" id="switch" onchange="togglePushPopup()"> Пуш / Поп-ап
+            </label>
+            <div id="push-section">
+                <h2>Пуш</h2>
+                <label for="push-title">Заголовок (до 21 символа):</label>
+                <input type="text" id="push-title" maxlength="21" oninput="updatePushTitleLength()">
+                <p>Осталось: <span id="push-title-remaining">21</span></p>
+
+                <label for="push-subtitle">Подзаголовок (до 108 символов):</label>
+                <input type="text" id="push-subtitle" maxlength="108" oninput="updatePushSubtitleLength()">
+                <p>Осталось: <span id="push-subtitle-remaining">108</span></p>
             </div>
-        </div>
+
+            <div id="popup-section" style="display: none;">
+                <h2>Поп-ап</h2>
+                <label for="popup-title">Заголовок (до 26 символов):</label>
+                <input type="text" id="popup-title" maxlength="26" oninput="updatePopupTitleLength()">
+                <p>Осталось: <span id="popup-title-remaining">26</span></p>
+
+                <label for="popup-subtitle">Подзаголовок (до 108 символов):</label>
+                <input type="text" id="popup-subtitle" maxlength="108" oninput="updatePopupSubtitleLength()">
+                <p>Осталось: <span id="popup-subtitle-remaining">108</span></p>
+            </div>
+        </section>
     </div>
 
     <script>
@@ -185,26 +186,30 @@
         document.getElementById('without-spaces').textContent = withoutSpaces;
     }
 
-    function toggleMode() {
-        const isPushMode = document.getElementById('modeSwitch').checked;
-        document.getElementById('push-section').classList.toggle('hidden', !isPushMode);
-        document.getElementById('popup-section').classList.toggle('hidden', isPushMode);
+    function togglePushPopup() {
+        const isPush = document.getElementById('switch').checked;
+        document.getElementById('push-section').style.display = isPush ? 'block' : 'none';
+        document.getElementById('popup-section').style.display = isPush ? 'none' : 'block';
     }
 
-    function countPushCharacters() {
-        const title = document.getElementById('push-title');
-        const subtitle = document.getElementById('push-subtitle');
-
-        document.getElementById('push-title-count').textContent = 'Осталось: ' + (21 - title.value.length);
-        document.getElementById('push-subtitle-count').textContent = 'Осталось: ' + (108 - subtitle.value.length);
+    function updatePushTitleLength() {
+        const remaining = 21 - document.getElementById('push-title').value.length;
+        document.getElementById('push-title-remaining').textContent = remaining;
     }
 
-    function countPopupCharacters() {
-        const title = document.getElementById('popup-title');
-        const subtitle = document.getElementById('popup-subtitle');
+    function updatePushSubtitleLength() {
+        const remaining = 108 - document.getElementById('push-subtitle').value.length;
+        document.getElementById('push-subtitle-remaining').textContent = remaining;
+    }
 
-        document.getElementById('popup-title-count').textContent = 'Осталось: ' + (26 - title.value.length);
-        document.getElementById('popup-subtitle-count').textContent = 'Осталось: ' + (108 - subtitle.value.length);
+    function updatePopupTitleLength() {
+        const remaining = 26 - document.getElementById('popup-title').value.length;
+        document.getElementById('popup-title-remaining').textContent = remaining;
+    }
+
+    function updatePopupSubtitleLength() {
+        const remaining = 108 - document.getElementById('popup-subtitle').value.length;
+        document.getElementById('popup-subtitle-remaining').textContent = remaining;
     }
     </script>
 </body>
