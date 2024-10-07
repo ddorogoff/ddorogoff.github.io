@@ -3,10 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Копирование символов</title>
+    <title>Интерактивные блоки</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+        }
+        /* Стили для боковой панели */
+        .sidebar {
+            background-color: #f4f4f4;
+            padding: 20px;
+            width: 250px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        .sidebar h2 {
+            margin-top: 0;
+        }
+        .sidebar .nav-button {
+            display: block;
+            padding: 10px 15px;
+            margin: 10px 0;
+            background-color: #007BFF;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .sidebar .nav-button:hover {
+            background-color: #0056b3;
+        }
+        /* Основной контент */
+        .content {
+            flex-grow: 1;
             padding: 20px;
         }
         .symbol {
@@ -23,14 +53,37 @@
     </style>
 </head>
 <body>
-    <h1>Копируйте символы</h1>
-    <div class="symbol" onclick="copyToClipboard('→')">→</div>
-    <div class="symbol" onclick="copyToClipboard('«')">«</div>
-    <div class="symbol" onclick="copyToClipboard('»')">»</div>
-    <div class="symbol" onclick="copyToClipboard('₽')">₽</div>
-    <div class="symbol" onclick="copyToClipboard('—')">—</div>
-    <div class="symbol" onclick="copyToClipboard('•')">•</div>
-    <div class="symbol" onclick="copyToClipboard('–')">–</div>
+
+    <!-- Боковая панель -->
+    <div class="sidebar">
+        <h2>Навигация</h2>
+        <a href="#copy-section" class="nav-button">Копирование символов</a>
+        <a href="#politics-section" class="nav-button">Всё про политику</a>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="content">
+        <!-- Раздел с копированием символов -->
+        <section id="copy-section">
+            <h1>Копируйте символы</h1>
+            <div class="symbol" onclick="copyToClipboard('→')">→</div>
+            <div class="symbol" onclick="copyToClipboard('«')">«</div>
+            <div class="symbol" onclick="copyToClipboard('»')">»</div>
+            <div class="symbol" onclick="copyToClipboard('₽')">₽</div>
+            <div class="symbol" onclick="copyToClipboard('—')">—</div>
+            <div class="symbol" onclick="copyToClipboard('•')">•</div>
+            <div class="symbol" onclick="copyToClipboard('–')">–</div>
+        </section>
+
+        <!-- Раздел с текстом про политику -->
+        <section id="politics-section">
+            <h1>Всё про политику</h1>
+            <p>
+                Здесь можно разместить любой текст, связанный с политикой. Это может быть новостная информация, статьи или ссылки на важные политические события. 
+                Например, обсудить текущие законы, политические программы, и так далее.
+            </p>
+        </section>
+    </div>
 
     <script>
     function copyToClipboard(text) {
