@@ -65,6 +65,12 @@
         .hidden {
             display: none;
         }
+        /* Стиль для текстовой области */
+        #text-area {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
@@ -73,8 +79,9 @@
     <div class="sidebar">
         <h2>Навигация</h2>
         <a href="#copy-section" class="nav-button">Копирование символов</a>
-        <a href="#politics-section" class="nav-button">Всё про</a>
+        <a href="#politics-section" class="nav-button">Памятник редполитике</a>
         <a href="#tov-section" class="nav-button">TOV</a>
+        <a href="#char-counter-section" class="nav-button">Счётчик символов</a>
     </div>
 
     <!-- Основной контент -->
@@ -93,19 +100,27 @@
 
         <!-- Раздел с текстом про политику -->
         <section id="politics-section">
-            <h1>Всё про</h1>
+            <h1>Памятник редполитике</h1>
             <p>
-                Здесь можно разместить любой текст, связанный с редполитикой. 
+                Тут будет старая редполитика. Остро. Больно. Навсегда.
             </p>
         </section>
 
         <!-- Раздел TOV с скрывающимися подразделами -->
         <section id="tov-section">
-            <h1>TOV <span class="toggle-arrow" onclick="toggleSection()">&#9660;</span></h1>
+            <h1>Блок TOV <span class="toggle-arrow" onclick="toggleSection()">&#9660;</span></h1>
             <div id="tov-content" class="hidden">
-                <p>Как делать сторис.</p>
-                <p>Как писать пуши.</p>
+                <p>TOV.</p>
+                <p>Всё про пуши.</p>
             </div>
+        </section>
+
+        <!-- Раздел с счётчиком символов -->
+        <section id="char-counter-section">
+            <h1>Счётчик символов</h1>
+            <textarea id="text-area" oninput="countCharacters()" placeholder="Введите или вставьте текст..."></textarea>
+            <p>Количество символов (включая пробелы): <span id="with-spaces">0</span></p>
+            <p>Количество символов (без пробелов): <span id="without-spaces">0</span></p>
         </section>
     </div>
 
@@ -124,6 +139,16 @@
         content.classList.toggle('hidden');
         arrow.classList.toggle('collapsed');
     }
+
+    function countCharacters() {
+        const text = document.getElementById('text-area').value;
+        const withSpaces = text.length;
+        const withoutSpaces = text.replace(/\s+/g, '').length;
+
+        document.getElementById('with-spaces').textContent = withSpaces;
+        document.getElementById('without-spaces').textContent = withoutSpaces;
+    }
     </script>
 </body>
 </html>
+
