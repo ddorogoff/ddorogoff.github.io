@@ -7,210 +7,171 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            min-height: 100vh;
-            margin: 0;
-        }
-        /* Стили для боковой панели */
-        .sidebar {
-            background-color: #f4f4f4;
-            padding: 20px;
-            width: 250px;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-        }
-        .sidebar h2 {
-            margin-top: 0;
-        }
-        .sidebar .nav-button {
-            display: block;
-            padding: 10px 15px;
-            margin: 10px 0;
-            background-color: #007BFF; /* Синий цвет */
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .sidebar .nav-button:hover {
-            background-color: #e6c200;
-        }
-        /* Основной контент */
-        .content {
-            flex-grow: 1;
-            padding: 20px;
-            display: flex;
-            flex-direction: column; /* Вертикальная структура */
-        }
-        /* Стили для символов */
-        .symbol {
-            cursor: pointer;
-            padding: 10px;
-            border: 1px solid #ccc;
-            margin: 5px;
-            display: inline-block;
-            transition: background-color 0.3s ease;
-        }
-        .symbol:hover {
-            background-color: #f0f0f0;
-        }
-        /* Стрелочка */
-        .toggle-arrow {
-            cursor: pointer;
-            display: inline-block;
-            margin-left: 10px;
-            transition: transform 0.3s ease;
-        }
-        .toggle-arrow.collapsed {
-            transform: rotate(-90deg);
-        }
-        /* Скрытый контент */
-        .hidden {
-            display: none;
-        }
-        /* Стиль для текстовой области */
-        #text-area {
-            width: 100%;
-            height: 100px;
-            margin: 10px 0;
-        }
-        /* Пуш и поп-ап стили */
-        .puspopup {
+            margin: 20px;
             display: flex;
             flex-direction: column;
-            margin-top: 0; /* Убираем отступ */
+            align-items: center;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .counter, .push-popup {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-right: 20px;
+            width: 45%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .switch {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .switch input {
+            display: none;
+        }
+
+        .switch-label {
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+            background-color: #ccc;
+            border-radius: 15px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .switch-label::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 26px;
+            height: 26px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        input:checked + .switch-label {
+            background-color: #4caf50;
+        }
+
+        input:checked + .switch-label::after {
+            transform: translateX(30px);
+        }
+
+        .text-input {
+            margin-bottom: 10px;
+        }
+
+        .remaining-chars {
+            margin-top: 5px;
+            font-size: 0.9em;
+            color: gray;
         }
     </style>
 </head>
 <body>
+    <h1>Универсальная шпаргалка</h1>
+    <div class="container">
+        <div class="counter">
+            <h2>Счётчик символов</h2>
+            <textarea id="textInput" rows="5" cols="40" placeholder="Введите или вставьте текст..."></textarea>
+            <p>Количество символов (включая пробелы): <span id="totalChars">0</span></p>
+            <p>Количество символов (без пробелов): <span id="nonSpaceChars">0</span></p>
+        </div>
 
-    <!-- Боковая панель -->
-    <div class="sidebar">
-        <h2>Навигация</h2>
-        <a href="#copy-section" class="nav-button">Копирование символов</a>
-        <a href="#politics-section" class="nav-button">Памятник редполитике</a>
-        <a href="#tov-section" class="nav-button">TOV</a>
-        <a href="#char-counter-section" class="nav-button">Счётчик символов</a>
-    </div>
-
-    <!-- Основной контент -->
-    <div class="content">
-        <!-- Раздел с копированием символов -->
-        <section id="copy-section">
-            <h1>Копируйте символы</h1>
-            <div class="symbol" onclick="copyToClipboard('→')">→</div>
-            <div class="symbol" onclick="copyToClipboard('«')">«</div>
-            <div class="symbol" onclick="copyToClipboard('»')">»</div>
-            <div class="symbol" onclick="copyToClipboard('₽')">₽</div>
-            <div class="symbol" onclick="copyToClipboard('—')">—</div>
-            <div class="symbol" onclick="copyToClipboard('•')">•</div>
-            <div class="symbol" onclick="copyToClipboard('–')">–</div>
-        </section>
-
-        <!-- Раздел с текстом про политику -->
-        <section id="politics-section">
-            <h1>Памятник редполитике</h1>
-            <p>
-                Тут будет старая редполитика. Остро. Больно. Навсегда.
-            </p>
-        </section>
-
-        <!-- Раздел TOV с скрывающимися подразделами -->
-        <section id="tov-section">
-            <h1>Блок TOV <span class="toggle-arrow" onclick="toggleSection()">&#9660;</span></h1>
-            <div id="tov-content" class="hidden">
-                <p>TOV.</p>
-                <p>Всё про пуши.</p>
+        <div class="push-popup">
+            <h2>Пуш и поп-ап</h2>
+            <div class="switch">
+                <input type="checkbox" id="toggle" />
+                <label class="switch-label" for="toggle"></label>
             </div>
-        </section>
-
-        <!-- Раздел с счётчиком символов -->
-        <section id="char-counter-section">
-            <h1>Счётчик символов</h1>
-            <textarea id="text-area" oninput="countCharacters()" placeholder="Введите или вставьте текст..."></textarea>
-            <p>Количество символов (включая пробелы): <span id="with-spaces">0</span></p>
-            <p>Количество символов (без пробелов): <span id="without-spaces">0</span></p>
-        </section>
-
-        <!-- Блок Пуш и Поп-ап -->
-        <section class="puspopup">
-            <h1>Пуш и поп-ап</h1>
-            <label>
-                <input type="checkbox" id="switch" onchange="togglePushPopup()"> Пуш / Поп-ап
-            </label>
-            <div id="push-section">
-                <h2>Пуш</h2>
-                <label for="push-title">Заголовок (до 21 символа):</label>
-                <input type="text" id="push-title" maxlength="21" oninput="updatePushTitleLength()">
-                <p>Осталось: <span id="push-title-remaining">21</span></p>
-
-                <label for="push-subtitle">Подзаголовок (до 108 символов):</label>
-                <input type="text" id="push-subtitle" maxlength="108" oninput="updatePushSubtitleLength()">
-                <p>Осталось: <span id="push-subtitle-remaining">108</span></p>
+            <div id="pushSection">
+                <label for="pushTitle" class="text-input">Пуш</label>
+                <input type="text" id="pushTitle" maxlength="21" placeholder="Заголовок (до 21 символа)" />
+                <p class="remaining-chars">Осталось: <span id="remainingPushTitle">21</span></p>
+                
+                <label for="pushSubtitle" class="text-input">Подзаголовок</label>
+                <input type="text" id="pushSubtitle" maxlength="108" placeholder="Подзаголовок (до 108 символов)" />
+                <p class="remaining-chars">Осталось: <span id="remainingPushSubtitle">108</span></p>
             </div>
-
-            <div id="popup-section" style="display: none;">
-                <h2>Поп-ап</h2>
-                <label for="popup-title">Заголовок (до 26 символов):</label>
-                <input type="text" id="popup-title" maxlength="26" oninput="updatePopupTitleLength()">
-                <p>Осталось: <span id="popup-title-remaining">26</span></p>
-
-                <label for="popup-subtitle">Подзаголовок (до 108 символов):</label>
-                <input type="text" id="popup-subtitle" maxlength="108" oninput="updatePopupSubtitleLength()">
-                <p>Осталось: <span id="popup-subtitle-remaining">108</span></p>
+            <div id="popupSection" style="display:none;">
+                <label for="popupTitle" class="text-input">Поп-ап</label>
+                <input type="text" id="popupTitle" maxlength="26" placeholder="Заголовок (до 26 символов)" />
+                <p class="remaining-chars">Осталось: <span id="remainingPopupTitle">26</span></p>
+                
+                <label for="popupSubtitle" class="text-input">Подзаголовок</label>
+                <input type="text" id="popupSubtitle" maxlength="108" placeholder="Подзаголовок (до 108 символов)" />
+                <p class="remaining-chars">Осталось: <span id="remainingPopupSubtitle">108</span></p>
             </div>
-        </section>
+        </div>
     </div>
 
     <script>
-    function copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(function() {
-            alert('Символ "' + text + '" скопирован!');
-        }).catch(function(err) {
-            console.error('Ошибка копирования: ', err);
+        const textInput = document.getElementById('textInput');
+        const totalChars = document.getElementById('totalChars');
+        const nonSpaceChars = document.getElementById('nonSpaceChars');
+        
+        textInput.addEventListener('input', () => {
+            const text = textInput.value;
+            totalChars.textContent = text.length;
+            nonSpaceChars.textContent = text.replace(/\s/g, '').length;
         });
-    }
 
-    function toggleSection() {
-        const content = document.getElementById('tov-content');
-        const arrow = document.querySelector('.toggle-arrow');
-        content.classList.toggle('hidden');
-        arrow.classList.toggle('collapsed');
-    }
+        const toggle = document.getElementById('toggle');
+        const pushSection = document.getElementById('pushSection');
+        const popupSection = document.getElementById('popupSection');
 
-    function countCharacters() {
-        const text = document.getElementById('text-area').value;
-        const withSpaces = text.length;
-        const withoutSpaces = text.replace(/\s+/g, '').length;
+        toggle.addEventListener('change', () => {
+            if (toggle.checked) {
+                pushSection.style.display = 'none';
+                popupSection.style.display = 'block';
+            } else {
+                pushSection.style.display = 'block';
+                popupSection.style.display = 'none';
+            }
+        });
 
-        document.getElementById('with-spaces').textContent = withSpaces;
-        document.getElementById('without-spaces').textContent = withoutSpaces;
-    }
+        const pushTitle = document.getElementById('pushTitle');
+        const remainingPushTitle = document.getElementById('remainingPushTitle');
 
-    function togglePushPopup() {
-        const isPush = document.getElementById('switch').checked;
-        document.getElementById('push-section').style.display = isPush ? 'block' : 'none';
-        document.getElementById('popup-section').style.display = isPush ? 'none' : 'block';
-    }
+        pushTitle.addEventListener('input', () => {
+            remainingPushTitle.textContent = 21 - pushTitle.value.length;
+        });
 
-    function updatePushTitleLength() {
-        const remaining = 21 - document.getElementById('push-title').value.length;
-        document.getElementById('push-title-remaining').textContent = remaining;
-    }
+        const pushSubtitle = document.getElementById('pushSubtitle');
+        const remainingPushSubtitle = document.getElementById('remainingPushSubtitle');
 
-    function updatePushSubtitleLength() {
-        const remaining = 108 - document.getElementById('push-subtitle').value.length;
-        document.getElementById('push-subtitle-remaining').textContent = remaining;
-    }
+        pushSubtitle.addEventListener('input', () => {
+            remainingPushSubtitle.textContent = 108 - pushSubtitle.value.length;
+        });
 
-    function updatePopupTitleLength() {
-        const remaining = 26 - document.getElementById('popup-title').value.length;
-        document.getElementById('popup-title-remaining').textContent = remaining;
-    }
+        const popupTitle = document.getElementById('popupTitle');
+        const remainingPopupTitle = document.getElementById('remainingPopupTitle');
 
-    function updatePopupSubtitleLength() {
-        const remaining = 108 - document.getElementById('popup-subtitle').value.length;
-        document.getElementById('popup-subtitle-remaining').textContent = remaining;
-    }
+        popupTitle.addEventListener('input', () => {
+            remainingPopupTitle.textContent = 26 - popupTitle.value.length;
+        });
+
+        const popupSubtitle = document.getElementById('popupSubtitle');
+        const remainingPopupSubtitle = document.getElementById('remainingPopupSubtitle');
+
+        popupSubtitle.addEventListener('input', () => {
+            remainingPopupSubtitle.textContent = 108 - popupSubtitle.value.length;
+        });
     </script>
 </body>
 </html>
