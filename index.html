@@ -130,6 +130,86 @@
     </div>
 </section>
 
+<!-- Раздел с счётчиком символов -->
+<section id="char-counter-section">
+    <h1>Счётчик символов</h1>
+    <textarea id="text-area" oninput="countCharacters()" placeholder="Введите или вставьте текст..."></textarea>
+    <p>Количество символов (включая пробелы): <span id="with-spaces">0</span></p>
+    <p>Количество символов (без пробелов): <span id="without-spaces">0</span></p>
+
+    <!-- Блок для символов пуша и поп-апа -->
+    <div>
+        <h2>Символы для пушей/поп-апов</h2>
+        <label>
+            <input type="checkbox" id="toggle-mode" onchange="toggleMode()"> Пуш / Поп-ап
+        </label>
+
+        <div id="push-settings" style="display: block;">
+            <h3>Пуш</h3>
+            <h4>Заголовок (макс. 21 символ):</h4>
+            <input type="text" id="push-title" maxlength="21" oninput="countPushCharacters()">
+            <p id="push-title-count">Осталось: 21</p>
+
+            <h4>Подзаголовок (макс. 108 символов):</h4>
+            <input type="text" id="push-subtitle" maxlength="108" oninput="countPushCharacters()">
+            <p id="push-subtitle-count">Осталось: 108</p>
+        </div>
+
+        <div id="popup-settings" style="display: none;">
+            <h3>Поп-ап</h3>
+            <h4>Заголовок (макс. 26 символов):</h4>
+            <input type="text" id="popup-title" maxlength="26" oninput="countPopupCharacters()">
+            <p id="popup-title-count">Осталось: 26</p>
+
+            <h4>Подзаголовок (макс. 108 символов):</h4>
+            <input type="text" id="popup-subtitle" maxlength="108" oninput="countPopupCharacters()">
+            <p id="popup-subtitle-count">Осталось: 108</p>
+        </div>
+    </div>
+
+    <!-- Модель iPhone 15 Pro -->
+    <div style="border: 1px solid #ccc; padding: 20px; border-radius: 10px; margin-top: 20px;">
+        <h3>Предпросмотр пуша/поп-апа:</h3>
+        <div style="border: 1px solid #999; padding: 10px; height: 200px;">
+            <h4 id="preview-title">Заголовок</h4>
+            <h5 id="preview-subtitle">Подзаголовок</h5>
+        </div>
+    </div>
+</section>
+
+<script>
+function countPushCharacters() {
+    const title = document.getElementById('push-title').value;
+    const subtitle = document.getElementById('push-subtitle').value;
+
+    document.getElementById('push-title-count').textContent = `Осталось: ${21 - title.length}`;
+    document.getElementById('push-subtitle-count').textContent = `Осталось: ${108 - subtitle.length}`;
+
+    document.getElementById('preview-title').textContent = title || "Заголовок";
+    document.getElementById('preview-subtitle').textContent = subtitle || "Подзаголовок";
+}
+
+function countPopupCharacters() {
+    const title = document.getElementById('popup-title').value;
+    const subtitle = document.getElementById('popup-subtitle').value;
+
+    document.getElementById('popup-title-count').textContent = `Осталось: ${26 - title.length}`;
+    document.getElementById('popup-subtitle-count').textContent = `Осталось: ${108 - subtitle.length}`;
+
+    document.getElementById('preview-title').textContent = title || "Заголовок";
+    document.getElementById('preview-subtitle').textContent = subtitle || "Подзаголовок";
+}
+
+function toggleMode() {
+    const isPushMode = document.getElementById('toggle-mode').checked;
+    document.getElementById('push-settings').style.display = isPushMode ? 'block' : 'none';
+    document.getElementById('popup-settings').style.display = isPushMode ? 'none' : 'block';
+}
+
+// Инициализация
+toggleMode();
+</script>
+
         <!-- Раздел с счётчиком символов -->
         <section id="char-counter-section">
             <h1>Счётчик символов</h1>
