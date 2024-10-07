@@ -25,20 +25,21 @@
             display: block;
             padding: 10px 15px;
             margin: 10px 0;
-            background-color: #007BFF;
+            background-color: #007BFF; /* Синий цвет */
             color: white;
             text-align: center;
             text-decoration: none;
             border-radius: 5px;
         }
         .sidebar .nav-button:hover {
-            background-color: #0056b3;
+            background-color: #e6c200;
         }
         /* Основной контент */
         .content {
             flex-grow: 1;
             padding: 20px;
         }
+        /* Стили для символов */
         .symbol {
             cursor: pointer;
             padding: 10px;
@@ -50,6 +51,20 @@
         .symbol:hover {
             background-color: #f0f0f0;
         }
+        /* Стрелочка */
+        .toggle-arrow {
+            cursor: pointer;
+            display: inline-block;
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+        .toggle-arrow.collapsed {
+            transform: rotate(-90deg);
+        }
+        /* Скрытый контент */
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -58,7 +73,8 @@
     <div class="sidebar">
         <h2>Навигация</h2>
         <a href="#copy-section" class="nav-button">Копирование символов</a>
-        <a href="#politics-section" class="nav-button">TOV</a>
+        <a href="#politics-section" class="nav-button">Всё про</a>
+        <a href="#tov-section" class="nav-button">TOV</a>
     </div>
 
     <!-- Основной контент -->
@@ -77,10 +93,19 @@
 
         <!-- Раздел с текстом про политику -->
         <section id="politics-section">
-            <h1>Всё про политику</h1>
+            <h1>Всё про</h1>
             <p>
                 Здесь можно разместить любой текст, связанный с редполитикой. 
             </p>
+        </section>
+
+        <!-- Раздел TOV с скрывающимися подразделами -->
+        <section id="tov-section">
+            <h1>TOV <span class="toggle-arrow" onclick="toggleSection()">&#9660;</span></h1>
+            <div id="tov-content" class="hidden">
+                <p>Как делать сторис.</p>
+                <p>Как писать пуши.</p>
+            </div>
         </section>
     </div>
 
@@ -91,6 +116,13 @@
         }).catch(function(err) {
             console.error('Ошибка копирования: ', err);
         });
+    }
+
+    function toggleSection() {
+        const content = document.getElementById('tov-content');
+        const arrow = document.querySelector('.toggle-arrow');
+        content.classList.toggle('hidden');
+        arrow.classList.toggle('collapsed');
     }
     </script>
 </body>
