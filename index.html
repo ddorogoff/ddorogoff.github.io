@@ -73,60 +73,41 @@
             height: 100px;
             margin: 10px 0;
         }
-        /* Стили для iPhone */
-        .iphone {
-            width: 300px;
-            height: 600px;
-            border: 16px solid #ccc;
-            border-radius: 36px;
-            background-color: #000;
-            position: relative;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
-        .screen {
-            background-color: #fff;
-            height: calc(100% - 40px);
-            border-radius: 20px;
-            position: absolute;
-            top: 40px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            padding: 10px;
-            overflow: hidden;
+        /* Стили для кнопок переключения */
+        .toggle-container {
             display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-        }
-        .status-bar {
-            height: 20px;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 0 5px;
-            border-radius: 10px;
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            right: 5px;
+            margin-bottom: 10px;
         }
-        .status-bar div {
-            font-size: 14px;
-            color: #000;
+        .toggle-container input[type="checkbox"] {
+            display: none;
         }
-        .app-icon {
+        .toggle-container label {
+            cursor: pointer;
             width: 60px;
-            height: 60px;
-            background-color: #007BFF;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 10px;
-            color: white;
-            font-weight: bold;
+            height: 30px;
+            background: #ccc;
+            border-radius: 15px;
+            position: relative;
+            display: inline-block;
+            transition: background 0.3s;
+        }
+        .toggle-container label:after {
+            content: "";
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        .toggle-container input[type="checkbox"]:checked + label {
+            background: #4CAF50;
+        }
+        .toggle-container input[type="checkbox"]:checked + label:after {
+            transform: translateX(30px);
         }
     </style>
 </head>
@@ -135,10 +116,11 @@
     <!-- Боковая панель -->
     <div class="sidebar">
         <h2>Навигация</h2>
-        <a href="#copy-section" class="nav-button">Копирование символов</a>
+        <a href="#copy-section" class="nav-button">Копирование символов</a
         <a href="#politics-section" class="nav-button">Памятник редполитике</a>
         <a href="#tov-section" class="nav-button">TOV</a>
         <a href="#char-counter-section" class="nav-button">Счётчик символов</a>
+        <a href="#push-popup-section" class="nav-button">Пуш и поп-ап</a>
     </div>
 
     <!-- Основной контент -->
@@ -168,18 +150,7 @@
             <h1>Блок TOV <span class="toggle-arrow" onclick="toggleSection()">&#9660;</span></h1>
             <div id="tov-content" class="hidden">
                 <p>TOV.</p>
-                <p>Нюансы TOV</p>
-                <p><span style="color:red;"><strong>Поспели арбузы!</strong></span><br> Мы знаем, что вы будете делать сегодня вечером.</p>
-                <div style="display: flex; gap: 20px;">
-                    <div style="background-color: lightcoral; padding: 10px; border-radius: 5px;">
-                        <strong>Поспели арбузы!</strong>
-                        <p>Заказывайте из нашей подборки с доставкой от получаса.</p>
-                    </div>
-                    <div style="background-color: lightgreen; padding: 10px; border-radius: 5px;">
-                        <strong>Поспели арбузы!</strong>
-                        <p>Заказывайте из нашей подборки с доставкой от получаса.</p>
-                    </div>
-                </div>
+                <p>Всё про пуши.</p>
             </div>
         </section>
 
@@ -191,38 +162,28 @@
             <p>Количество символов (без пробелов): <span id="without-spaces">0</span></p>
         </section>
 
-        <!-- Раздел с пушами и поп-апами -->
+        <!-- Раздел для пуша и поп-апа -->
         <section id="push-popup-section">
-            <h1>Пуши и Поп-апы</h1>
-            <label>
+            <h1>Пуш и поп-ап</h1>
+            <div class="toggle-container">
                 <input type="checkbox" id="toggle-mode" onchange="toggleMode()">
-                <span>Переключить на поп-ап</span>
-            </label>
+                <label for="toggle-mode"></label>
+            </div>
             <div id="push-settings">
-                <h2>Настройки Пуша</h2>
-                <input type="text" id="push-title" oninput="countPushCharacters()" placeholder="Заголовок (макс. 21 символ)" maxlength="21">
+                <h3>Заголовок (макс. 21 символ)</h3>
+                <input type="text" id="push-title" maxlength="21" oninput="countPushCharacters()" placeholder="Заголовок (макс. 21 символ)">
                 <p id="push-title-count">Осталось: 21</p>
-                <input type="text" id="push-subtitle" oninput="countPushCharacters()" placeholder="Подзаголовок (макс. 108 символов)" maxlength="108">
+                <h3>Подзаголовок (макс. 108 символов)</h3>
+                <input type="text" id="push-subtitle" maxlength="108" oninput="countPushCharacters()" placeholder="Подзаголовок (макс. 108 символов)">
                 <p id="push-subtitle-count">Осталось: 108</p>
             </div>
             <div id="popup-settings" style="display: none;">
-                <h2>Настройки Поп-апа</h2>
-                <input type="text" id="popup-title" oninput="countPopupCharacters()" placeholder="Заголовок (макс. 26 символов)" maxlength="26">
+                <h3>Заголовок (макс. 26 символов)</h3>
+                <input type="text" id="popup-title" maxlength="26" oninput="countPopupCharacters()" placeholder="Заголовок (макс. 26 символов)">
                 <p id="popup-title-count">Осталось: 26</p>
-                <input type="text" id="popup-subtitle" oninput="countPopupCharacters()" placeholder="Подзаголовок (макс. 108 символов)" maxlength="108">
+                <h3>Подзаголовок (макс. 108 символов)</h3>
+                <input type="text" id="popup-subtitle" maxlength="108" oninput="countPopupCharacters()" placeholder="Подзаголовок (макс. 108 символов)">
                 <p id="popup-subtitle-count">Осталось: 108</p>
-            </div>
-            <div class="iphone">
-                <div class="status-bar">
-                    <div>09:30</div>
-                    <div>4G</div>
-                    <div>🔔</div> <!-- Символ пуша -->
-                </div>
-                <div class="screen">
-                    <div class="app-icon">Пуш</div>
-                    <h5 id="preview-title">Заголовок</h5>
-                    <h5 id="preview-subtitle">Подзаголовок</h5>
-                </div>
             </div>
         </section>
     </div>
@@ -270,8 +231,6 @@
 
             document.getElementById('push-title-count').textContent = 'Осталось: ' + (21 - title.value.length);
             document.getElementById('push-subtitle-count').textContent = 'Осталось: ' + (108 - subtitle.value.length);
-            
-            updatePreview(title.value, subtitle.value);
         }
 
         function countPopupCharacters() {
@@ -280,21 +239,6 @@
 
             document.getElementById('popup-title-count').textContent = 'Осталось: ' + (26 - title.value.length);
             document.getElementById('popup-subtitle-count').textContent = 'Осталось: ' + (108 - subtitle.value.length);
-            
-            updatePreview(title.value, subtitle.value);
-        }
-
-        function updatePreview(title, subtitle) {
-            const previewTitle = document.getElementById('preview-title');
-            const previewSubtitle = document.getElementById('preview-subtitle');
-            
-            if (document.getElementById('toggle-mode').checked) {
-                previewTitle.textContent = title || 'Заголовок';
-                previewSubtitle.textContent = subtitle || 'Подзаголовок';
-            } else {
-                previewTitle.textContent = title || 'Заголовок';
-                previewSubtitle.textContent = subtitle || 'Подзаголовок';
-            }
         }
     </script>
 </body>
