@@ -71,12 +71,14 @@
             height: 100px;
             margin: 10px 0;
         }
-        /* Стиль для блока пуша и поп-апа */
+        /* Стили для блока Пуш и поп-ап */
         .push-popup-container {
             display: flex;
-            flex-direction: column; /* Вертикальное отображение */
+            flex-direction: column;
+            margin-left: 20px;
         }
-        .toggle-container {
+        /* Стили для переключателя */
+        .switch {
             margin-bottom: 10px;
         }
     </style>
@@ -90,7 +92,6 @@
         <a href="#politics-section" class="nav-button">Памятник редполитике</a>
         <a href="#tov-section" class="nav-button">TOV</a>
         <a href="#char-counter-section" class="nav-button">Счётчик символов</a>
-        <a href="#push-popup-section" class="nav-button">Пуш и поп-ап</a>
     </div>
 
     <!-- Основной контент -->
@@ -124,95 +125,87 @@
             </div>
         </section>
 
-        <!-- Раздел с счётчиком символов -->
-        <section id="char-counter-section" style="display: flex; flex-direction: column;">
-            <h1>Счётчик символов</h1>
-            <textarea id="text-area" oninput="countCharacters()" placeholder="Введите или вставьте текст..."></textarea>
-            <div style="display: flex; flex-direction: row;">
-                <p style="margin-right: 10px;">Количество символов (включая пробелы): <span id="with-spaces">0</span></p>
+        <!-- Контейнер для Счётчика символов и Пуш и поп-ап -->
+        <div style="display: flex; justify-content: space-between;">
+            <!-- Раздел с счётчиком символов -->
+            <section id="char-counter-section">
+                <h1>Счётчик символов</h1>
+                <textarea id="text-area" oninput="countCharacters()" placeholder="Введите или вставьте текст..."></textarea>
+                <p>Количество символов (включая пробелы): <span id="with-spaces">0</span></p>
                 <p>Количество символов (без пробелов): <span id="without-spaces">0</span></p>
-            </div>
-        </section>
+            </section>
 
-        <!-- Раздел для пуша и поп-апа -->
-        <section id="push-popup-section" class="push-popup-container">
-            <h1>Пуш и поп-ап</h1>
-            <div class="toggle-container">
-                <input type="checkbox" id="toggle-mode" onchange="toggleMode()">
-                <label for="toggle-mode">Пуш / Поп-ап</label>
+            <!-- Блок Пуш и поп-ап -->
+            <div class="push-popup-container">
+                <h1>Пуш и поп-ап</h1>
+                <label class="switch">
+                    <input type="checkbox" id="modeSwitch" onchange="toggleMode()">
+                    <span>Пуш / Поп-ап</span>
+                </label>
+                <div id="push-section">
+                    <h2>Пуш</h2>
+                    <input type="text" id="push-title" maxlength="21" placeholder="Заголовок (до 21 символа)" oninput="countPushCharacters()">
+                    <p id="push-title-count">Осталось: 21</p>
+                    <input type="text" id="push-subtitle" maxlength="108" placeholder="Подзаголовок (до 108 символов)" oninput="countPushCharacters()">
+                    <p id="push-subtitle-count">Осталось: 108</p>
+                </div>
+                <div id="popup-section" class="hidden">
+                    <h2>Поп-ап</h2>
+                    <input type="text" id="popup-title" maxlength="26" placeholder="Заголовок (до 26 символов)" oninput="countPopupCharacters()">
+                    <p id="popup-title-count">Осталось: 26</p>
+                    <input type="text" id="popup-subtitle" maxlength="108" placeholder="Подзаголовок (до 108 символов)" oninput="countPopupCharacters()">
+                    <p id="popup-subtitle-count">Осталось: 108</p>
+                </div>
             </div>
-            <div id="push-settings">
-                <h3>Заголовок (макс. 21 символ)</h3>
-                <input type="text" id="push-title" maxlength="21" oninput="countPushCharacters()" placeholder="Заголовок (макс. 21 символ)">
-                <p id="push-title-count">Осталось: 21</p>
-                <h3>Подзаголовок (макс. 108 символов)</h3>
-                <input type="text" id="push-subtitle" maxlength="108" oninput="countPushCharacters()" placeholder="Подзаголовок (макс. 108 символов)">
-                <p id="push-subtitle-count">Осталось: 108</p>
-            </div>
-            <div id="popup-settings" style="display: none;">
-                <h3>Заголовок (макс. 26 символов)</h3>
-                <input type="text" id="popup-title" maxlength="26" oninput="countPopupCharacters()" placeholder="Заголовок (макс. 26 символов)">
-                <p id="popup-title-count">Осталось: 26</p>
-                <h3>Подзаголовок (макс. 108 символов)</h3>
-                <input type="text" id="popup-subtitle" maxlength="108" oninput="countPopupCharacters()" placeholder="Подзаголовок (макс. 108 символов)">
-                <p id="popup-subtitle-count">Осталось: 108</p>
-            </div>
-        </section>
+        </div>
     </div>
 
     <script>
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(function() {
-                alert('Символ "' + text + '" скопирован!');
-            }).catch(function(err) {
-                console.error('Ошибка копирования: ', err);
-            });
-        }
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(function() {
+            alert('Символ "' + text + '" скопирован!');
+        }).catch(function(err) {
+            console.error('Ошибка копирования: ', err);
+        });
+    }
 
-        function toggleSection() {
-            const content = document.getElementById('tov-content');
-            const arrow = document.querySelector('.toggle-arrow');
-            content.classList.toggle('hidden');
-            arrow.classList.toggle('collapsed');
-        }
+    function toggleSection() {
+        const content = document.getElementById('tov-content');
+        const arrow = document.querySelector('.toggle-arrow');
+        content.classList.toggle('hidden');
+        arrow.classList.toggle('collapsed');
+    }
 
-        function countCharacters() {
-            const text = document.getElementById('text-area').value;
-            const withSpaces = text.length;
-            const withoutSpaces = text.replace(/\s+/g, '').length;
+    function countCharacters() {
+        const text = document.getElementById('text-area').value;
+        const withSpaces = text.length;
+        const withoutSpaces = text.replace(/\s+/g, '').length;
 
-            document.getElementById('with-spaces').textContent = withSpaces;
-            document.getElementById('without-spaces').textContent = withoutSpaces;
-        }
+        document.getElementById('with-spaces').textContent = withSpaces;
+        document.getElementById('without-spaces').textContent = withoutSpaces;
+    }
 
-        function toggleMode() {
-            const pushSettings = document.getElementById('push-settings');
-            const popupSettings = document.getElementById('popup-settings');
-            if (document.getElementById('toggle-mode').checked) {
-                pushSettings.style.display = 'none';
-                popupSettings.style.display = 'block';
-            } else {
-                pushSettings.style.display = 'block';
-                popupSettings.style.display = 'none';
-            }
-        }
+    function toggleMode() {
+        const isPushMode = document.getElementById('modeSwitch').checked;
+        document.getElementById('push-section').classList.toggle('hidden', !isPushMode);
+        document.getElementById('popup-section').classList.toggle('hidden', isPushMode);
+    }
 
-        function countPushCharacters() {
-            const title = document.getElementById('push-title');
-            const subtitle = document.getElementById('push-subtitle');
+    function countPushCharacters() {
+        const title = document.getElementById('push-title');
+        const subtitle = document.getElementById('push-subtitle');
 
-            document.getElementById('push-title-count').textContent = 'Осталось: ' + (21 - title.value.length);
-            document.getElementById('push-subtitle-count').
-            document.getElementById('push-subtitle-count').textContent = 'Осталось: ' + (108 - subtitle.value.length);
-        }
+        document.getElementById('push-title-count').textContent = 'Осталось: ' + (21 - title.value.length);
+        document.getElementById('push-subtitle-count').textContent = 'Осталось: ' + (108 - subtitle.value.length);
+    }
 
-        function countPopupCharacters() {
-            const title = document.getElementById('popup-title');
-            const subtitle = document.getElementById('popup-subtitle');
+    function countPopupCharacters() {
+        const title = document.getElementById('popup-title');
+        const subtitle = document.getElementById('popup-subtitle');
 
-            document.getElementById('popup-title-count').textContent = 'Осталось: ' + (26 - title.value.length);
-            document.getElementById('popup-subtitle-count').textContent = 'Осталось: ' + (108 - subtitle.value.length);
-        }
+        document.getElementById('popup-title-count').textContent = 'Осталось: ' + (26 - title.value.length);
+        document.getElementById('popup-subtitle-count').textContent = 'Осталось: ' + (108 - subtitle.value.length);
+    }
     </script>
 </body>
 </html>
