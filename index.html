@@ -21,13 +21,9 @@
 
 .emoji-list li {
     margin-bottom: 10px; /* Добавляет отступы между элементами списка */
-    }
-         /* Стиль для Ночного режима <span> */
-        details span {
-            font-weight: bold;
-            font-size: 18px;
-            margin-bottom: 10px;
         }
+        .night-mode-label {
+    margin-left: 15px; /* Задаёт отступ слева в 15px, можно изменить на нужное значение */
 }
          /* Стиль для текста внутри тега <summary> */
         details summary {
@@ -177,12 +173,13 @@
         <a href="#char-counter-section" class="nav-button" onclick="toggleSection('char-counter-section')">Счётчики символов</a>
         <a href="#tov-section" class="nav-button" onclick="toggleSection('tov-section')">TOV</a>
         <a href="#politics-section" class="nav-button" onclick="toggleSection('politics-section')">Памятник редполитике</a>
+        <a href="#stop-words" class="nav-button" onclick="toggleSection('stop-words')">Детектор стоп-слов</a>
         
         <!-- Переключатель для ночного режима -->
         <div class="switch">
             <input type="checkbox" id="night-mode-toggle" onchange="toggleNightMode()">
             <label class="switch-label" for="night-mode-toggle"></label>
-            <span> Ночной режим</span>
+             <span class="night-mode-label"> Ночной режим</span>
         </div>
     </div>
 
@@ -200,6 +197,10 @@
             <div class="symbol" onclick="copyToClipboard('–')">–</div>
         </section>
 
+ <!-- Раздел с стоп словами -->
+        <section id="stop-words" class="hidden">
+        </section>
+        
         <!-- Раздел с текстом про политику -->
         <section id="politics-section" class="hidden">
             <h1>Памятник редполитике</h1>
