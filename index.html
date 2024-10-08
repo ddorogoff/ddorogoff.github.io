@@ -198,8 +198,48 @@
         </section>
 
  <!-- Раздел с стоп словами -->
-        <section id="stop-words" class="hidden">
-        </section>
+<section id="stop-words" class="hidden">
+    <h1>Проверка на стоп-слова</h1>
+    <div style="display: flex;">
+        <!-- Левая часть для ввода текста -->
+        <div style="flex: 1; margin-right: 20px;">
+            <textarea id="text-input" placeholder="Введите или вставьте текст..." style="width: 100%; height: 150px;" oninput="highlightStopWords()"></textarea>
+        </div>
+        
+        <!-- Правая часть для объяснений -->
+        <div style="flex: 1;">
+            <h2>Объяснения</h2>
+            <p>Стоп-слова — это нежелательные слова, которые следует избегать в тексте. В нашем случае это:</p>
+            <ul>
+                <li>"работа"</li>
+                <li>"заработок"</li>
+                <li>"зарплата"</li>
+                <li>"получка"</li>
+                <li>и другие</li>
+            </ul>
+            <p>Постарайтесь заменить их на более нейтральные и корректные формулировки.</p>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Массив стоп-слов
+    const stopWords = ["работа", "заработок", "зарплата", "получка"];
+
+    function highlightStopWords() {
+        let textArea = document.getElementById("text-input");
+        let text = textArea.value;
+
+        // Преобразуем текст в HTML с выделенными стоп-словами
+        stopWords.forEach(word => {
+            let regex = new RegExp(`(${word})`, "gi");
+            text = text.replace(regex, '<span style="color: red; font-weight: bold;">$1</span>');
+        });
+
+        // Вставляем результат обратно в textarea (если планируется выделение в отдельном блоке)
+        textArea.innerHTML = text;
+    }
+</script>
         
         <!-- Раздел с текстом про политику -->
         <section id="politics-section" class="hidden">
