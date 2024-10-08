@@ -197,7 +197,7 @@
             <div class="symbol" onclick="copyToClipboard('–')">–</div>
         </section>
 
- <!-- Раздел с стоп словами -->
+<!-- Раздел с стоп словами -->
 <section id="stop-words" class="hidden">
     <h1>Проверка на стоп-слова</h1>
     <div style="display: flex;">
@@ -208,18 +208,20 @@
         
         <!-- Правая часть для объяснений -->
         <div style="flex: 1;">
-            <h2>Объяснения</h2>
-            <p>Стоп-слова — это нежелательные слова, которые следует избегать в тексте. В нашем случае это:</p>
+            <h2>Стоп-слова</h2>
+            <p>— это нежелательные слова, которые следует избегать в тексте.</p>
             <ul>
-                <li>"работа"</li>
-                <li>"заработок"</li>
-                <li>"зарплата"</li>
-                <li>"получка"</li>
+                <li>работа</li>
+                <li>заработок</li>
+                <li>зарплата</li>
+                <li>получка</li>
                 <li>и другие</li>
             </ul>
-            <p>Постарайтесь заменить их на более нейтральные и корректные формулировки.</p>
+            <p>Постарайтесь заменить их на более нейтральные и корректные формулировки. Если не знаете какие — воспользуйтесь</p>
         </div>
     </div>
+    <!-- Блок для вывода текста с подсветкой -->
+    <div id="output" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; white-space: pre-wrap;"></div>
 </section>
 
 <script>
@@ -227,17 +229,18 @@
     const stopWords = ["работа", "заработок", "зарплата", "получка"];
 
     function highlightStopWords() {
-        let textArea = document.getElementById("text-input");
-        let text = textArea.value;
+        let textArea = document.getElementById("text-input").value;
+        let outputDiv = document.getElementById("output");
 
         // Преобразуем текст в HTML с выделенными стоп-словами
+        let highlightedText = textArea;
         stopWords.forEach(word => {
             let regex = new RegExp(`(${word})`, "gi");
-            text = text.replace(regex, '<span style="color: red; font-weight: bold;">$1</span>');
+            highlightedText = highlightedText.replace(regex, '<span style="color: red; font-weight: bold;">$1</span>');
         });
 
-        // Вставляем результат обратно в textarea (если планируется выделение в отдельном блоке)
-        textArea.innerHTML = text;
+        // Вставляем результат в блок вывода (output)
+        outputDiv.innerHTML = highlightedText;
     }
 </script>
         
