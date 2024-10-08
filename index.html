@@ -18,24 +18,6 @@
     list-style-type: none; /* Убирает стандартные буллеты */
     padding-left: 0; /* Убирает отступы списка, если нужно */
 }
-        .highlighted-text {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    width: 100%;
-    height: 150px;
-    overflow: hidden;
-    border: 1px solid black;
-    padding: 5px;
-    color: black;
-    background-color: white;
-    z-index: 0;
-}
-
-.red {
-    background-color: red;
-    color: white;
-    font-weight: bold;
-}
 
 .emoji-list li {
     margin-bottom: 10px; /* Добавляет отступы между элементами списка */
@@ -224,7 +206,7 @@
             <textarea id="text-input" placeholder="Введите или вставьте текст..." style="width: 100%; height: 150px;" oninput="highlightStopWords()"></textarea>
         </div>
         
-       <!-- Раздел с стоп словами -->
+    <!-- Раздел с стоп словами -->
 <section id="stop-words" class="hidden">
     <h1>Проверка на стоп-слова</h1>
     <div style="display: flex;">
@@ -235,18 +217,20 @@
         
         <!-- Правая часть для объяснений -->
         <div style="flex: 1;">
-            <h2>Объяснения</h2>
-            <p>Стоп-слова — это нежелательные слова, которые следует избегать в тексте. В нашем случае это:</p>
+            <h2>Стоп-слова</h2>
+            <p>это нежелательные слова, которые следует избегать в тексте.</p>
             <ul>
-                <li>"работа"</li>
-                <li>"заработок"</li>
-                <li>"зарплата"</li>
-                <li>"получка"</li>
+                <li>работа</li>
+                <li>заработок</li>
+                <li>зарплата</li>
+                <li>получка</li>
                 <li>и другие</li>
             </ul>
             <p>Постарайтесь заменить их на более нейтральные и корректные формулировки.</p>
         </div>
     </div>
+    <!-- Блок для вывода текста с подсветкой -->
+    <div id="output" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; white-space: pre-wrap;"></div>
 </section>
 
 <script>
@@ -254,17 +238,18 @@
     const stopWords = ["работа", "заработок", "зарплата", "получка"];
 
     function highlightStopWords() {
-        let textArea = document.getElementById("text-input");
-        let text = textArea.value;
+        let textArea = document.getElementById("text-input").value;
+        let outputDiv = document.getElementById("output");
 
         // Преобразуем текст в HTML с выделенными стоп-словами
+        let highlightedText = textArea;
         stopWords.forEach(word => {
             let regex = new RegExp(`(${word})`, "gi");
-            text = text.replace(regex, '<span style="color: red; font-weight: bold;">$1</span>');
+            highlightedText = highlightedText.replace(regex, '<span style="color: red; font-weight: bold;">$1</span>');
         });
 
-        // Вставляем результат обратно в textarea (если планируется выделение в отдельном блоке)
-        textArea.innerHTML = text;
+        // Вставляем результат в блок вывода (output)
+        outputDiv.innerHTML = highlightedText;
     }
 </script>
         
