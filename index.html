@@ -218,50 +218,55 @@
 <!-- Раздел с стоп словами -->
 <section id="stop-words" class="hidden">
     <h1>Проверка на стоп-слова</h1>
-    <div style="position: relative;">
-        <!-- Скрытый блок для отображения текста с подсветкой -->
-        <div id="highlighted-text" class="highlighted-text"></div>
+    <div style="display: flex;">
+        <!-- Левая часть для ввода текста -->
+        <div style="flex: 1; margin-right: 20px;">
+            <textarea id="text-input" placeholder="Введите или вставьте текст..." style="width: 100%; height: 150px;" oninput="highlightStopWords()"></textarea>
+        </div>
         
-        <!-- textarea для ввода текста -->
-        <textarea id="text-input" placeholder="Введите или вставьте текст..." oninput="highlightStopWords()" style="position: absolute; top: 0; left: 0; width: 100%; height: 150px; background: transparent; color: transparent; caret-color: black; z-index: 1; border: 1px solid black; padding: 5px;"></textarea>
-    </div>
-
-    <script>
-        // Массив стоп-слов
-        const stopWords = ["работа", "заработок", "зарплата", "получка"];
-
-        // Функция подсветки стоп-слов
-        function highlightStopWords() {
-            const inputText = document.getElementById('text-input').value; // Исправлено здесь
-            const outputText = document.getElementById('highlighted-text'); // Исправлено здесь
-
-            // Экранируем специальные символы для регулярного выражения
-            const escapedStopWords = stopWords.map(word => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-            const regex = new RegExp(`\\b(${escapedStopWords.join('|')})\\b`, 'gi');
-
-            // Подсвечиваем стоп-слова
-            const highlighted = inputText.replace(regex, match => `<span class="highlight">${match}</span>`);
-
-            // Отображаем текст с подсветкой
-            outputText.innerHTML = highlighted;
-        }
-    </script>
-</section>
-    
-    <!-- Объяснения -->
-    <div style="margin-top: 20px;">
-        <h2>Объяснения</h2>
-        <p>Стоп-слова — это нежелательные слова, которые следует избегать в тексте. В нашем случае это:</p>
-        <ul>
-            <li>"работа"</li>
-            <li>"заработок"</li>
-            <li>"зарплата"</li>
-            <li>"получка"</li>
-            <li>и другие</li>
-        </ul>
-        <p>Постарайтесь заменить их на более нейтральные и корректные формулировки.</p>
+       <!-- Раздел с стоп словами -->
+<section id="stop-words" class="hidden">
+    <h1>Проверка на стоп-слова</h1>
+    <div style="display: flex;">
+        <!-- Левая часть для ввода текста -->
+        <div style="flex: 1; margin-right: 20px;">
+            <textarea id="text-input" placeholder="Введите или вставьте текст..." style="width: 100%; height: 150px;" oninput="highlightStopWords()"></textarea>
+        </div>
+        
+        <!-- Правая часть для объяснений -->
+        <div style="flex: 1;">
+            <h2>Объяснения</h2>
+            <p>Стоп-слова — это нежелательные слова, которые следует избегать в тексте. В нашем случае это:</p>
+            <ul>
+                <li>"работа"</li>
+                <li>"заработок"</li>
+                <li>"зарплата"</li>
+                <li>"получка"</li>
+                <li>и другие</li>
+            </ul>
+            <p>Постарайтесь заменить их на более нейтральные и корректные формулировки.</p>
+        </div>
     </div>
 </section>
+
+<script>
+    // Массив стоп-слов
+    const stopWords = ["работа", "заработок", "зарплата", "получка"];
+
+    function highlightStopWords() {
+        let textArea = document.getElementById("text-input");
+        let text = textArea.value;
+
+        // Преобразуем текст в HTML с выделенными стоп-словами
+        stopWords.forEach(word => {
+            let regex = new RegExp(`(${word})`, "gi");
+            text = text.replace(regex, '<span style="color: red; font-weight: bold;">$1</span>');
+        });
+
+        // Вставляем результат обратно в textarea (если планируется выделение в отдельном блоке)
+        textArea.innerHTML = text;
+    }
+</script>
         
         <!-- Раздел с текстом про политику -->
         <section id="politics-section" class="hidden">
