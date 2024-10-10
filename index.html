@@ -174,13 +174,14 @@
         <a href="#stop-words" class="nav-button" onclick="toggleSection('stop-words')">Детектор стоп-слов</a>
         <a href="#tov-section" class="nav-button" onclick="toggleSection('tov-section')">TOV</a>
         <a href="#watching" class="nav-button" onclick="toggleSection('watching')">Насмотренность</a>
+        <a href="#utm-generator" class="nav-button" onclick="toggleSection('utm-generator')">Генератор UTM-меток</a>
         <a href="#politics-section" class="nav-button" onclick="toggleSection('politics-section')">Памятник редполитике</a>
         
         <!-- Переключатель для ночного режима -->
         <div class="switch">
             <input type="checkbox" id="night-mode-toggle" onchange="toggleNightMode()">
             <label class="switch-label" for="night-mode-toggle"></label>
-             <span class="night-mode-label"> Ночной режим</span>
+            <span class="night-mode-label"> Ночной режим</span>
         </div>
     </div>
 
@@ -197,25 +198,77 @@
             <div class="symbol" onclick="copyToClipboard('•')">•</div>
             <div class="symbol" onclick="copyToClipboard('–')">–</div>
         </section>
+    
+        <!-- Раздел с генерацией UTM-меток -->
+        <section id="utm-generator" class="hidden">
+            <h1>Генерация UTM-меток</h1>
+            
+            <!-- Поле для ввода основной ссылки -->
+            <label for="base-url">Введите ссылку:</label>
+            <input type="text" id="base-url" placeholder="https://example.com" style="width: 100%; margin-bottom: 20px;">
+        
+            <!-- Поля для UTM-параметров -->
+            <div style="margin-bottom: 20px;">
+                <label for="utm-source">Источник кампании (utm_source):</label>
+                <span class="info" title="Источник трафика, например, google, newsletter, facebook и т.д.">ⓘ</span>
+                <input type="text" id="utm-source" placeholder="Пример: google" style="width: 100%;">
+            </div>
+        
+            <div style="margin-bottom: 20px;">
+                <label for="utm-medium">Тип трафика (utm_medium):</label>
+                <span class="info" title="Тип трафика, например, cpc, email, banner и т.д.">ⓘ</span>
+                <input type="text" id="utm-medium" placeholder="Пример: cpc" style="width: 100%;">
+            </div>
+        
+            <div style="margin-bottom: 20px;">
+                <label for="utm-campaign">Название кампании (utm_campaign):</label>
+                <span class="info" title="Название кампании, например, summer_sale, new_product_launch и т.д.">ⓘ</span>
+                <input type="text" id="utm-campaign" placeholder="Пример: summer_sale" style="width: 100%;">
+            </div>
+        
+            <!-- Необязательные параметры -->
+            <div style="margin-bottom: 20px;">
+                <label for="utm-content">Идентификатор объявления (utm_content):</label>
+                <span class="info" title="Идентификатор рекламного контента для различия объявлений">ⓘ</span>
+                <input type="text" id="utm-content" placeholder="Пример: banner_1" style="width: 100%;">
+            </div>
+        
+            <div style="margin-bottom: 20px;">
+                <label for="utm-term">Ключевое слово (utm_term):</label>
+                <span class="info" title="Ключевое слово, по которому показывается объявление">ⓘ</span>
+                <input type="text" id="utm-term" placeholder="Пример: buy_shoes" style="width: 100%;">
+            </div>
+        
+            <!-- Кнопка для генерации UTM-ссылки -->
+            <button onclick="generateUTM()">Генерировать UTM-метку</button>
+        
+            <!-- Поле для вывода сгенерированной UTM-ссылки -->
+            <div style="margin-top: 20px;">
+                <label for="generated-url">Сгенерированная ссылка:</label>
+                <input type="text" id="generated-url" readonly style="width: 100%; margin-bottom: 10px;">
+                <button onclick="copyToClipboard()">Копировать ссылку</button>
+            </div>
+            </section>
+
 
 <!-- Раздел насмотренность -->
-<section id="watching" class="hidden">
-    <h1>Насмотренность</h1>
-    <p>Здесь будет всё то, где можно брать идеи, гайды, образы мысли. Обычно это называют воровством, но сейчас принято называть — насмотренность.</p>
-    <h1>Гайдлайны сервисов</h1>
-    <p><a href="https://docs.google.com/document/d/1LRiQuzy4J7lOdeUz3XadQDE1AF9Ngf6Fsu29qkXln80/edit?tab=t.0#heading=h.l4p0o4ozb56c">Редполитика QIWI</a></p>
-    <p><a href="https://monzo.com/tone-of-voice/">Monzo Tone of voice</a></p>
-    <p><a href="https://guides.kontur.ru/principles/text/styleguide/">Бухгалтерский сервис Контур</a></p>
-    <p><a href="https://www.are.na/block/6813737">IKEA Tone of voice</a></p>
-    <p><a href="https://docs.google.com/document/d/1V7JFWQj_smKuBvv7ujWbPtzFPlAeoAtRV__FzaXDT6w/edit?tab=t.0#heading=h.whe0sqqiag73">Манго Tone of Voice</a></p>
-    <p><a href="https://www.figma.com/file/Lx0pi66sBA8hMQ5aYwvvYS/%D0%AF%D0%B7%D1%8B%D0%BA-%D0%A0%D0%B0%D0%B9%D1%84%D1%84%D0%B0%D0%B9%D0%B7%D0%B5%D0%BD%D0%B1%D0%B0%D0%BD%D0%BA%D0%B0-(Community)?node-id=15722%3A39022">Текст в интерфейсе Райффайзена</a></p>
-    <p><a href="http://www.sberbank.ru/common/img/uploaded/redirected/design/text.html">Текст в интерфейсах Сбера</a></p>
-    <p><a href="https://guides.gosuslugi.ru/">Редполитика Госуслуг</a></p>
-    <p><a href="https://buffer.com/resources/style-guide/">Buffer Tone of voice</a></p> 
-    <p><a href="https://cdn.shopify.com/s/files/1/0565/3423/7349/files/TikTok_guidelines.pdf?v=1630652127">TikTok for Business</a></p>
-    <p><a href="chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/viewer.html?pdfurl=https%3A%2F%2Fcomms.leeds.ac.uk%2Fwp-content%2Fuploads%2Fsites%2F7%2F2017%2F01%2Ftone_of_voice_guidelines_2016.pdf&tabId=1833703170&clen=687619&chunk=true">University of Leeds</a></p> 
-    <p><a href="https://www.figma.com/proto/4u5dhL9svYYysmn6xPiTu4/%E2%9C%8D%F0%9F%8F%BB-%D0%93%D0%B0%D0%B9%D0%B4-%D0%BF%D0%BE-%D1%82%D0%B5%D0%BA%D1%81%D1%82%D0%B0%D0%BC-%D0%B2-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B9%D1%81%D0%B5-Ozon?page-id=67%3A64748&type=design&node-id=67-65212&viewport=814%2C414%2C0.28&t=CGwyNVttYtOE0ltg-1&scaling=contain&starting-point-node-id=67%3A65212&hotspot-hints=0&utm_source=ozondesign&utm_medium=social&utm_campaign=text_guide">Гайд по текстам в интерфейсе Ozon</a></p>
-    </section>
+   <section id="watching" class="hidden">
+       <h1>Насмотренность</h1>
+       <p>Здесь будет всё то, где можно брать идеи, гайды, образы мысли. Обычно это называют воровством, но сейчас принято называть — насмотренность.</p>
+       <h1>Гайдлайны сервисов</h1>
+       <p><a href="https://docs.google.com/document/d/1LRiQuzy4J7lOdeUz3XadQDE1AF9Ngf6Fsu29qkXln80/edit?tab=t.0#heading=h.l4p0o4ozb56c">Редполитика QIWI</a></p>
+       <p><a href="https://monzo.com/tone-of-voice/">Monzo Tone of voice</a></p>
+       <p><a href="https://guides.kontur.ru/principles/text/styleguide/">Бухгалтерский сервис Контур</a></p>
+       <p><a href="https://www.are.na/block/6813737">IKEA Tone of voice</a></p>
+       <p><a href="https://docs.google.com/document/d/1V7JFWQj_smKuBvv7ujWbPtzFPlAeoAtRV__FzaXDT6w/edit?tab=t.0#heading=h.whe0sqqiag73">Манго Tone of Voice</a></p>
+       <p><a href="https://www.figma.com/file/Lx0pi66sBA8hMQ5aYwvvYS/%D0%AF%D0%B7%D1%8B%D0%BA-%D0%A0%D0%B0%D0%B9%D1%84%D1%84%D0%B0%D0%B9%D0%B7%D0%B5%D0%BD%D0%B1%D0%B0%D0%BD%D0%BA%D0%B0-(Community)?node-id=15722%3A39022">Текст в интерфейсе Райффайзена</a></p>
+       <p><a href="http://www.sberbank.ru/common/img/uploaded/redirected/design/text.html">Текст в интерфейсах Сбера</a></p>
+       <p><a href="https://guides.gosuslugi.ru/">Редполитика Госуслуг</a></p>
+       <p><a href="https://buffer.com/resources/style-guide/">Buffer Tone of voice</a></p> 
+       <p><a href="https://cdn.shopify.com/s/files/1/0565/3423/7349/files/TikTok_guidelines.pdf?v=1630652127">TikTok for Business</a></p>
+       <p><a href="chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/viewer.html?pdfurl=https%3A%2F%2Fcomms.leeds.ac.uk%2Fwp-content%2Fuploads%2Fsites%2F7%2F2017%2F01%2Ftone_of_voice_guidelines_2016.pdf&tabId=1833703170&clen=687619&chunk=true">University of Leeds</a></p> 
+       <p><a href="https://www.figma.com/proto/4u5dhL9svYYysmn6xPiTu4/%E2%9C%8D%F0%9F%8F%BB-%D0%93%D0%B0%D0%B9%D0%B4-%D0%BF%D0%BE-%D1%82%D0%B5%D0%BA%D1%81%D1%82%D0%B0%D0%BC-%D0%B2-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B9%D1%81%D0%B5-Ozon?page-id=67%3A64748&type=design&node-id=67-65212&viewport=814%2C414%2C0.28&t=CGwyNVttYtOE0ltg-1&scaling=contain&starting-point-node-id=67%3A65212&hotspot-hints=0&utm_source=ozondesign&utm_medium=social&utm_campaign=text_guide">Гайд по текстам в интерфейсе Ozon</a></p>
+       </section>
 
         <!-- Раздел с стоп словами -->
 <section id="stop-words" class="hidden">
@@ -625,6 +678,37 @@
                 popupSettings.style.display = 'none';
             }
         }
+         // Функция для генерации UTM-ссылки
+    function generateUTM() {
+        const baseUrl = document.getElementById('base-url').value;
+        const utmSource = document.getElementById('utm-source').value;
+        const utmMedium = document.getElementById('utm-medium').value;
+        const utmCampaign = document.getElementById('utm-campaign').value;
+        const utmContent = document.getElementById('utm-content').value;
+        const utmTerm = document.getElementById('utm-term').value;
+
+        // Проверка, что обязательные параметры заполнены
+        if (!baseUrl || !utmSource || !utmMedium || !utmCampaign) {
+            alert('Пожалуйста, заполните обязательные поля (ссылка, utm_source, utm_medium, utm_campaign).');
+            return;
+        }
+
+        // Формирование UTM-метки
+        let utmUrl = `${baseUrl}?utm_source=${utmSource}&utm_medium=${utmMedium}&utm_campaign=${utmCampaign}`;
+        if (utmContent) utmUrl += `&utm_content=${utmContent}`;
+        if (utmTerm) utmUrl += `&utm_term=${utmTerm}`;
+
+        // Вывод сгенерированной ссылки
+        document.getElementById('generated-url').value = utmUrl;
+    }
+
+    // Функция для копирования сгенерированной UTM-ссылки в буфер обмена
+    function copyToClipboard() {
+        const generatedUrl = document.getElementById('generated-url');
+        generatedUrl.select();
+        document.execCommand('copy');
+        alert('Ссылка скопирована!');
+    }
     </script>
 
 </body>
