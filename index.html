@@ -186,7 +186,7 @@
     <!-- Основной контент -->
     <div class="content">
         <!-- Раздел с копированием символов -->
-        <section id="copy-section" class="hidden">
+        <section id="copy-section">
             <h1>Копируйте символы</h1>
             <div class="symbol" onclick="copyToClipboard('→')">→</div>
             <div class="symbol" onclick="copyToClipboard('«')">«</div>
@@ -245,7 +245,7 @@
             <div style="margin-top: 20px;">
                 <label for="generated-url">Сгенерированная ссылка:</label>
                 <input type="text" id="generated-url" readonly style="width: 100%; margin-bottom: 10px;">
-                <button onclick="copyToClipboard()">Копировать ссылку</button>
+                <button onclick="copyUTMToClipboard()">Копировать ссылку</button>
             </div>
              <p>При желании ссылку можно сократить с помощью <a href="https://clck.ru/">clck.ru</a>
             </section>
@@ -618,13 +618,12 @@
             document.getElementById(sectionId).classList.remove('hidden');
         }
 
-        // Функция для копирования текста в буфер обмена
         function copyToClipboard(text) {
-            navigator.clipboard.writeText(text)
-                .catch(err => {
-                    console.error('Ошибка при копировании: ', err);
-                });
-        }
+        navigator.clipboard.writeText(text).then(function() {
+        }).catch(function(err) {
+            console.error('Ошибка копирования: ', err);
+        });
+    }
 
         // Функция для обновления счётчика символов
         function countCharacters() {
@@ -694,12 +693,12 @@
         document.getElementById('generated-url').value = utmUrl;
     }
 
-    // Функция для копирования сгенерированной UTM-ссылки в буфер обмена
-    function copyToClipboard() {
-        const generatedUrl = document.getElementById('generated-url');
-        generatedUrl.select();
-        document.execCommand('copy');
-    }
+   // Функция для копирования сгенерированной UTM-ссылки в буфер обмена
+function copyUTMToClipboard() {
+    const generatedUrl = document.getElementById('generated-url');
+    generatedUrl.select();
+    document.execCommand('copy');
+}
     </script>
 
 </body>
