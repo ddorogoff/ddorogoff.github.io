@@ -815,9 +815,9 @@ function updateCityTimes() {
         cityBlock.className = "city-block";
         cityBlock.innerHTML = `
             <h4>${city.name}</h4>
-            <p>Местное время: ${localTime}</p>
-            <p>Московское время: ${moscowTime}</p>
-            <p>Разница с Москвой: ${timeDifference} ч.</p>
+            <p>Местное: ${localTime}</p>
+            <p>Московское: ${moscowTime}</p>
+            <p>Разница: ${timeDifference} ч.</p>
         `;
         cityTimeGrid.appendChild(cityBlock);
     });
