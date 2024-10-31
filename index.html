@@ -162,6 +162,18 @@
         input:checked + .switch-label:before {
             transform: translateX(25px);
         }
+        .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.city-block {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
     </style>
 </head>
 <body>
@@ -174,6 +186,7 @@
         <a href="#stop-words" class="nav-button" onclick="toggleSection('stop-words')">Детектор стоп-слов</a>
         <a href="#watching" class="nav-button" onclick="toggleSection('watching')">Насмотренность</a>
         <a href="#utm-generator" class="nav-button" onclick="toggleSection('utm-generator')">Генератор UTM-меток</a>
+        <a href="#time-section" class="nav-button" onclick="toggleSection('time-section')">Время</a>
         
         <!-- Переключатель для ночного режима -->
         <div class="switch">
@@ -250,7 +263,16 @@
             </div>
              <p>При желании ссылку можно сократить с помощью <a href="https://clck.ru/">clck.ru</a>
             </section>
+<!-- Раздел для отображения времени -->
+<section id="time-section" style="display: none;">
+    <h2>Московское время</h2>
+    <div id="moscow-time">00:00:00</div>
 
+    <h3>Города России</h3>
+    <div id="city-time-grid" class="grid-container">
+        <!-- Здесь будут отображаться города и их время -->
+    </div>
+</section>
 
 <!-- Раздел насмотренность -->
    <section id="watching" class="hidden">
@@ -670,6 +692,85 @@
                 popupSettings.style.display = 'none';
             }
         }
+
+        // Функция для переключения между разделами
+function toggleSection(sectionId) {
+    document.querySelectorAll('section').forEach(section => {
+        section.style.display = 'none';
+    });
+    document.getElementById(sectionId).style.display = 'block';
+
+    if (sectionId === 'time-section') {
+        showTime();
+    }
+}
+
+// Показ московского времени
+function showTime() {
+    updateMoscowTime();
+    updateCityTimes();
+}
+
+// Обновление московского времени в реальном времени
+function updateMoscowTime() {
+    setInterval(() => {
+        const moscowTime = new Date().toLocaleString("ru-RU", { timeZone: "Europe/Moscow", hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        document.getElementById("moscow-time").innerText = moscowTime;
+    }, 1000);
+}
+
+// Обновление времени для каждого города
+function updateCityTimes() {
+    const cities = [
+        { name: "Альметьевск", timeZone: "Europe/Moscow" },
+        { name: "Архангельск", timeZone: "Europe/Moscow" },
+        { name: "Адлер", timeZone: "Europe/Moscow" },
+        { name: "Анапа", timeZone: "Europe/Moscow" },
+        { name: "Белгород", timeZone: "Europe/Moscow" },
+        { name: "Великий Новгород", timeZone: "Europe/Moscow" },
+        // Добавляем остальные города
+        { name: "Барнаул", timeZone: "Asia/Barnaul" },
+        { name: "Владивосток", timeZone: "Asia/Vladivostok" },
+        { name: "Хабаровск", timeZone: "Asia/Vladivostok" },
+        { name: "Калининград", timeZone: "Europe/Kaliningrad" },
+        { name: "Екатеринбург", timeZone: "Asia/Yekaterinburg" },
+        { name: "Челябинск", timeZone: "Asia/Yekaterinburg" },
+        { name: "Новосибирск", timeZone: "Asia/Novosibirsk" },
+        { name: "Омск", timeZone: "Asia/Omsk" },
+        { name: "Красноярск", timeZone: "Asia/Krasnoyarsk" },
+        { name: "Иркутск", timeZone: "Asia/Irkutsk" },
+        // Добавить другие города, как необходимо
+    ];
+
+    const cityTimeGrid = document.getElementById("city-time-grid");
+    cityTimeGrid.innerHTML = ""; // Очищаем для обновления
+
+    cities.forEach(city => {
+        const localTime = new Date().toLocaleString("ru-RU", { timeZone: city.timeZone, hour: '2-digit', minute: '2-digit' });
+        const moscowTime = new Date().toLocaleString("ru-RU", { timeZone: "Europe/Moscow", hour: '2-digit', minute: '2-digit' });
+        const timeDifference = calculateTimeDifference(city.timeZone);
+
+        // Создаем блок для города
+        const cityBlock = document.createElement("div");
+        cityBlock.className = "city-block";
+        cityBlock.innerHTML = `
+            <h4>${city.name}</h4>
+            <p>Местное время: ${localTime}</p>
+            <p>Московское время: ${moscowTime}</p>
+            <p>Разница с Москвой: ${timeDifference} ч.</p>
+        `;
+        cityTimeGrid.appendChild(cityBlock);
+    });
+}
+
+// Расчет разницы во времени с Москвой
+function calculateTimeDifference(cityTimeZone) {
+    const moscowDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Moscow" });
+    const cityDate = new Date().toLocaleString("en-US", { timeZone: cityTimeZone });
+
+    const diff = (new Date(cityDate) - new Date(moscowDate)) / (1000 * 60 * 60);
+    return diff.toFixed(1); // Разница в часах
+}
          // Функция для генерации UTM-ссылки
     function generateUTM() {
         const baseUrl = document.getElementById('base-url').value;
