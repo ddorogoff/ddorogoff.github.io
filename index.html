@@ -708,16 +708,20 @@
             } else {
                 pushSettings.style.display = 'block';
                 popupSettings.style.display = 'none';
-            }
+                  }
         }
-    // Функция для переключения между разделами
-    function toggleSection(sectionId) {
-        document.querySelectorAll('section').forEach(section => {
-            section.style.display = 'none';
-        });
-        document.getElementById(sectionId).style.display = 'block';
-    }
 
+        // Функция для переключения между разделами
+function toggleSection(sectionId) {
+    document.querySelectorAll('section').forEach(section => {
+        section.style.display = 'none';
+    });
+    document.getElementById(sectionId).style.display = 'block';
+
+    if (sectionId === 'time-section') {
+        showTime();
+    }
+}
     function showTime() {
         updateMoscowTime();
         updateCityTimes();
