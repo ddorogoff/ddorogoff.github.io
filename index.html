@@ -263,12 +263,13 @@
             </div>
              <p>При желании ссылку можно сократить с помощью <a href="https://clck.ru/">clck.ru</a>
             </section>
+        
 <!-- Раздел для отображения времени -->
 <section id="time-section" style="display: none;">
     <h2>Московское время</h2>
     <div>
-    <h2>Текущее московское время: <span id="moscowTime"></span></h2>
-    <div id="filterButtons">
+        <h2>Текущее московское время: <span id="moscowTime"></span></h2>
+        <div id="cityTimeGrid"></div>
         <button onclick="filterCities(0)">Убрать города с московским временем</button>
         <button onclick="filterCities(1)">+1ч</button>
         <button onclick="filterCities(2)">+2ч</button>
@@ -282,16 +283,11 @@
         <button onclick="filterCities(-2)">-2ч</button>
         <button onclick="filterCities(-3)">-3ч</button>
     </div>
-</div>
-
-<div id="cityTimeGrid"></div>
-    <div id="moscow-time">00:00:00</div>
-
+    
     <h3>Города России</h3>
-    <div id="city-time-grid" class="grid-container">
+    <div id="cityTimeGrid" class="grid-container">
         <!-- Здесь будут отображаться города и их время -->
     </div>
-    
 </section>
 
 <!-- Раздел насмотренность -->
@@ -723,19 +719,20 @@ function toggleSection(sectionId) {
     if (sectionId === 'time-section') {
         showTime();
     }
-}
 // Показ московского времени
 function showTime() {
     updateMoscowTime();
     updateCityTimes();
 }
+
 // Обновление московского времени в реальном времени
 function updateMoscowTime() {
     setInterval(() => {
         const moscowTime = new Date().toLocaleString("ru-RU", { timeZone: "Europe/Moscow", hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        document.getElementById("moscow-time").innerText = moscowTime;
+        document.getElementById("moscowTime").innerText = moscowTime; // Исправлено на правильный id
     }, 1000);
 }
+
 // Обновление времени для каждого города
 function updateCityTimes() {
     const cities = [
@@ -824,44 +821,39 @@ function updateCityTimes() {
         { name: "Владивосток", timeZone: "Asia/Vladivostok" },
         { name: "Хабаровск", timeZone: "Asia/Vladivostok" }
     ];
-    const cityTimeGrid = document.getElementById("city-time-grid");
-    cityTimeGrid.innerHTML = ""; // Очищаем для обновления
-    cities.forEach(city => {
-        const localTime = new Date().toLocaleString("ru-RU", { timeZone: city.timeZone, hour: '2-digit', minute: '2-digit' });
-        const moscowTime = new Date().toLocaleString("ru-RU", { timeZone: "Europe/Moscow", hour: '2-digit', minute: '2-digit' });
-        const timeDifference = calculateTimeDifference(city.timeZone);
-        // Создаем блок для города
-        const cityBlock = document.createElement("div");
-        cityBlock.className = "city-block";
-        cityBlock.innerHTML = `
-            <h4>${city.name}</h4>
-            <p>Местное время: ${localTime}</p>
-            <p>Московское время: ${moscowTime}</p>
-            <p>Разница с Москвой: ${timeDifference} ч.</p>
-        `;
-        cityTimeGrid.appendChild(cityBlock);
-    });
-// Функция для фильтрации по часовому поясу
-        function filterCities(difference) {
-            const cityBlocks = document.querySelectorAll(".city-block");
-            cityBlocks.forEach(block => {
-                if (difference === 0) {
-                    // Убираем города с московским временем
-                    block.style.display = block.classList.contains("diff-0") ? "none" : "block";
-                } else {
-                    // Отображаем только города с заданной разницей
-                    block.style.display = block.classList.contains(`diff-${difference}`) ? "block" : "none";
-                }
-            });
-        }
 
-        // Расчет разницы во времени с Москвой
-        function calculateTimeDifference(cityTimeZone) {
-            const moscowDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Moscow" });
-            const cityDate = new Date().toLocaleString("en-US", { timeZone: cityTimeZone });
-            const diff = (new Date(cityDate) - new Date(moscowDate)) / (1000 * 60 * 60);
-            return diff.toFixed(1); // Разница в часах
+    const cityTimeGrid = document.getElementById("cityTimeGrid");
+    cityTimeGrid.innerHTML = ""; // Очищаем для обновления
+
+    // Создаем контейнеры для группировки городов
+    const groups = {};
+    cities.forEach(city => {
+        const timeDifference = calculateTimeDifference(city.timeZone);
+        const groupKey = `Москва ${timeDifference} ч`; // Создаем ключ для группировки
+        if (!groups[groupKey]) {
+            groups[groupKey] = [];
         }
+        groups[groupKey].push({ name: city.name, timeZone: city.timeZone, timeDifference });
+    });
+
+    // Генерация HTML для каждой группы
+    for (const group in groups) {
+        const groupBlock = document.createElement("div");
+        groupBlock.className = "city-group";
+        groupBlock.innerHTML = `<h3>${group}</h3>`;
+        groups[group].forEach(city => {
+            const localTime = new Date().toLocaleString("ru-RU", { timeZone: city.timeZone, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            groupBlock.innerHTML += `<div class="city">${city.name}: ${localTime} <span class="difference">(разница ${city.timeDifference} ч)</span></div>`;
+        });
+        cityTimeGrid.appendChild(groupBlock);
+    }
+}
+
+// Расчет разницы во времени
+function calculateTimeDifference(timeZone) {
+    const moscowOffset = new Date().toLocaleString("ru-RU", { timeZone: "Europe/Moscow" }).getTimezoneOffset();
+    const cityOffset = new Date().toLocaleString("ru-RU", { timeZone }).getTimezoneOffset();
+    return (cityOffset - moscowOffset) / 60; // Возвращаем разницу в часах
 }
          // Функция для генерации UTM-ссылки
     function generateUTM() {
