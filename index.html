@@ -266,12 +266,32 @@
 <!-- Раздел для отображения времени -->
 <section id="time-section" style="display: none;">
     <h2>Московское время</h2>
+    <div>
+    <h2>Текущее московское время: <span id="moscowTime"></span></h2>
+    <div id="filterButtons">
+        <button onclick="filterCities(0)">Убрать города с московским временем</button>
+        <button onclick="filterCities(1)">+1ч</button>
+        <button onclick="filterCities(2)">+2ч</button>
+        <button onclick="filterCities(3)">+3ч</button>
+        <button onclick="filterCities(4)">+4ч</button>
+        <button onclick="filterCities(5)">+5ч</button>
+        <button onclick="filterCities(6)">+6ч</button>
+        <button onclick="filterCities(7)">+7ч</button>
+        <button onclick="filterCities(8)">+8ч</button>
+        <button onclick="filterCities(-1)">-1ч</button>
+        <button onclick="filterCities(-2)">-2ч</button>
+        <button onclick="filterCities(-3)">-3ч</button>
+    </div>
+</div>
+
+<div id="cityTimeGrid"></div>
     <div id="moscow-time">00:00:00</div>
 
     <h3>Города России</h3>
     <div id="city-time-grid" class="grid-container">
         <!-- Здесь будут отображаться города и их время -->
     </div>
+    
 </section>
 
 <!-- Раздел насмотренность -->
