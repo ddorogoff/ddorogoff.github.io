@@ -267,7 +267,6 @@
 <section id="time-section" style="display: none;">
     <h2>Московское время</h2>
     <div>
-        <h2>Текущее московское время: <span id="moscowTime"></span></h2>
         <div id="cityTimeGrid"></div>
         <button onclick="filterCities(0)">Убрать города с московским временем</button>
         <button onclick="filterCities(1)">+1ч</button>
@@ -847,9 +846,9 @@ function toggleSection(sectionId) {
             cityBlock.classList.add(`diff-${timeDifference}`);
             cityBlock.innerHTML = `
                 <h4>${city.name}</h4>
-                <p>Местное время: ${localTime}</p>
-                <p>Московское время: ${moscowTime}</p>
-                <p>Разница с Москвой: ${timeDifference} ч.</p>
+                <p>Местное: ${localTime}</p>
+                <p>Московское: ${moscowTime}</p>
+                <p>Разница: ${timeDifference} ч.</p>
             `;
             citiesGrid.appendChild(cityBlock);
         });
