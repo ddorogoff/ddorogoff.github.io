@@ -841,13 +841,27 @@ function updateCityTimes() {
         `;
         cityTimeGrid.appendChild(cityBlock);
     });
-}
-// Расчет разницы во времени с Москвой
-function calculateTimeDifference(cityTimeZone) {
-    const moscowDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Moscow" });
-    const cityDate = new Date().toLocaleString("en-US", { timeZone: cityTimeZone });
-    const diff = (new Date(cityDate) - new Date(moscowDate)) / (1000 * 60 * 60);
-    return diff.toFixed(1); // Разница в часах
+// Функция для фильтрации по часовому поясу
+        function filterCities(difference) {
+            const cityBlocks = document.querySelectorAll(".city-block");
+            cityBlocks.forEach(block => {
+                if (difference === 0) {
+                    // Убираем города с московским временем
+                    block.style.display = block.classList.contains("diff-0") ? "none" : "block";
+                } else {
+                    // Отображаем только города с заданной разницей
+                    block.style.display = block.classList.contains(`diff-${difference}`) ? "block" : "none";
+                }
+            });
+        }
+
+        // Расчет разницы во времени с Москвой
+        function calculateTimeDifference(cityTimeZone) {
+            const moscowDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Moscow" });
+            const cityDate = new Date().toLocaleString("en-US", { timeZone: cityTimeZone });
+            const diff = (new Date(cityDate) - new Date(moscowDate)) / (1000 * 60 * 60);
+            return diff.toFixed(1); // Разница в часах
+        }
 }
          // Функция для генерации UTM-ссылки
     function generateUTM() {
