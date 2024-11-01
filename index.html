@@ -265,35 +265,15 @@
             </section>
 <!-- Раздел для отображения времени -->
 <section id="time-section" style="display: none;">
-   
     <h2>Московское время</h2>
     <div id="moscow-time">00:00:00</div>
-    <div>
-    <h2>Текущее московское время: <span id="moscow-time"></span></h2>
-    <div id="filterButtons">
-        <button onclick="filterCities(0)">Убрать города с московским временем</button>
-        <button onclick="filterCities(1)">+1ч</button>
-        <button onclick="filterCities(2)">+2ч</button>
-        <button onclick="filterCities(3)">+3ч</button>
-        <button onclick="filterCities(4)">+4ч</button>
-        <button onclick="filterCities(5)">+5ч</button>
-        <button onclick="filterCities(6)">+6ч</button>
-        <button onclick="filterCities(7)">+7ч</button>
-        <button onclick="filterCities(8)">+8ч</button>
-        <button onclick="filterCities(-1)">-1ч</button>
-        <button onclick="filterCities(-2)">-2ч</button>
-        <button onclick="filterCities(-3)">-3ч</button>
-    </div>
-</div>
 
-<div id="city-time-grid"></div>
     <h3>Города России</h3>
     <div id="city-time-grid" class="grid-container">
         <!-- Здесь будут отображаться города и их время -->
     </div>
-
 </section>
-        
+
 <!-- Раздел насмотренность -->
    <section id="watching" class="hidden">
     <h1>Насмотренность</h1>
@@ -515,6 +495,8 @@
                 <p>Н. Галь <a href="https://bookscafe.net/read/gal_nora-slovo_zhivoe_i_mertvoe-30296.html#p1">Слово живое и мертвое»</a></p>
                 <p>А. Мильчин, Л. Чельцова <a href="https://orfogrammka.ru/OGL03/70091323.html">«Справочник издателя и автора»</a></p>
              </details>
+            
+
     </section>
 
         <!-- Раздел с стоп словами -->
@@ -708,7 +690,7 @@
             } else {
                 pushSettings.style.display = 'block';
                 popupSettings.style.display = 'none';
-                  }
+            }
         }
 
         // Функция для переключения между разделами
@@ -823,50 +805,29 @@ function updateCityTimes() {
         { name: "Хабаровск", timeZone: "Asia/Vladivostok" }
     ];
     const cityTimeGrid = document.getElementById("city-time-grid");
-        cityTimeGrid.innerHTML = ""; // Очищаем для обновления
-
-        cities.forEach(city => {
-            const localTime = new Date().toLocaleString("ru-RU", { timeZone: city.timeZone, hour: '2-digit', minute: '2-digit' });
-            const moscowTime = new Date().toLocaleString("ru-RU", { timeZone: "Europe/Moscow", hour: '2-digit', minute: '2-digit' });
-            const timeDifference = calculateTimeDifference(city.timeZone);
-
-            // Создаем блок для города
-            const cityBlock = document.createElement("div");
-            cityBlock.className = `city-block diff-${Math.round(timeDifference)}`; // добавляем класс с разницей времени
-            cityBlock.innerHTML = `
-                <h4>${city.name}</h4>
-                <p>Местное время: ${localTime}</p>
-                <p>Московское время: ${moscowTime}</p>
-                <p>Разница с Москвой: ${timeDifference} ч.</p>
-            `;
-            cityTimeGrid.appendChild(cityBlock);
-        });
-    }
-
-    // Функция для фильтрации по часовому поясу
-    function filterCities(difference) {
-        const cityBlocks = document.querySelectorAll(".city-block");
-        cityBlocks.forEach(block => {
-            if (difference === 0) {
-                // Отображаем только города с московским временем
-                block.style.display = block.classList.contains("diff-0") ? "block" : "none";
-            } else {
-                // Отображаем только города с заданной разницей
-                block.style.display = block.classList.contains(`diff-${difference}`) ? "block" : "none";
-            }
-        });
-    }
-
-    // Расчет разницы во времени с Москвой
-    function calculateTimeDifference(cityTimeZone) {
-        const moscowDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Moscow" });
-        const cityDate = new Date().toLocaleString("en-US", { timeZone: cityTimeZone });
-        const diff = (new Date(cityDate) - new Date(moscowDate)) / (1000 * 60 * 60);
-        return diff.toFixed(1); // Разница в часах
-    }
-
-    // Запуск обновлений
-    showTime();
+    cityTimeGrid.innerHTML = ""; // Очищаем для обновления
+    cities.forEach(city => {
+        const localTime = new Date().toLocaleString("ru-RU", { timeZone: city.timeZone, hour: '2-digit', minute: '2-digit' });
+        const moscowTime = new Date().toLocaleString("ru-RU", { timeZone: "Europe/Moscow", hour: '2-digit', minute: '2-digit' });
+        const timeDifference = calculateTimeDifference(city.timeZone);
+        // Создаем блок для города
+        const cityBlock = document.createElement("div");
+        cityBlock.className = "city-block";
+        cityBlock.innerHTML = `
+            <h4>${city.name}</h4>
+            <p>Местное время: ${localTime}</p>
+            <p>Московское время: ${moscowTime}</p>
+            <p>Разница с Москвой: ${timeDifference} ч.</p>
+        `;
+        cityTimeGrid.appendChild(cityBlock);
+    });
+}
+// Расчет разницы во времени с Москвой
+function calculateTimeDifference(cityTimeZone) {
+    const moscowDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Moscow" });
+    const cityDate = new Date().toLocaleString("en-US", { timeZone: cityTimeZone });
+    const diff = (new Date(cityDate) - new Date(moscowDate)) / (1000 * 60 * 60);
+    return diff.toFixed(1); // Разница в часах
 }
          // Функция для генерации UTM-ссылки
     function generateUTM() {
