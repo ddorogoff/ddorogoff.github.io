@@ -265,15 +265,11 @@
             </section>
 <!-- Раздел для отображения времени -->
 <section id="time-section" style="display: none;">
+   
     <h2>Московское время</h2>
     <div id="moscow-time">00:00:00</div>
-
-    <h3>Города России</h3>
-    <div id="city-time-grid" class="grid-container">
-        <!-- Здесь будут отображаться города и их время -->
-    </div>
     <div>
-    <h2>Текущее московское время: <span id="moscowTime"></span></h2>
+    <h2>Текущее московское время: <span id="moscow-time"></span></h2>
     <div id="filterButtons">
         <button onclick="filterCities(0)">Убрать города с московским временем</button>
         <button onclick="filterCities(1)">+1ч</button>
@@ -290,7 +286,12 @@
     </div>
 </div>
 
-<div id="cityTimeGrid"></div>
+<div id="city-time-grid"></div>
+    <h3>Города России</h3>
+    <div id="city-time-grid" class="grid-container">
+        <!-- Здесь будут отображаться города и их время -->
+    </div>
+
 </section>
         
 <!-- Раздел насмотренность -->
@@ -716,120 +717,41 @@ function toggleSection(sectionId) {
         section.style.display = 'none';
     });
     document.getElementById(sectionId).style.display = 'block';
-
-    if (sectionId === 'time-section') {
-        showTime();
-    }
-}
-// Показ московского времени
+   }
+        }
 function showTime() {
     updateMoscowTime();
     updateCityTimes();
 }
-// Обновление московского времени в реальном времени
+
 function updateMoscowTime() {
     setInterval(() => {
         const moscowTime = new Date().toLocaleString("ru-RU", { timeZone: "Europe/Moscow", hour: '2-digit', minute: '2-digit', second: '2-digit' });
         document.getElementById("moscow-time").innerText = moscowTime;
     }, 1000);
 }
-// Обновление времени для каждого города
+
 function updateCityTimes() {
     const cities = [
         { name: "Альметьевск", timeZone: "Europe/Moscow" },
         { name: "Архангельск", timeZone: "Europe/Moscow" },
-        { name: "Адлер", timeZone: "Europe/Moscow" },
-        { name: "Анапа", timeZone: "Europe/Moscow" },
-        { name: "Белгород", timeZone: "Europe/Moscow" },
-        { name: "Брянск", timeZone: "Europe/Moscow" },
-        { name: "Великий Новгород", timeZone: "Europe/Moscow" },
-        { name: "Владикавказ", timeZone: "Europe/Moscow" },
-        { name: "Владимир", timeZone: "Europe/Moscow" },
-        { name: "Волгоград", timeZone: "Europe/Volgograd" },
-        { name: "Волжский", timeZone: "Europe/Volgograd" },
-        { name: "Воронеж", timeZone: "Europe/Moscow" },
-        { name: "Вологда", timeZone: "Europe/Moscow" },
-        { name: "Геленджик", timeZone: "Europe/Moscow" },
-        { name: "Дзержинск", timeZone: "Europe/Moscow" },
-        { name: "Иваново", timeZone: "Europe/Moscow" },
-        { name: "Йошкар-Ола", timeZone: "Europe/Moscow" },
-        { name: "Казань", timeZone: "Europe/Moscow" },
-        { name: "Калуга", timeZone: "Europe/Moscow" },
-        { name: "Киров", timeZone: "Europe/Moscow" },
-        { name: "Колпино", timeZone: "Europe/Moscow" },
-        { name: "Кострома", timeZone: "Europe/Moscow" },
-        { name: "Краснодар", timeZone: "Europe/Moscow" },
-        { name: "Курск", timeZone: "Europe/Moscow" },
-        { name: "Липецк", timeZone: "Europe/Moscow" },
-        { name: "Набережные Челны", timeZone: "Europe/Moscow" },
-        { name: "Нальчик", timeZone: "Europe/Moscow" },
-        { name: "Нижнекамск", timeZone: "Europe/Moscow" },
-        { name: "Нижний Новгород", timeZone: "Europe/Moscow" },
-        { name: "Новороссийск", timeZone: "Europe/Moscow" },
-        { name: "Майкоп", timeZone: "Europe/Moscow" },
-        { name: "Московская область", timeZone: "Europe/Moscow" },
-        { name: "Мурманск", timeZone: "Europe/Moscow" },
-        { name: "Санкт-Петербург", timeZone: "Europe/Moscow" },
-        { name: "Старый Оскол", timeZone: "Europe/Moscow" },
-        { name: "Сыктывкар", timeZone: "Europe/Moscow" },
-        { name: "Обнинск", timeZone: "Europe/Moscow" },
-        { name: "Орёл", timeZone: "Europe/Moscow" },
-        { name: "Пенза", timeZone: "Europe/Moscow" },
-        { name: "Петрозаводск", timeZone: "Europe/Moscow" },
-        { name: "Псков", timeZone: "Europe/Moscow" },
-        { name: "Пятигорск", timeZone: "Europe/Moscow" },
-        { name: "Ростов-на-Дону", timeZone: "Europe/Moscow" },
-        { name: "Рязань", timeZone: "Europe/Moscow" },
-        { name: "Саранск", timeZone: "Europe/Moscow" },
-        { name: "Смоленск", timeZone: "Europe/Moscow" },
-        { name: "Сочи", timeZone: "Europe/Moscow" },
-        { name: "Ставрополь", timeZone: "Europe/Moscow" },
-        { name: "Таганрог", timeZone: "Europe/Moscow" },
-        { name: "Тамбов", timeZone: "Europe/Moscow" },
-        { name: "Тверь", timeZone: "Europe/Moscow" },
-        { name: "Тула", timeZone: "Europe/Moscow" },
-        { name: "Чебоксары", timeZone: "Europe/Moscow" },
-        { name: "Череповец", timeZone: "Europe/Moscow" },
-        { name: "Ярославль", timeZone: "Europe/Moscow" },
-        { name: "Калининград", timeZone: "Europe/Kaliningrad" },
-        { name: "Астрахань", timeZone: "Europe/Volgograd" },
-        { name: "Ижевск", timeZone: "Europe/Samara" },
-        { name: "Самара", timeZone: "Europe/Samara" },
-        { name: "Саратов", timeZone: "Europe/Saratov" },
-        { name: "Тольятти", timeZone: "Europe/Samara" },
-        { name: "Ульяновск", timeZone: "Europe/Ulyanovsk" },
-        { name: "Екатеринбург", timeZone: "Asia/Yekaterinburg" },
-        { name: "Магнитогорск", timeZone: "Asia/Yekaterinburg" },
-        { name: "Нижневартовск", timeZone: "Asia/Yekaterinburg" },
-        { name: "Новый Уренгой", timeZone: "Asia/Yekaterinburg" },
-        { name: "Оренбург", timeZone: "Asia/Yekaterinburg" },
-        { name: "Пермь", timeZone: "Asia/Yekaterinburg" },
-        { name: "Стерлитамак", timeZone: "Asia/Yekaterinburg" },
-        { name: "Сургут", timeZone: "Asia/Yekaterinburg" },
-        { name: "Тюмень", timeZone: "Asia/Yekaterinburg" },
-        { name: "Уфа", timeZone: "Asia/Yekaterinburg" },
-        { name: "Ханты-Мансийск", timeZone: "Asia/Yekaterinburg" },
-        { name: "Челябинск", timeZone: "Asia/Yekaterinburg" },
-        { name: "Омск", timeZone: "Asia/Omsk" },
-        { name: "Барнаул", timeZone: "Asia/Barnaul" },
-        { name: "Кемерово", timeZone: "Asia/Novokuznetsk" },
-        { name: "Красноярск", timeZone: "Asia/Krasnoyarsk" },
-        { name: "Новокузнецк", timeZone: "Asia/Novokuznetsk" },
-        { name: "Новосибирск", timeZone: "Asia/Novosibirsk" },
-        { name: "Томск", timeZone: "Asia/Tomsk" },
-        { name: "Иркутск", timeZone: "Asia/Irkutsk" },
         { name: "Владивосток", timeZone: "Asia/Vladivostok" },
-        { name: "Хабаровск", timeZone: "Asia/Vladivostok" }
+        { name: "Калининград", timeZone: "Europe/Kaliningrad" },
+        { name: "Самара", timeZone: "Europe/Samara" },
+        // Добавьте остальные города
     ];
+
     const cityTimeGrid = document.getElementById("city-time-grid");
     cityTimeGrid.innerHTML = ""; // Очищаем для обновления
+
     cities.forEach(city => {
         const localTime = new Date().toLocaleString("ru-RU", { timeZone: city.timeZone, hour: '2-digit', minute: '2-digit' });
         const moscowTime = new Date().toLocaleString("ru-RU", { timeZone: "Europe/Moscow", hour: '2-digit', minute: '2-digit' });
         const timeDifference = calculateTimeDifference(city.timeZone);
+
         // Создаем блок для города
         const cityBlock = document.createElement("div");
-        cityBlock.className = "city-block";
+        cityBlock.className = `city-block diff-${Math.round(timeDifference)}`; // добавляем класс с разницей времени
         cityBlock.innerHTML = `
             <h4>${city.name}</h4>
             <p>Местное время: ${localTime}</p>
@@ -839,6 +761,21 @@ function updateCityTimes() {
         cityTimeGrid.appendChild(cityBlock);
     });
 }
+
+// Функция для фильтрации по часовому поясу
+function filterCities(difference) {
+    const cityBlocks = document.querySelectorAll(".city-block");
+    cityBlocks.forEach(block => {
+        if (difference === 0) {
+            // Убираем города с московским временем
+            block.style.display = block.classList.contains("diff-0") ? "none" : "block";
+        } else {
+            // Отображаем только города с заданной разницей
+            block.style.display = block.classList.contains(`diff-${difference}`) ? "block" : "none";
+        }
+    });
+}
+
 // Расчет разницы во времени с Москвой
 function calculateTimeDifference(cityTimeZone) {
     const moscowDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Moscow" });
@@ -846,6 +783,14 @@ function calculateTimeDifference(cityTimeZone) {
     const diff = (new Date(cityDate) - new Date(moscowDate)) / (1000 * 60 * 60);
     return diff.toFixed(1); // Разница в часах
 }
+
+// Запуск обновлений
+showTime();
+
+<style>
+    .city-block { margin: 10px; padding: 10px; border: 1px solid #ccc; }
+    .hidden { display: none; }
+</style>
          // Функция для генерации UTM-ссылки
     function generateUTM() {
         const baseUrl = document.getElementById('base-url').value;
