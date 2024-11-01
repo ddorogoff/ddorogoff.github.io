@@ -790,37 +790,37 @@
 <style>
     .city-block { margin: 10px; padding: 10px; border: 1px solid #ccc; }
 </style>
- }
-         // Функция для генерации UTM-ссылки
-    function generateUTM() {
-        const baseUrl = document.getElementById('base-url').value;
-        const utmSource = document.getElementById('utm-source').value;
-        const utmMedium = document.getElementById('utm-medium').value;
-        const utmCampaign = document.getElementById('utm-campaign').value;
-        const utmContent = document.getElementById('utm-content').value;
-        const utmTerm = document.getElementById('utm-term').value;
+    
+  // Функция для генерации UTM-ссылки
+        function generateUTM() {
+            const baseUrl = document.getElementById('base-url').value;
+            const utmSource = document.getElementById('utm-source').value;
+            const utmMedium = document.getElementById('utm-medium').value;
+            const utmCampaign = document.getElementById('utm-campaign').value;
+            const utmContent = document.getElementById('utm-content').value;
+            const utmTerm = document.getElementById('utm-term').value;
 
-        // Проверка, что обязательные параметры заполнены
-        if (!baseUrl || !utmSource || !utmMedium || !utmCampaign) {
-            alert('Пожалуйста, заполните обязательные поля (ссылка, utm_source, utm_medium, utm_campaign).');
-            return;
+            // Проверка, что обязательные параметры заполнены
+            if (!baseUrl || !utmSource || !utmMedium || !utmCampaign) {
+                alert('Пожалуйста, заполните обязательные поля (ссылка, utm_source, utm_medium, utm_campaign).');
+                return;
+            }
+
+            // Формирование UTM-метки
+            let utmUrl = `${baseUrl}?utm_source=${encodeURIComponent(utmSource)}&utm_medium=${encodeURIComponent(utmMedium)}&utm_campaign=${encodeURIComponent(utmCampaign)}`;
+            if (utmContent) utmUrl += `&utm_content=${encodeURIComponent(utmContent)}`;
+            if (utmTerm) utmUrl += `&utm_term=${encodeURIComponent(utmTerm)}`;
+
+            // Вывод сгенерированной ссылки
+            document.getElementById('generated-url').value = utmUrl;
         }
 
-        // Формирование UTM-метки
-        let utmUrl = `${baseUrl}?utm_source=${utmSource}&utm_medium=${utmMedium}&utm_campaign=${utmCampaign}`;
-        if (utmContent) utmUrl += `&utm_content=${utmContent}`;
-        if (utmTerm) utmUrl += `&utm_term=${utmTerm}`;
-
-        // Вывод сгенерированной ссылки
-        document.getElementById('generated-url').value = utmUrl;
-    }
-
-   // Функция для копирования сгенерированной UTM-ссылки в буфер обмена
-function copyUTMToClipboard() {
-    const generatedUrl = document.getElementById('generated-url');
-    generatedUrl.select();
-    document.execCommand('copy');
-}
+        // Функция для копирования сгенерированной UTM-ссылки в буфер обмена
+        function copyUTMToClipboard() {
+            const generatedUrl = document.getElementById('generated-url');
+            generatedUrl.select();
+            document.execCommand('copy');
+        }
     </script>
 
 </body>
