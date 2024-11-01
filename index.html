@@ -710,87 +710,87 @@
                 popupSettings.style.display = 'none';
             }
         }
+    // Функция для переключения между разделами
+    function toggleSection(sectionId) {
+        document.querySelectorAll('section').forEach(section => {
+            section.style.display = 'none';
+        });
+        document.getElementById(sectionId).style.display = 'block';
+    }
 
-        // Функция для переключения между разделами
-function toggleSection(sectionId) {
-    document.querySelectorAll('section').forEach(section => {
-        section.style.display = 'none';
-    });
-    document.getElementById(sectionId).style.display = 'block';
-   }
-        }
-function showTime() {
-    updateMoscowTime();
-    updateCityTimes();
-}
+    function showTime() {
+        updateMoscowTime();
+        updateCityTimes();
+    }
 
-function updateMoscowTime() {
-    setInterval(() => {
-        const moscowTime = new Date().toLocaleString("ru-RU", { timeZone: "Europe/Moscow", hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        document.getElementById("moscow-time").innerText = moscowTime;
-    }, 1000);
-}
+    function updateMoscowTime() {
+        setInterval(() => {
+            const moscowTime = new Date().toLocaleString("ru-RU", { timeZone: "Europe/Moscow", hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById("moscow-time").innerText = moscowTime;
+        }, 1000);
+    }
 
-function updateCityTimes() {
-    const cities = [
-        { name: "Альметьевск", timeZone: "Europe/Moscow" },
-        { name: "Архангельск", timeZone: "Europe/Moscow" },
-        { name: "Владивосток", timeZone: "Asia/Vladivostok" },
-        { name: "Калининград", timeZone: "Europe/Kaliningrad" },
-        { name: "Самара", timeZone: "Europe/Samara" },
-        // Добавьте остальные города
-    ];
+    function updateCityTimes() {
+        const cities = [
+            { name: "Альметьевск", timeZone: "Europe/Moscow" },
+            { name: "Архангельск", timeZone: "Europe/Moscow" },
+            { name: "Владивосток", timeZone: "Asia/Vladivostok" },
+            { name: "Калининград", timeZone: "Europe/Kaliningrad" },
+            { name: "Самара", timeZone: "Europe/Samara" },
+            // Добавьте остальные города
+        ];
 
-    const cityTimeGrid = document.getElementById("city-time-grid");
-    cityTimeGrid.innerHTML = ""; // Очищаем для обновления
+        const cityTimeGrid = document.getElementById("city-time-grid");
+        cityTimeGrid.innerHTML = ""; // Очищаем для обновления
 
-    cities.forEach(city => {
-        const localTime = new Date().toLocaleString("ru-RU", { timeZone: city.timeZone, hour: '2-digit', minute: '2-digit' });
-        const moscowTime = new Date().toLocaleString("ru-RU", { timeZone: "Europe/Moscow", hour: '2-digit', minute: '2-digit' });
-        const timeDifference = calculateTimeDifference(city.timeZone);
+        cities.forEach(city => {
+            const localTime = new Date().toLocaleString("ru-RU", { timeZone: city.timeZone, hour: '2-digit', minute: '2-digit' });
+            const moscowTime = new Date().toLocaleString("ru-RU", { timeZone: "Europe/Moscow", hour: '2-digit', minute: '2-digit' });
+            const timeDifference = calculateTimeDifference(city.timeZone);
 
-        // Создаем блок для города
-        const cityBlock = document.createElement("div");
-        cityBlock.className = `city-block diff-${Math.round(timeDifference)}`; // добавляем класс с разницей времени
-        cityBlock.innerHTML = `
-            <h4>${city.name}</h4>
-            <p>Местное время: ${localTime}</p>
-            <p>Московское время: ${moscowTime}</p>
-            <p>Разница с Москвой: ${timeDifference} ч.</p>
-        `;
-        cityTimeGrid.appendChild(cityBlock);
-    });
-}
+            // Создаем блок для города
+            const cityBlock = document.createElement("div");
+            cityBlock.className = `city-block diff-${Math.round(timeDifference)}`; // добавляем класс с разницей времени
+            cityBlock.innerHTML = `
+                <h4>${city.name}</h4>
+                <p>Местное время: ${localTime}</p>
+                <p>Московское время: ${moscowTime}</p>
+                <p>Разница с Москвой: ${timeDifference} ч.</p>
+            `;
+            cityTimeGrid.appendChild(cityBlock);
+        });
+    }
 
-// Функция для фильтрации по часовому поясу
-function filterCities(difference) {
-    const cityBlocks = document.querySelectorAll(".city-block");
-    cityBlocks.forEach(block => {
-        if (difference === 0) {
-            // Убираем города с московским временем
-            block.style.display = block.classList.contains("diff-0") ? "none" : "block";
-        } else {
-            // Отображаем только города с заданной разницей
-            block.style.display = block.classList.contains(`diff-${difference}`) ? "block" : "none";
-        }
-    });
-}
+    // Функция для фильтрации по часовому поясу
+    function filterCities(difference) {
+        const cityBlocks = document.querySelectorAll(".city-block");
+        cityBlocks.forEach(block => {
+            if (difference === 0) {
+                // Отображаем только города с московским временем
+                block.style.display = block.classList.contains("diff-0") ? "block" : "none";
+            } else {
+                // Отображаем только города с заданной разницей
+                block.style.display = block.classList.contains(`diff-${difference}`) ? "block" : "none";
+            }
+        });
+    }
 
-// Расчет разницы во времени с Москвой
-function calculateTimeDifference(cityTimeZone) {
-    const moscowDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Moscow" });
-    const cityDate = new Date().toLocaleString("en-US", { timeZone: cityTimeZone });
-    const diff = (new Date(cityDate) - new Date(moscowDate)) / (1000 * 60 * 60);
-    return diff.toFixed(1); // Разница в часах
-}
+    // Расчет разницы во времени с Москвой
+    function calculateTimeDifference(cityTimeZone) {
+        const moscowDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Moscow" });
+        const cityDate = new Date().toLocaleString("en-US", { timeZone: cityTimeZone });
+        const diff = (new Date(cityDate) - new Date(moscowDate)) / (1000 * 60 * 60);
+        return diff.toFixed(1); // Разница в часах
+    }
 
-// Запуск обновлений
-showTime();
+    // Запуск обновлений
+    showTime();
+</script>
 
 <style>
     .city-block { margin: 10px; padding: 10px; border: 1px solid #ccc; }
-    .hidden { display: none; }
 </style>
+
          // Функция для генерации UTM-ссылки
     function generateUTM() {
         const baseUrl = document.getElementById('base-url').value;
