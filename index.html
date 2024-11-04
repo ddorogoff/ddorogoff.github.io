@@ -174,6 +174,36 @@
     border-radius: 5px;
     text-align: center;
 }
+/* Контейнер для снега */
+#snow-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Чтобы снег не мешал кликам */
+    overflow: hidden;
+    z-index: 1000; /* Поверх всего контента */
+}
+
+.snowflake {
+    position: absolute;
+    top: -10px;
+    color: white;
+    font-size: 1em;
+    opacity: 0.8;
+    animation: fall linear infinite;
+}
+
+/* Анимация падения снега */
+@keyframes fall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+    }
+}
     </style>
 </head>
 <body>
@@ -187,7 +217,10 @@
         <a href="#watching" class="nav-button" onclick="toggleSection('watching')">Насмотренность</a>
         <a href="#utm-generator" class="nav-button" onclick="toggleSection('utm-generator')">Генератор UTM-меток</a>
         <a href="#time-section" class="nav-button" onclick="toggleSection('time-section')">Время</a>
-        
+        <a href="#" id="toggle-snow-btn" class="nav-button" onclick="toggleSnow()">Отключить снег</a>
+
+        <div id="snow-container"></div>
+
         <!-- Переключатель для ночного режима -->
         <div class="switch">
             <input type="checkbox" id="night-mode-toggle" onchange="toggleNightMode()">
@@ -195,6 +228,7 @@
             <span class="night-mode-label"> Ночной режим</span>
         </div>
     </div>
+
 
     <!-- Основной контент -->
     <div class="content">
@@ -909,6 +943,70 @@ function copyUTMToClipboard() {
     generatedUrl.select();
     document.execCommand('copy');
 }
+let snowEnabled = true;
+const snowContainer = document.getElementById("snow-container");
+
+// Функция для включения и выключения снега
+function toggleSnow() {
+    snowEnabled = !snowEnabled;
+    if (snowEnabled) {
+        document.getElementById("toggle-snow-btn").innerText = "Отключить снег";
+        startSnowfall();
+    } else {
+        document.getElementById("toggle-snow-btn").innerText = "Включить снег";
+        stopSnowfall();
+    }
+}
+
+// Создание снежинок
+function createSnowflake() {
+    const snowflake = document.createElement("div");
+    snowflake.classList.add("snowflake");
+    snowflake.innerText = "❄"; // Символ снежинки
+    snowflake.style.left = Math.random() * 100 + "vw"; // случайная позиция по ширине
+    snowflake.style.fontSize = Math.random() * 10 + 10 + "px"; // случайный размер снежинки
+    snowflake.style.animationDuration = Math.random() * 3 + 5 + "s"; // случайная продолжительность анимации
+    snowContainer.appendChild(snowflake);
+
+    // Удаление снежинки после окончания анимации
+    snowflake.addEventListener("animationend", () => {
+        snowflake.remove();
+    });
+}
+
+// Запуск и остановка снега
+function startSnowfall() {
+    if (!snowEnabled) return;
+    createSnowflake();
+    snowInterval = setInterval(createSnowflake, 200); // Создание снежинок через каждые 200 мс
+}
+
+function stopSnowfall() {
+    clearInterval(snowInterval);
+    snowContainer.innerHTML = ""; // Удаление всех снежинок
+}
+
+// Начать снег при загрузке страницы
+let snowInterval;
+if (snowEnabled) {
+    startSnowfall();
+}
+let isSnowing = true;
+
+function toggleSnow() {
+    const snowContainer = document.querySelector('#snow-container');
+    
+    if (isSnowing) {
+        snowContainer.style.display = 'none';
+        document.getElementById('toggle-snow-btn').innerText = 'Включить снег';
+    } else {
+        snowContainer.style.display = 'block';
+        document.getElementById('toggle-snow-btn').innerText = 'Отключить снег';
+    }
+    
+    isSnowing = !isSnowing;
+}
+
     </script>
 
 </body>
