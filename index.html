@@ -671,23 +671,46 @@ label {
     color: #e0e0e0;
 }
 
+.night-mode #stop-words h2 {
+    color: #e0e0e0;
+}
+
+.night-mode #stop-words p {
+    color: #bbb;
+}
+
+.night-mode #stop-words a {
+    color: #4caf50;
+}
+
 .night-mode #stop-words textarea {
     background-color: #333;
     border-color: #555;
     color: #e0e0e0;
 }
 
+.night-mode #stop-words textarea:focus {
+    border-color: #4caf50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
+}
+
+.night-mode #stop-words li {
+    color: #bbb;
+}
+
 .night-mode #stop-words-output {
-    background-color: #444;
+    background-color: #333;
+    border-color: #555;
     color: #e0e0e0;
 }
 
 .night-mode #highlighted-text-output {
-    background-color: #333;
+    background-color: #2c2c2c;
+    border-color: #444;
     color: #e0e0e0;
 }
 
-.night-mode li {
+.night-mode #highlighted-text {
     color: #e0e0e0;
 }
 
@@ -696,14 +719,63 @@ label {
     color: #e0e0e0;
 }
 
-.night-mode #stop-words-output {
+/* Стили для типографа */
+#typograph {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#typograph h1 {
+    margin-bottom: 20px;
+}
+
+#typograph-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#typograph .input-container,
+#typograph .output-container {
+    width: 100%;
+    min-width: 300px;
+}
+
+#typograph textarea {
+    width: 100%;
+    height: 300px;
+    padding: 15px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    resize: vertical;
+    margin-bottom: 10px;
+}
+
+#typograph .input-container h2,
+#typograph .output-container h2 {
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 18px;
+}
+
+/* Ночной режим для типографа */
+.night-mode #typograph {
+    background-color: #2c2c2c;
+}
+
+.night-mode #typograph textarea {
+    background-color: #333;
     border-color: #555;
+    color: #e0e0e0;
 }
 
-.night-mode #highlighted-text-output {
-    border-color: #444;
+.night-mode #typograph .input-container h2,
+.night-mode #typograph .output-container h2 {
+    color: #e0e0e0;
 }
-
 
     </style>
 </head>
@@ -717,6 +789,7 @@ label {
         <a href="#utm-generator" class="nav-button" onclick="toggleSection('utm-generator')">Генератор UTM-меток</a>
         <a href="#time-section" class="nav-button" onclick="toggleSection('time-section')">Время</a>
         <a href="#stop-words" class="nav-button" onclick="toggleSection('stop-words')">Детектор стоп-слов</a>
+        <a href="#typograph" class="nav-button" onclick="toggleSection('typograph')">Типограф</a>
 
         <!-- Переключатель для ночного режима -->
         <div class="switch">
@@ -799,6 +872,24 @@ label {
     </div>
     <p>При желании ссылку можно сократить с помощью <a href="https://clck.ru/">clck.ru</a></p>
 </section>
+
+<!-- Раздел типографа -->
+<section id="typograph" class="hidden">
+    <h1>Типограф</h1>
+    <div id="typograph-container">
+        <div class="input-container">
+            <h2>Исходный текст</h2>
+            <textarea id="input-text" placeholder="Введите текст для типографирования..."></textarea>
+            <button onclick="typograph()">Типографировать</button>
+        </div>
+        <div class="output-container">
+            <h2>Результат</h2>
+            <textarea id="output-text" readonly></textarea>
+            <button onclick="copyTypographOutput()">Копировать результат</button>
+        </div>
+    </div>
+</section>
+
 <!-- Раздел для отображения времени -->
 <section id="time-section" style="display: none;">
     <div>
@@ -861,6 +952,48 @@ label {
 </section>
 
 <script>
+    // Функция типографа
+    function typograph() {
+        let text = document.getElementById('input-text').value;
+        
+        // Замена кавычек
+        text = text.replace(/"/g, '«');
+        text = text.replace(/"/g, '»');
+        
+        // Замена дефисов на тире
+        text = text.replace(/\s-\s/g, ' — ');
+        
+        // Замена трех точек на многоточие
+        text = text.replace(/\.{3}/g, '…');
+        
+        // Удаление множественных пробелов
+        text = text.replace(/\s+/g, ' ');
+        
+        // Добавление неразрывных пробелов после предлогов и союзов
+        text = text.replace(/(\s|^)(в|у|к|с|о|а|и|но|за|на|по|от|до|из|под|над|об|при|для|без|через|про|вот)\s/gi, '$1$2\u00A0');
+        
+        // Замена "руб" на символ рубля
+        text = text.replace(/(\d+)\s*руб/gi, '$1\u00A0₽');
+        
+        // Добавление неразрывного пробела перед знаками процента
+        text = text.replace(/(\d+)\s*%/g, '$1\u00A0%');
+        
+        // Исправление пробелов перед знаками препинания
+        text = text.replace(/\s+([,.!?:;])/g, '$1');
+        
+        // Добавление пробелов после знаков препинания
+        text = text.replace(/([,.!?:;])(\S)/g, '$1 $2');
+        
+        document.getElementById('output-text').value = text.trim();
+    }
+
+    // Функция для копирования результата типографа
+    function copyTypographOutput() {
+        const outputText = document.getElementById('output-text');
+        outputText.select();
+        document.execCommand('copy');
+    }
+
     // Массив стоп-слов
     const stopWords = ["работа", "работать", "работник", "работодатель", "выработка","раб","смен", "переработка", "обработка", "заработок", "наработка", "работоспособность", "труд", "трудиться",
 "заработок", "заработать", "заработали", "зарабатывает", "зарабатывали", "зарабатывающий", "заработанный",
