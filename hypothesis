@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Стоит ли писать?</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9f9f9;
+      padding: 40px 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    h1 {
+      font-size: 28px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .question {
+      display: none;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .question.active {
+      display: block;
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    select, input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #result {
+      padding: 20px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .green { background-color: #d8fdd8; }
+    .yellow { background-color: #fff8cc; }
+    .red { background-color: #ffd8d8; }
+
+    .progress {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Стоит ли писать?</h1>
+  <div class="progress">Вопрос <span id="stepNum">1</span> из 6</div>
+  
+  <form id="checkForm">
+    <div class="question active" data-step="1">
+      <label>Где вы узнали об инфоповоде?</label>
+      <select name="source" required>
+        <option value="3">Из первых рук</option>
+        <option value="2">Телеграм/соцсети</option>
+        <option value="1">Медиа / все уже пишут</option>
+      </select>
+      <button type="button" class="nextBtn">Далее</button>
+    </div>
+
+    <div class="question" data-step="2">
+      <label>Когда вы узнали о нём? (в часах назад)</label>
+      <input type="number" name="hoursAgo" min="0" max="168" required />
+      <button type="button" class="nextBtn">Далее</button>
+    </div>
+
+    <div class="question" data-step="3">
+      <label>Какой формат?</label>
+      <select name="format" required>
+        <option value="3">Мем / короткий пост</option>
+        <option value="2">Небольшой пост с комментарием</option>
+        <option value="1">Лонгрид, спецпроект</option>
+      </select>
+      <button type="button" class="nextBtn">Далее</button>
+    </div>
+
+    <div class="question" data-step="4">
+      <label>Есть ли уникальный ракурс?</label>
+      <select name="angle" required>
+        <option value="3">Да, это наша экспертиза</option>
+        <option value="2">Можно придумать</option>
+        <option value="1">Нет, просто повторяем</option>
+      </select>
+      <button type="button" class="nextBtn">Далее</button>
+    </div>
+
+    <div class="question" data-step="5">
+      <label>Сколько времени займёт подготовка? (в часах)</label>
+      <input type="number" name="effort" min="0" max="48" required />
+      <button type="button" class="nextBtn">Далее</button>
+    </div>
+
+    <div class="question" data-step="6">
+      <label>Какова цель публикации?</label>
+      <select name="goal" required>
+        <option value="3">Ценно для репутации / экспертизы</option>
+        <option value="2">Немного охватов / инфоподдержка</option>
+        <option value="1">Все пишут — и мы напишем</option>
+      </select>
+      <button type="submit">Проверить</button>
+    </div>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    const steps = document.querySelectorAll(".question");
+    const nextBtns = document.querySelectorAll(".nextBtn");
+    const stepNum = document.getElementById("stepNum");
+
+    let currentStep = 0;
+
+    nextBtns.forEach((btn, index) => {
+      btn.addEventListener("click", () => {
+        if (steps[index].querySelector("select, input").checkValidity()) {
+          steps[index].classList.remove("active");
+          steps[index + 1].classList.add("active");
+          currentStep++;
+          stepNum.textContent = currentStep + 1;
+        } else {
+          steps[index].querySelector("select, input").reportValidity();
+        }
+      });
+    });
+
+    document.getElementById('checkForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const data = new FormData(e.target);
+      let score = 0;
+
+      score += parseInt(data.get('source'));
+      score += parseInt(data.get('format'));
+      score += parseInt(data.get('angle'));
+      score += parseInt(data.get('goal'));
+
+      const hoursAgo = parseInt(data.get('hoursAgo'));
+      const effort = parseInt(data.get('effort'));
+
+      if (hoursAgo <= 3) score += 3;
+      else if (hoursAgo <= 12) score += 2;
+      else if (hoursAgo <= 24) score += 1;
+
+      if (effort <= 2) score += 3;
+      else if (effort <= 6) score += 2;
+      else score += 1;
+
+      let resultText = '';
+      let resultClass = '';
+
+      if (score >= 17) {
+        resultText = '💡 Постите немедленно — тема сильная, ракурс есть, формат подходящий.';
+        resultClass = 'green';
+      } else if (score >= 13) {
+        resultText = '🧐 Можно постить, но подумайте над подачей — есть что улучшить.';
+        resultClass = 'yellow';
+      } else {
+        resultText = '🚫 Не стоит — ценности мало, потратите время зря.';
+        resultClass = 'red';
+      }
+
+      const resultBlock = document.getElementById('result');
+      resultBlock.textContent = resultText;
+      resultBlock.className = resultClass;
+    });
+  </script>
+</body>
+</html>
