@@ -790,6 +790,8 @@ label {
         <a href="#time-section" class="nav-button" onclick="toggleSection('time-section')">Время</a>
         <a href="#stop-words" class="nav-button" onclick="toggleSection('stop-words')">Детектор стоп-слов</a>
         <a href="#typograph" class="nav-button" onclick="toggleSection('typograph')">Типограф</a>
+        <a href="#social-sizes" class="nav-button" onclick="toggleSection('social-sizes')">Размеры макетов</a>
+
 
         <!-- Переключатель для ночного режима -->
         <div class="switch">
@@ -949,6 +951,26 @@ label {
         <h3>Подсвеченный текст:</h3>
         <div id="highlighted-text" style="white-space: pre-wrap;"></div>
     </div>
+</section>
+
+<section id="social-sizes" class="hidden">
+    <h1>Размеры макетов в соцсетях</h1>
+    <label for="formatSelect">Выберите формат:</label>
+    <select id="formatSelect" onchange="updateSizeInfo()">
+        <option value="story-telegram">Сторис для Telegram</option>
+        <option value="story-instagram">Сторис для Instagram</option>
+        <option value="post-telegram">Пост для Telegram</option>
+        <option value="post-telegram-1x1">Пост для Telegram (1:1)</option>
+    </select>
+
+    <div id="sizeMockup" style="margin-top: 20px; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #f9f9f9;">
+        <p><strong>Макет:</strong> <span id="sizeLabel">1080×1920px</span></p>
+        <p><strong>Соотношение:</strong> <span id="aspectRatio">9:16</span></p>
+    </div>
+
+    <button onclick="showSizeString()">Супер, дай готовые размеры</button>
+
+    <div id="sizeResult" style="margin-top: 15px; font-weight: bold;"></div>
 </section>
 
 <script>
@@ -1359,6 +1381,34 @@ function copyUTMToClipboard() {
     generatedUrl.select();
     document.execCommand('copy');
 }
+function updateSizeInfo() {
+    const format = document.getElementById("formatSelect").value;
+    const sizeLabel = document.getElementById("sizeLabel");
+    const aspectRatio = document.getElementById("aspectRatio");
+
+    const formats = {
+        "story-telegram": { size: "1080×1920px", ratio: "9:16" },
+        "story-instagram": { size: "1080×1920px", ratio: "9:16" },
+        "post-telegram": { size: "1280×720px", ratio: "16:9" },
+        "post-telegram-1x1": { size: "1080×1080px", ratio: "1:1" }
+    };
+
+    sizeLabel.textContent = formats[format].size;
+    aspectRatio.textContent = formats[format].ratio;
+    document.getElementById("sizeResult").textContent = "";
+}
+
+function showSizeString() {
+    const format = document.getElementById("formatSelect").value;
+    const formats = {
+        "story-telegram": "Размер: 1080×1920px (соотношение: 9:16)",
+        "story-instagram": "Размер: 1080×1920px (соотношение: 9:16)",
+        "post-telegram": "Размер: 1280×720px (соотношение: 16:9)",
+        "post-telegram-1x1": "Размер: 1080×1080px (соотношение: 1:1)"
+    };
+    document.getElementById("sizeResult").textContent = formats[format];
+}
+
 
     </script>
 
