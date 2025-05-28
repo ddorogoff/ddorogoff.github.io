@@ -954,19 +954,15 @@ label {
 </section>
 
 <section id="social-sizes" class="hidden">
-    <h1>Размеры макетов в соцсетях</h1>
-    <label for="formatSelect">Выберите формат:</label>
+    <h1>Выберите формат:</h1>
     <select id="formatSelect" onchange="updateSizeInfo()">
         <option value="story-telegram">Сторис для Telegram</option>
-        <option value="story-instagram">Сторис для Instagram</option>
-        <option value="post-telegram">Пост для Telegram</option>
+        <option value="stickers-telegram">Telegram Stickers</option>
+        <option value="emoji-telegram">Telegram Emoji</option>
         <option value="post-telegram-1x1">Пост для Telegram (1:1)</option>
+        <option value="video">Анимированный эмодзи</option>
     </select>
 
-    <div id="sizeMockup" style="margin-top: 20px; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #f9f9f9;">
-        <p><strong>Макет:</strong> <span id="sizeLabel">1080×1920px</span></p>
-        <p><strong>Соотношение:</strong> <span id="aspectRatio">9:16</span></p>
-    </div>
 
     <button onclick="showSizeString()">Супер, дай готовые размеры</button>
 
@@ -1388,9 +1384,10 @@ function updateSizeInfo() {
 
     const formats = {
         "story-telegram": { size: "1080×1920px", ratio: "9:16" },
-        "story-instagram": { size: "1080×1920px", ratio: "9:16" },
-        "post-telegram": { size: "1280×720px", ratio: "16:9" },
-        "post-telegram-1x1": { size: "1080×1080px", ratio: "1:1" }
+        "stickers-telegram": { size: "512×512px", ratio: "1:1" },
+        "emoji-telegram": { size: "1280×720px", ratio: "1:1" },
+        "post-telegram-1x1": { size: "1080×1080px", ratio: "1:1" },
+        "video": { size: "1080×1080px", ratio: "1:1" }
     };
 
     sizeLabel.textContent = formats[format].size;
@@ -1402,9 +1399,11 @@ function showSizeString() {
     const format = document.getElementById("formatSelect").value;
     const formats = {
         "story-telegram": "Размер: 1080×1920px (соотношение: 9:16)",
-        "story-instagram": "Размер: 1080×1920px (соотношение: 9:16)",
-        "post-telegram": "Размер: 1280×720px (соотношение: 16:9)",
-        "post-telegram-1x1": "Размер: 1080×1080px (соотношение: 1:1)"
+        "stickers-telegram": "Размер: 512×512px; Соотношение: 1:1; Форматы: .PNG или .WEBP",
+        "emoji-telegram": "Размер: 100×100px; Соотношение: 1:1; Форматы: .PNG или .WEBP; Максимальный размер: 128КБ",
+        "post-telegram-1x1": "Размер: 1080×1080px (соотношение: 1:1)",
+        "video": "Размер: 100×100px; Соотношение: 1:1; Форматы: .WEBM, сжатый кодеком VP9; Максимальный размер: 64КБ"
+        
     };
     document.getElementById("sizeResult").textContent = formats[format];
 }
