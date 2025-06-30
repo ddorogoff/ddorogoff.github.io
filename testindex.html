@@ -776,13 +776,13 @@ label {
 .night-mode #typograph .output-container h2 {
     color: #e0e0e0;
 }
-        .push-preview {
+      .push-preview {
     border: 1px solid #ccc;
     border-radius: 20px;
     padding: 15px;
     margin-bottom: 20px;
     background-color: #fff;
-    max-width: 320px;
+    max-width: 360px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   }
   .push-header {
@@ -814,6 +814,7 @@ label {
     margin-top: 5px;
     background-color: #52c41a;
     border-radius: 4px;
+    width: 0%;
     transition: background-color 0.3s, width 0.3s;
   }
   .progress-bar.warning { background-color: #faad14; }
@@ -829,7 +830,6 @@ label {
   .night-mode .push-app-name {
     color: #fff;
   }
-
     </style>
 </head>
 <body>
@@ -1133,38 +1133,44 @@ label {
 <section id="char-counter-section" class="hidden">
   <h1>Push-тестер</h1>
   <div class="input-group">
+     <!-- Выбор устройства -->
+  <div class="input-group">
     <label for="push-device">Выберите устройство</label>
     <select id="push-device" onchange="updateDevicePreview()">
       <option value="iphone-se">iPhone SE</option>
+      <option value="iphone-13-mini">iPhone 13 Mini</option>
       <option value="iphone-14">iPhone 14</option>
+      <option value="iphone-16-pro">iPhone 16 Pro</option>
+      <option value="iphone-16-pro-max">iPhone 16 Pro Max</option>
       <option value="android">Android 12</option>
       <option value="android-4">Android 4</option>
       <option value="huawei-p30">Huawei P30</option>
     </select>
   </div>
 
+  <!-- Предпросмотр пуша -->
   <div id="push-preview" class="push-preview iphone-se">
     <div class="push-header">
-      <img src="https://yastatic.net/s3/pro-www/static/favicon/apple-touch-icon.png" alt="Логотип" class="push-logo">
+      <img src="https://avatars.mds.yandex.net/i?id=a6feb339a7435c9352e23cf14cefe89f_l-12394646-images-thumbs&n=13" alt="Логотип" class="push-logo">
       <span class="push-app-name">Яндекс Про</span>
     </div>
     <div class="push-title" id="preview-title">Заголовок</div>
     <div class="push-body" id="preview-body">Текст уведомления</div>
   </div>
 
+  <!-- Поле заголовка -->
   <div class="input-group">
-    <label for="push-title-input">Заголовок (до 50 символов)</label>
+    <label for="push-title-input">Заголовок (до 26 символов)</label>
     <input type="text" id="push-title-input" maxlength="100">
     <div class="progress-bar" id="push-title-bar"></div>
   </div>
 
+  <!-- Поле подзаголовка -->
   <div class="input-group">
-    <label for="push-body-input">Тело сообщения (до 150 символов)</label>
-    <textarea id="push-body-input" maxlength="300"></textarea>
+    <label for="push-body-input">Подзаголовок (до 100 символов)</label>
+    <textarea id="push-body-input" maxlength="200"></textarea>
     <div class="progress-bar" id="push-body-bar"></div>
   </div>
-
-  <button onclick="copyPushPayload()">Скопировать JSON</button>
 </section>
 
     <script>
@@ -1476,37 +1482,36 @@ function showSizeString() {
     };
     document.getElementById("sizeResult").textContent = formats[format];
 }
-function updatePushUI() {
-    const title = document.getElementById('push-title-input').value;
-    const body = document.getElementById('push-body-input').value;
+ function updatePushUI() {
+    const title = document.getElementById('push-title-input').value.trim();
+    const body = document.getElementById('push-body-input').value.trim();
     const titleBar = document.getElementById('push-title-bar');
     const bodyBar = document.getElementById('push-body-bar');
-    const titleMax = 50;
-    const bodyMax = 150;
 
     document.getElementById('preview-title').textContent = title || "Заголовок";
     document.getElementById('preview-body').textContent = body || "Текст уведомления";
 
-    const updateBar = (bar, length, max) => {
-      bar.style.width = Math.min(length / max * 100, 100) + "%";
+    const setProgress = (bar, value, max) => {
+      const percent = Math.min((value / max) * 100, 100);
+      bar.style.width = percent + "%";
       bar.className = 'progress-bar';
-      if (length > max) {
+      if (value > max) {
         bar.classList.add('limit');
-      } else if (length > max * 0.85) {
+      } else if (value > max * 0.9) {
         bar.classList.add('warning');
       }
     };
 
-    updateBar(titleBar, title.length, titleMax);
-    updateBar(bodyBar, body.length, bodyMax);
+    setProgress(titleBar, title.length, 26);
+    setProgress(bodyBar, body.length, 100);
   }
 
   document.getElementById('push-title-input').addEventListener('input', updatePushUI);
   document.getElementById('push-body-input').addEventListener('input', updatePushUI);
 
   function copyPushPayload() {
-    const title = document.getElementById('push-title-input').value;
-    const body = document.getElementById('push-body-input').value;
+    const title = document.getElementById('push-title-input').value.trim();
+    const body = document.getElementById('push-body-input').value.trim();
     const json = JSON.stringify({ title, message: body }, null, 2);
     navigator.clipboard.writeText(json).then(() => alert("Скопировано!"));
   }
