@@ -776,6 +776,59 @@ label {
 .night-mode #typograph .output-container h2 {
     color: #e0e0e0;
 }
+        .push-preview {
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    max-width: 320px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .push-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .push-logo {
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+    margin-right: 8px;
+  }
+  .push-app-name {
+    font-weight: bold;
+    font-size: 14px;
+  }
+  .push-title {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  .push-body {
+    font-size: 14px;
+    color: #333;
+  }
+  .progress-bar {
+    height: 6px;
+    margin-top: 5px;
+    background-color: #52c41a;
+    border-radius: 4px;
+    transition: background-color 0.3s, width 0.3s;
+  }
+  .progress-bar.warning { background-color: #faad14; }
+  .progress-bar.limit { background-color: #ff4d4f; }
+
+  /* Темный режим */
+  .night-mode .push-preview {
+    background-color: #1e1e1e;
+    border-color: #444;
+  }
+  .night-mode .push-title,
+  .night-mode .push-body,
+  .night-mode .push-app-name {
+    color: #fff;
+  }
 
     </style>
 </head>
@@ -1076,26 +1129,43 @@ label {
     }
 </script>
 
-        <!-- Раздел с счётчиками символов -->
-        <section id="char-counter-section" class="hidden">
-                <!-- Заголовок пуша -->
-                <div class="input-group">
-                  <label for="push-title">Заголовок пуша (до 26 символов)</label>
-                  <textarea id="push-title" rows="1" maxlength="100" placeholder="Введите заголовок..."></textarea>
-                  <div class="progress-bar" id="title-progress"></div>
-                  <div class="char-count" id="title-count">0 / 26</div>
-                </div>
-            
-                <!-- Тело пуша -->
-                <div class="input-group">
-                  <label for="push-body">Тело пуша (76–80 символов, максимум 100)</label>
-                  <textarea id="push-body" rows="2" maxlength="120" placeholder="Введите текст..."></textarea>
-                  <div class="progress-bar" id="body-progress"></div>
-                  <div class="char-count" id="body-count">0 / 100</div>
-                </div>
-              </div>
-        </section>
+      <!-- Раздел с пуш-тестером -->
+<section id="char-counter-section" class="hidden">
+  <h1>Push-тестер</h1>
+  <div class="input-group">
+    <label for="push-device">Выберите устройство</label>
+    <select id="push-device" onchange="updateDevicePreview()">
+      <option value="iphone-se">iPhone SE</option>
+      <option value="iphone-14">iPhone 14</option>
+      <option value="android">Android 12</option>
+      <option value="android-4">Android 4</option>
+      <option value="huawei-p30">Huawei P30</option>
+    </select>
+  </div>
+
+  <div id="push-preview" class="push-preview iphone-se">
+    <div class="push-header">
+      <img src="https://yastatic.net/s3/pro-www/static/favicon/apple-touch-icon.png" alt="Логотип" class="push-logo">
+      <span class="push-app-name">Яндекс Про</span>
     </div>
+    <div class="push-title" id="preview-title">Заголовок</div>
+    <div class="push-body" id="preview-body">Текст уведомления</div>
+  </div>
+
+  <div class="input-group">
+    <label for="push-title-input">Заголовок (до 50 символов)</label>
+    <input type="text" id="push-title-input" maxlength="100">
+    <div class="progress-bar" id="push-title-bar"></div>
+  </div>
+
+  <div class="input-group">
+    <label for="push-body-input">Тело сообщения (до 150 символов)</label>
+    <textarea id="push-body-input" maxlength="300"></textarea>
+    <div class="progress-bar" id="push-body-bar"></div>
+  </div>
+
+  <button onclick="copyPushPayload()">Скопировать JSON</button>
+</section>
 
     <script>
          // Универсальная функция обновления прогресса
@@ -1406,7 +1476,46 @@ function showSizeString() {
     };
     document.getElementById("sizeResult").textContent = formats[format];
 }
+function updatePushUI() {
+    const title = document.getElementById('push-title-input').value;
+    const body = document.getElementById('push-body-input').value;
+    const titleBar = document.getElementById('push-title-bar');
+    const bodyBar = document.getElementById('push-body-bar');
+    const titleMax = 50;
+    const bodyMax = 150;
 
+    document.getElementById('preview-title').textContent = title || "Заголовок";
+    document.getElementById('preview-body').textContent = body || "Текст уведомления";
+
+    const updateBar = (bar, length, max) => {
+      bar.style.width = Math.min(length / max * 100, 100) + "%";
+      bar.className = 'progress-bar';
+      if (length > max) {
+        bar.classList.add('limit');
+      } else if (length > max * 0.85) {
+        bar.classList.add('warning');
+      }
+    };
+
+    updateBar(titleBar, title.length, titleMax);
+    updateBar(bodyBar, body.length, bodyMax);
+  }
+
+  document.getElementById('push-title-input').addEventListener('input', updatePushUI);
+  document.getElementById('push-body-input').addEventListener('input', updatePushUI);
+
+  function copyPushPayload() {
+    const title = document.getElementById('push-title-input').value;
+    const body = document.getElementById('push-body-input').value;
+    const json = JSON.stringify({ title, message: body }, null, 2);
+    navigator.clipboard.writeText(json).then(() => alert("Скопировано!"));
+  }
+
+  function updateDevicePreview() {
+    const preview = document.getElementById('push-preview');
+    const device = document.getElementById('push-device').value;
+    preview.className = 'push-preview ' + device;
+  }
 
     </script>
 
