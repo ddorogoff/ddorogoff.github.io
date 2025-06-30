@@ -778,12 +778,12 @@ label {
 }
       .push-preview {
     border: 1px solid #ccc;
-    border-radius: 20px;
-    padding: 15px;
+    border-radius: 16px;
+    padding: 12px;
     margin-bottom: 20px;
     background-color: #fff;
-    max-width: 360px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: width 0.3s, height 0.3s;
   }
   .push-header {
     display: flex;
@@ -809,6 +809,17 @@ label {
     font-size: 14px;
     color: #333;
   }
+
+  /* Устройства */
+  .iphone-se { width: 300px; aspect-ratio: 16 / 9; }
+  .iphone-13-mini { width: 300px; aspect-ratio: 19.5 / 9; }
+  .iphone-14 { width: 320px; aspect-ratio: 19.5 / 9; }
+  .iphone-16-pro { width: 340px; aspect-ratio: 19.5 / 9; }
+  .iphone-16-pro-max { width: 360px; aspect-ratio: 19.5 / 9; }
+  .android { width: 330px; aspect-ratio: 20 / 9; }
+  .android-4 { width: 280px; aspect-ratio: 16 / 9; }
+  .huawei-p30 { width: 320px; aspect-ratio: 19.5 / 9; }
+
   .night-mode .push-preview {
     background-color: #1e1e1e;
     border-color: #444;
@@ -826,7 +837,7 @@ label {
     <div class="sidebar">
         <h2>Навигация</h2>
         <a href="#copy-section" class="nav-button" onclick="toggleSection('copy-section')">Копирование символов</a>
-        <a href="#char-counter-section" class="nav-button" onclick="toggleSection('char-counter-section')">Счётчики символов</a>
+        <a href="#char-counter-section" class="nav-button" onclick="toggleSection('char-counter-section')">Push-тестер</a>
         <a href="#utm-generator" class="nav-button" onclick="toggleSection('utm-generator')">Генератор UTM-меток</a>
         <a href="#time-section" class="nav-button" onclick="toggleSection('time-section')">Время</a>
         <a href="#stop-words" class="nav-button" onclick="toggleSection('stop-words')">Детектор стоп-слов</a>
@@ -1146,7 +1157,7 @@ label {
     <div class="push-body" id="preview-body">Текст уведомления</div>
   </div>
 
-  <!-- Поле заголовка -->
+  <!-- Поля ввода -->
   <div class="input-group">
     <label for="push-title">Заголовок (до 26 символов)</label>
     <textarea id="push-title" rows="1" maxlength="100" placeholder="Введите заголовок..."></textarea>
@@ -1154,13 +1165,13 @@ label {
     <div class="char-count" id="title-count">0 / 26</div>
   </div>
 
-  <!-- Поле подзаголовка -->
   <div class="input-group">
     <label for="push-body">Подзаголовок (до 100 символов)</label>
     <textarea id="push-body" rows="2" maxlength="200" placeholder="Введите текст..."></textarea>
     <div class="progress-bar" id="body-progress"></div>
     <div class="char-count" id="body-count">0 / 100</div>
   </div>
+
 </section>
 
     <script>
@@ -1473,8 +1484,8 @@ function showSizeString() {
     document.getElementById("sizeResult").textContent = formats[format];
 }
 // Расширим массив элементов из твоей системы
-  window.addEventListener('DOMContentLoaded', () => {
-    const extraElements = [
+ window.addEventListener('DOMContentLoaded', () => {
+    const elements = [
       {
         textarea: document.getElementById('push-title'),
         progressBar: document.getElementById('title-progress'),
@@ -1489,7 +1500,7 @@ function showSizeString() {
       }
     ];
 
-    extraElements.forEach(({ textarea, progressBar, charCount, limits }) => {
+    elements.forEach(({ textarea, progressBar, charCount, limits }) => {
       textarea.addEventListener('input', () => {
         updateCounter(textarea, progressBar, charCount, limits);
         updatePushPreview();
