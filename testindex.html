@@ -1254,10 +1254,12 @@ label {
     document.getElementById('label' + index).textContent = names[val];
   }
 
-const titleCount = document.getElementById('title-count');
-const bodyCount = document.getElementById('body-count');
+const titleInput = document.getElementById('title-input');
+const bodyInput = document.getElementById('body-input');
 const titleProgress = document.getElementById('title-progress');
 const bodyProgress = document.getElementById('body-progress');
+const titleCount = document.getElementById('title-count');
+const bodyCount = document.getElementById('body-count');
 
 titleInput.addEventListener('input', () => {
   const val = titleInput.value || 'Заголовок';
