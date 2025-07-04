@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Универсальна шпаргалка</title>
+    <title>Универсальная шпаргалка</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -154,23 +154,25 @@ body.night-mode .symbol:hover {
     resize: none;
 }
 
+/* Прогресс-бары */
 .progress-bar {
-  height: 4px;
-  border-radius: 2px;
-  transition: width 0.3s ease, background-color 0.3s ease;
+    height: 8px;
+    border-radius: 4px;
+    margin-top: 8px;
 }
 
 .progress-bar.normal {
-  background-color: #52c41a; /* Зеленый */
+    background-color: #52c41a; /* Зеленый */
 }
 
 .progress-bar.warning {
-  background-color: #faad14; /* Оранжевый */
+    background-color: #faad14; /* Оранжевый */
 }
 
 .progress-bar.limit {
-  background-color: #ff4d4f; /* Красный */
+    background-color: #ff4d4f; /* Красный */
 }
+
 /* Счётчик символов */
 .char-count {
     margin-top: 8px;
@@ -1193,16 +1195,10 @@ label {
   <label>Заголовок (до 25 символов)</label>
   <textarea id="title-input" rows="1" maxlength="100"></textarea>
   <div class="progress-container"><div id="title-progress" class="progress-bar"></div></div>
- <label for="title-input">
-  Заголовок (<span id="title-count">0</span> / 25 символов)
-</label>
 
   <label>Подзаголовок (до 100 символов)</label>
   <textarea id="body-input" rows="3" maxlength="200"></textarea>
   <div class="progress-container"><div id="body-progress" class="progress-bar"></div></div>
-<label for="body-input">
-  Подзаголовок (<span id="body-count">0</span> / 100 символов)
-</label>
 </div>
 
 <div class="previews">
@@ -1229,7 +1225,7 @@ label {
           <img class="push-logo" src="https://avatars.mds.yandex.net/i?id=a6feb339a7435c9352e23cf14cefe89f_l-12394646-images-thumbs&n=13">
           <span>Яндекс Про</span>
         </div>
-        <span>1 секунду назад</span>
+        <span>Now</span>
       </div>
       <div class="push-title" id="title1">Заголовок</div>
       <div class="push-body" id="body1">Текст уведомления</div>
@@ -1254,43 +1250,28 @@ label {
     document.getElementById('label' + index).textContent = names[val];
   }
 
-const titleInput = document.getElementById('title-input');
-const bodyInput = document.getElementById('body-input');
-const titleProgress = document.getElementById('title-progress');
-const bodyProgress = document.getElementById('body-progress');
-const titleCount = document.getElementById('title-count');
-const bodyCount = document.getElementById('body-count');
+  const titleInput = document.getElementById('title-input');
+  const bodyInput = document.getElementById('body-input');
+  const titleProgress = document.getElementById('title-progress');
+  const bodyProgress = document.getElementById('body-progress');
 
-titleInput.addEventListener('input', () => {
-  const val = titleInput.value || 'Заголовок';
-  for (let i = 0; i < 2; i++) document.getElementById('title' + i).textContent = val;
-  updateProgress(val.length, 25, titleProgress);
+  titleInput.addEventListener('input', () => {
+    const val = titleInput.value || 'Заголовок';
+    for (let i = 0; i < 2; i++) document.getElementById('title' + i).textContent = val;
+    updateProgress(val.length, 25, titleProgress);
+  });
 
-  // 🔧 Добавь это:
-  titleCount.textContent = val.length;
-});
+  bodyInput.addEventListener('input', () => {
+    const val = bodyInput.value || 'Текст уведомления';
+    for (let i = 0; i < 2; i++) document.getElementById('body' + i).textContent = val;
+    updateProgress(val.length, 100, bodyProgress);
+  });
 
-bodyInput.addEventListener('input', () => {
-  const val = bodyInput.value || 'Текст уведомления';
-  for (let i = 0; i < 2; i++) document.getElementById('body' + i).textContent = val;
-  updateProgress(val.length, 100, bodyProgress);
-
-  // 🔧 Добавь это:
-  bodyCount.textContent = val.length;
-
-function updateProgress(len, max, bar) {
-  const pct = Math.min((len / max) * 100, 100);
-  bar.style.width = pct + '%';
-  bar.classList.remove('normal', 'warning', 'limit');
-
-  if (len > max) {
-    bar.classList.add('limit');
-  } else if (len > max * 0.8) {
-    bar.classList.add('warning');
-  } else {
-    bar.classList.add('normal');
+  function updateProgress(len, max, bar) {
+    const pct = Math.min((len / max) * 100, 100);
+    bar.style.width = pct + '%';
+    bar.classList.toggle('over', len > max);
   }
-}
 
       // Функция для переключения ночного режима
 function toggleNightMode() {
@@ -1300,27 +1281,27 @@ function toggleNightMode() {
     sidebar.classList.toggle('night-mode');
 }
 
-        // Переключение между разделами
-  function showSection(id) {
+        // Функция для переключения между разделами
+function toggleSection(sectionId) {
     document.querySelectorAll('section').forEach(section => {
-      section.style.display = 'none';
+        section.style.display = 'none';
     });
-    const target = document.getElementById(id);
-    if (target) target.style.display = 'block';
-  }
+    document.getElementById(sectionId).style.display = 'block';
 
-  // Показываем первый раздел по умолчанию
-  document.addEventListener("DOMContentLoaded", () => {
-    showSection('char-counter-section'); // или другой ID первого раздела
-  });
-
-  // Подключаем обработчики к навигации
-  document.querySelectorAll('.nav-button').forEach(button => {
-    button.addEventListener('click', () => {
-      const sectionId = button.getAttribute('data-section');
-      showSection(sectionId);
-    });
-    });
+    if (sectionId === 'time-section') {
+        showTime();
+    }
+}
+  function toggleSection(sectionId) {
+        const sections = document.querySelectorAll('section');
+        sections.forEach(section => {
+            if (section.id === sectionId) {
+                section.style.display = section.style.display === 'none' ? 'block' : 'none';
+            } else {
+                section.style.display = 'none';
+            }
+        });
+    }
 
    // Показ московского времени
    function showTime() {
@@ -1531,9 +1512,7 @@ function showSizeString() {
     };
     document.getElementById("sizeResult").textContent = formats[format];
 }
-function toggleSection(id) {
-  showSection(id);
-}
+
 
     </script>
 
