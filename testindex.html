@@ -1250,30 +1250,31 @@ label {
     document.getElementById('label' + index).textContent = names[val];
   }
 
-  const titleInput = document.getElementById('title-input');
-  const bodyInput = document.getElementById('body-input');
-  const titleProgress = document.getElementById('title-progress');
-  const bodyProgress = document.getElementById('body-progress');
+ const titleInput = document.getElementById('title-input');
+const bodyInput = document.getElementById('body-input');
+const titleProgress = document.getElementById('title-progress');
+const bodyProgress = document.getElementById('body-progress');
 
-  titleInput.addEventListener('input', () => {
-    const val = titleInput.value || 'Заголовок';
-    for (let i = 0; i < 2; i++) document.getElementById('title' + i).textContent = val;
-    updateProgress(val.length, 25, titleProgress);
-  });
+titleInput.addEventListener('input', () => {
+  const val = titleInput.value || 'Заголовок';
+  for (let i = 0; i < 2; i++) document.getElementById('title' + i).textContent = val;
+  updateProgress(val.length, 25, titleProgress);
+});
 
-  bodyInput.addEventListener('input', () => {
-    const val = bodyInput.value || 'Текст уведомления';
-    for (let i = 0; i < 2; i++) document.getElementById('body' + i).textContent = val;
-    updateProgress(val.length, 100, bodyProgress);
-  });
+bodyInput.addEventListener('input', () => {
+  const val = bodyInput.value || 'Текст уведомления';
+  for (let i = 0; i < 2; i++) document.getElementById('body' + i).textContent = val;
+  updateProgress(val.length, 100, bodyProgress);
+});
 
- function updateProgress(len, max, bar) {
+function updateProgress(len, max, bar) {
   const pct = Math.min((len / max) * 100, 100);
   bar.style.width = pct + '%';
 
-  // Снимаем все классы перед установкой нового
+  // Удаляем предыдущие классы
   bar.classList.remove('normal', 'warning', 'limit');
 
+  // Добавляем нужный
   if (len > max) {
     bar.classList.add('limit');
   } else if (len > max * 0.8) {
@@ -1281,7 +1282,7 @@ label {
   } else {
     bar.classList.add('normal');
   }
-  }
+}
 
       // Функция для переключения ночного режима
 function toggleNightMode() {
