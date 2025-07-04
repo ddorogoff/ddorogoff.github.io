@@ -2,139 +2,189 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Push-тестер</title>
+  <title>Push-тестер на 3 устройства</title>
   <style>
     body {
-      display: flex; height: 100vh; margin: 0;
+      margin: 0; padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
-      background: #f5f5f5;
+      background: #121212; color: #fff;
     }
     .container {
-      display: flex; width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 20px;
     }
-    .preview {
-      flex: 1; background: #e6f0ff; padding: 20px;
-      display: flex; flex-direction: column;
+    .device-column {
+      flex: 1;
+      padding: 0 10px;
+    }
+    .push-card {
+      background: #fff;
+      color: #000;
+      border-radius: 16px;
+      padding: 12px;
+      margin-top: 20px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.3);
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-width: 360px;
+      min-height: 80px;
+      word-break: break-word;
+    }
+    .push-header {
+      display: flex;
       align-items: center;
+      justify-content: space-between;
+    }
+    .app-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: bold;
+    }
+    .push-logo {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+    }
+    .push-title {
+      font-weight: bold;
+      font-size: 15px;
+    }
+    .push-body {
+      font-size: 14px;
+      color: #333;
+      white-space: pre-wrap;
     }
     .controls {
-      width: 360px; background: #fff; padding: 20px;
-      box-shadow: -2px 0 4px rgba(0,0,0,0.1);
-      display: flex; flex-direction: column; gap: 20px;
+      background: #1e1e1e;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
-    label { font-size: 14px; color: #333; }
-    select, textarea { width: 100%; font-size: 16px; padding: 8px; }
-    .push-card {
-      background: #fff; border-radius: 12px; padding: 12px;
-      margin-top: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      width: 90%; max-width: 380px; color: #000;
-      display: flex; flex-direction: column; gap: 6px;
+    textarea {
+      width: 100%;
+      font-size: 14px;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
     }
-    .header {
-      display: flex; align-items: center; gap: 8px;
-      font-weight: bold; font-size: 14px;
+    .label {
+      font-size: 14px;
+      margin-bottom: 4px;
     }
-    .header img { width: 18px; height: 18px; border-radius: 4px; }
-    .title {
-      font-size: 15px; font-weight: bold;
-      display: -webkit-box;-webkit-line-clamp:1;
-      -webkit-box-orient:vertical; overflow:hidden;
-      text-overflow:ellipsis;
+    .progress-container {
+      height: 6px;
+      background: #444;
+      border-radius: 3px;
+      overflow: hidden;
     }
-    .body {
-      font-size: 14px; color: #555;
-      display: -webkit-box;-webkit-line-clamp:2;
-      -webkit-box-orient:vertical; overflow:hidden;
-      text-overflow:ellipsis;
+    .progress-bar {
+      height: 100%;
+      background: #00c853;
+      width: 0%;
+      transition: width 0.2s;
     }
-    .progress-wrapper { position: relative; height: 6px;
-      background: #ddd; border-radius: 4px; }
-    .progress {
-      height: 100%; background: #52c41a;
-      width: 0%; transition: width .2s;
-      border-radius:4px;
+    .progress-bar.over {
+      background: #d50000;
     }
-    .progress.over { background: #ff4d4f; }
+    h2 {
+      font-size: 18px;
+      color: #ccc;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="preview">
-      <label for="device">Устройство:</label>
-      <select id="device" onchange="applyDevice()">
-        <option value="iphone-se">iPhone SE</option>
-        <option value="iphone5se">iPhone 5 SE</option>
-        <option value="iphone13mini">iPhone 13 mini</option>
-        <option value="iphone14pro">iPhone 14 Pro</option>
-        <option value="iphone16">iPhone 16</option>
-        <option value="iphone16pro">iPhone 16 Pro</option>
-        <option value="s21">Samsung S21</option>
-        <option value="galaxy-a52">Samsung A52</option>
-        <option value="pixel6">Pixel 6</option>
-        <option value="xiaomi-note11">Xiaomi Note 11</option>
-        <option value="huawei-p30">Huawei P30</option>
-      </select>
-      <div id="pushCard" class="push-card">
-        <div class="header">
-          <img src="https://avatars.mds.yandex.net/i?id=a6feb339a7435c9352e23cf14cefe89f_l-12394646-images-thumbs&n=13">
-          <span>Яндекс Про</span>
+
+<div class="controls">
+  <div>
+    <div class="label">Заголовок (до 25 символов)</div>
+    <textarea id="title-input" rows="1" maxlength="100"></textarea>
+    <div class="progress-container"><div id="title-progress" class="progress-bar"></div></div>
+  </div>
+  <div>
+    <div class="label">Подзаголовок (до 100 символов)</div>
+    <textarea id="body-input" rows="3" maxlength="200"></textarea>
+    <div class="progress-container"><div id="body-progress" class="progress-bar"></div></div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="device-column">
+    <h2>iPhone SE</h2>
+    <div class="push-card">
+      <div class="push-header">
+        <div class="app-info">
+          <img class="push-logo" src="https://avatars.mds.yandex.net/i?id=a6feb339a7435c9352e23cf14cefe89f_l-12394646-images-thumbs&n=13">
+          <span>Яндекс Про</span>
         </div>
-        <div class="title" id="mobileTitle">Заголовок</div>
-        <div class="body" id="mobileBody">Подзаголовок push-уведомления.</div>
+        <span>Now</span>
       </div>
-    </div>
-    <div class="controls">
-      <div>
-        <label>Заголовок (макс 25 символов)</label>
-        <textarea id="inputTitle" rows="1" maxlength="100"></textarea>
-        <div class="progress-wrapper"><div id="prTitle" class="progress"></div></div>
-      </div>
-      <div>
-        <label>Подзаголовок (макс 100 символов)</label>
-        <textarea id="inputBody" rows="3" maxlength="200"></textarea>
-        <div class="progress-wrapper"><div id="prBody" class="progress"></div></div>
-      </div>
+      <div class="push-title" id="title-se">Заголовок</div>
+      <div class="push-body" id="body-se">Текст уведомления</div>
     </div>
   </div>
+
+  <div class="device-column">
+    <h2>iPhone 16 Pro</h2>
+    <div class="push-card">
+      <div class="push-header">
+        <div class="app-info">
+          <img class="push-logo" src="https://avatars.mds.yandex.net/i?id=a6feb339a7435c9352e23cf14cefe89f_l-12394646-images-thumbs&n=13">
+          <span>Яндекс Про</span>
+        </div>
+        <span>Now</span>
+      </div>
+      <div class="push-title" id="title-16pro">Заголовок</div>
+      <div class="push-body" id="body-16pro">Текст уведомления</div>
+    </div>
+  </div>
+
+  <div class="device-column">
+    <h2>Android Collapsed</h2>
+    <div class="push-card">
+      <div class="push-header">
+        <div class="app-info">
+          <img class="push-logo" src="https://avatars.mds.yandex.net/i?id=a6feb339a7435c9352e23cf14cefe89f_l-12394646-images-thumbs&n=13">
+          <span>Яндекс Про</span>
+        </div>
+        <span>Now</span>
+      </div>
+      <div class="push-title" id="title-android">Заголовок</div>
+      <div class="push-body" id="body-android">Текст уведомления</div>
+    </div>
+  </div>
+</div>
+
 <script>
-  const inputTitle = document.getElementById('inputTitle');
-  const inputBody = document.getElementById('inputBody');
-  const mobileTitle = document.getElementById('mobileTitle');
-  const mobileBody = document.getElementById('mobileBody');
-  const prTitle = document.getElementById('prTitle');
-  const prBody = document.getElementById('prBody');
-  inputTitle.addEventListener('input', e=>{
-    mobileTitle.textContent = e.target.value || 'Заголовок';
-    updateProgress(e.target.value.length,25,prTitle);
+  const titleInput = document.getElementById('title-input');
+  const bodyInput = document.getElementById('body-input');
+  const titleIds = ['title-se', 'title-16pro', 'title-android'];
+  const bodyIds = ['body-se', 'body-16pro', 'body-android'];
+  const titleProgress = document.getElementById('title-progress');
+  const bodyProgress = document.getElementById('body-progress');
+
+  titleInput.addEventListener('input', () => {
+    const val = titleInput.value || 'Заголовок';
+    titleIds.forEach(id => document.getElementById(id).textContent = val);
+    updateProgress(titleInput.value.length, 25, titleProgress);
   });
-  inputBody.addEventListener('input', e=>{
-    mobileBody.textContent = e.target.value || 'Подзаголовок…';
-    updateProgress(e.target.value.length,100,prBody);
+
+  bodyInput.addEventListener('input', () => {
+    const val = bodyInput.value || 'Текст уведомления';
+    bodyIds.forEach(id => document.getElementById(id).textContent = val);
+    updateProgress(bodyInput.value.length, 100, bodyProgress);
   });
-  function updateProgress(len,lim,bar){
-    const pct = Math.min(len/lim*100,100)+'%';
-    bar.style.width = pct;
-    bar.classList.toggle('over', len>lim);
+
+  function updateProgress(length, limit, bar) {
+    const percent = Math.min(length / limit * 100, 100);
+    bar.style.width = percent + '%';
+    bar.classList.toggle('over', length > limit);
   }
-  function applyDevice(){
-    const d = document.getElementById('device').value;
-    const pc = document.getElementById('pushCard');
-    let w='360px';
-    switch(d){
-      case 'iphone5se': w='320px'; break;
-      case 'iphone-se': w='375px'; break;
-      case 'iphone13mini': w='360px'; break;
-      case 'iphone14pro': w='390px'; break;
-      case 'iphone16': w='360px'; break;
-      case 'iphone16pro': w='393px'; break;
-      case 's21': case 'galaxy-a52': w='412px'; break;
-      case 'pixel6': w='412px'; break;
-      case 'xiaomi-note11': w='393px'; break;
-      case 'huawei-p30': w='360px'; break;
-    }
-    pc.style.width = w;
-  }
-  applyDevice();
 </script>
 </body>
 </html>
