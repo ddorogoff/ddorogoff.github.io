@@ -156,21 +156,22 @@ body.night-mode .symbol:hover {
 
 /* Прогресс-бары */
 .progress-bar {
-    height: 8px;
-    border-radius: 4px;
-    margin-top: 8px;
+  height: 4px;
+  border-radius: 2px;
+  transition: width 0.3s ease, background-color 0.3s ease;
 }
 
 .progress-bar.normal {
-    background-color: #52c41a; /* Зеленый */
+  background-color: #52c41a; /* Зеленый */
 }
 
 .progress-bar.warning {
-    background-color: #faad14; /* Оранжевый */
+  background-color: #faad14; /* Оранжевый */
 }
 
 .progress-bar.limit {
-    background-color: #ff4d4f; /* Красный */
+  background-color: #ff4d4f; /* Красный */
+}
 }
 
 /* Счётчик символов */
