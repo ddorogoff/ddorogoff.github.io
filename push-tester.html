@@ -1,3 +1,7 @@
+from pathlib import Path
+
+# Обновлённый push-тестер с переносом подзаголовка и расширенным списком устройств
+push_tester_updated = """
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -53,8 +57,6 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
-      width: 90%;
-      max-width: 380px;
     }
     .push-header {
       display: flex;
@@ -103,6 +105,19 @@
       margin-bottom: 6px;
       display: block;
     }
+
+    /* Устройства */
+    .iphone5se .push-preview { width: 320px; }
+    .iphonese2022 .push-preview { width: 375px; }
+    .iphone13mini .push-preview { width: 360px; }
+    .iphone14pro .push-preview { width: 393px; }
+    .iphone16 .push-preview { width: 360px; }
+    .iphone16pro .push-preview { width: 393px; }
+    .samsung-s21 .push-preview { width: 412px; }
+    .samsung-a52 .push-preview { width: 385px; }
+    .pixel6 .push-preview { width: 412px; }
+    .xiaomi-note11 .push-preview { width: 393px; }
+    .huawei .push-preview { width: 360px; }
   </style>
 </head>
 <body>
@@ -110,9 +125,16 @@
     <div class="preview-area">
       <label for="device-select">Выберите устройство:</label>
       <select id="device-select" onchange="updateDeviceSize()">
+        <option value="iphone5se">iPhone 5 SE</option>
+        <option value="iphonese2022">iPhone SE (2022)</option>
+        <option value="iphone13mini">iPhone 13 mini</option>
+        <option value="iphone14pro">iPhone 14 Pro</option>
         <option value="iphone16">iPhone 16</option>
         <option value="iphone16pro">iPhone 16 Pro</option>
-        <option value="samsung">Samsung Galaxy S23</option>
+        <option value="samsung-s21">Samsung Galaxy S21</option>
+        <option value="samsung-a52">Samsung Galaxy A52</option>
+        <option value="pixel6">Google Pixel 6</option>
+        <option value="xiaomi-note11">Xiaomi Redmi Note 11</option>
         <option value="huawei">Huawei P30</option>
       </select>
       <div id="push-preview" class="push-preview">
@@ -148,17 +170,14 @@
     const bodyPreview = document.getElementById('preview-body');
     const titleProgress = document.getElementById('title-progress');
     const bodyProgress = document.getElementById('body-progress');
-    const preview = document.getElementById('push-preview');
+    const previewWrapper = document.getElementById('push-preview');
+    const deviceSelect = document.getElementById('device-select');
 
     function updateProgressBar(input, bar, limit) {
       const length = input.value.length;
       const percent = Math.min((length / limit) * 100, 100);
       bar.style.width = percent + '%';
-      if (length > limit) {
-        bar.classList.add('over');
-      } else {
-        bar.classList.remove('over');
-      }
+      bar.classList.toggle('over', length > limit);
     }
 
     titleInput.addEventListener('input', () => {
@@ -172,26 +191,19 @@
     });
 
     function updateDeviceSize() {
-      const device = document.getElementById('device-select').value;
-      switch (device) {
-        case 'iphone16':
-          preview.style.width = '360px';
-          break;
-        case 'iphone16pro':
-          preview.style.width = '393px';
-          break;
-        case 'samsung':
-          preview.style.width = '412px';
-          break;
-        case 'huawei':
-          preview.style.width = '360px';
-          break;
-        default:
-          preview.style.width = '360px';
-      }
+      const frame = document.querySelector('.preview-area');
+      const selected = deviceSelect.value;
+      frame.className = 'preview-area ' + selected;
     }
 
     updateDeviceSize();
   </script>
 </body>
 </html>
+"""
+
+# Сохраняем обновлённый HTML
+file_path = Path("/mnt/data/push_tester_extended.html")
+file_path.write_text(push_tester_updated, encoding="utf-8")
+file_path
+
