@@ -1193,10 +1193,16 @@ label {
   <label>Заголовок (до 25 символов)</label>
   <textarea id="title-input" rows="1" maxlength="100"></textarea>
   <div class="progress-container"><div id="title-progress" class="progress-bar"></div></div>
+ <label for="title-input">
+  Заголовок (<span id="title-count">0</span> / 25 символов)
+</label>
 
   <label>Подзаголовок (до 100 символов)</label>
   <textarea id="body-input" rows="3" maxlength="200"></textarea>
   <div class="progress-container"><div id="body-progress" class="progress-bar"></div></div>
+<label for="body-input">
+  Подзаголовок (<span id="body-count">0</span> / 100 символов)
+</label>
 </div>
 
 <div class="previews">
@@ -1248,21 +1254,33 @@ label {
     document.getElementById('label' + index).textContent = names[val];
   }
 
- const titleInput = document.getElementById('title-input');
-const bodyInput = document.getElementById('body-input');
+const titleCount = document.getElementById('title-count');
+const bodyCount = document.getElementById('body-count');
 const titleProgress = document.getElementById('title-progress');
 const bodyProgress = document.getElementById('body-progress');
 
 titleInput.addEventListener('input', () => {
   const val = titleInput.value || 'Заголовок';
+
+  // Обновляем текст в пушах
   for (let i = 0; i < 2; i++) document.getElementById('title' + i).textContent = val;
+
+  // Обновляем прогресс
   updateProgress(val.length, 25, titleProgress);
+
+  // ✅ Обновляем счётчик
+  titleCount.textContent = val.length;
 });
 
 bodyInput.addEventListener('input', () => {
   const val = bodyInput.value || 'Текст уведомления';
+
   for (let i = 0; i < 2; i++) document.getElementById('body' + i).textContent = val;
+
   updateProgress(val.length, 100, bodyProgress);
+
+  // ✅ Счётчик подзаголовка
+  bodyCount.textContent = val.length;
 });
 
 function updateProgress(len, max, bar) {
