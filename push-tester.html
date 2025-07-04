@@ -1,7 +1,3 @@
-from pathlib import Path
-
-# Обновлённый push-тестер с переносом подзаголовка и расширенным списком устройств
-push_tester_updated = """
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -9,201 +5,137 @@ push_tester_updated = """
   <title>Push-тестер</title>
   <style>
     body {
-      margin: 0;
+      display: flex; height: 100vh; margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
-      background: #121212;
-      color: #fff;
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
+      background: #f5f5f5;
     }
     .container {
-      display: flex;
-      width: 100%;
+      display: flex; width: 100%;
     }
-    .preview-area {
-      flex: 1;
-      background: #1e1e1e;
-      display: flex;
-      flex-direction: column;
+    .preview {
+      flex: 1; background: #e6f0ff; padding: 20px;
+      display: flex; flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      padding: 20px;
     }
-    .control-area {
-      width: 400px;
-      background: #222;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+    .controls {
+      width: 360px; background: #fff; padding: 20px;
+      box-shadow: -2px 0 4px rgba(0,0,0,0.1);
+      display: flex; flex-direction: column; gap: 20px;
     }
-    select, textarea {
-      width: 100%;
-      font-size: 16px;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      outline: none;
+    label { font-size: 14px; color: #333; }
+    select, textarea { width: 100%; font-size: 16px; padding: 8px; }
+    .push-card {
+      background: #fff; border-radius: 12px; padding: 12px;
+      margin-top: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      width: 90%; max-width: 380px; color: #000;
+      display: flex; flex-direction: column; gap: 6px;
     }
-    .push-preview {
-      background: #fff;
-      color: #000;
-      border-radius: 16px;
-      padding: 12px;
-      margin-top: 40px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.3);
-      font-size: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+    .header {
+      display: flex; align-items: center; gap: 8px;
+      font-weight: bold; font-size: 14px;
     }
-    .push-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: bold;
+    .header img { width: 18px; height: 18px; border-radius: 4px; }
+    .title {
+      font-size: 15px; font-weight: bold;
+      display: -webkit-box;-webkit-line-clamp:1;
+      -webkit-box-orient:vertical; overflow:hidden;
+      text-overflow:ellipsis;
     }
-    .push-header img {
-      width: 20px;
-      height: 20px;
-      border-radius: 4px;
+    .body {
+      font-size: 14px; color: #555;
+      display: -webkit-box;-webkit-line-clamp:2;
+      -webkit-box-orient:vertical; overflow:hidden;
+      text-overflow:ellipsis;
     }
-    .push-title, .push-body {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
+    .progress-wrapper { position: relative; height: 6px;
+      background: #ddd; border-radius: 4px; }
+    .progress {
+      height: 100%; background: #52c41a;
+      width: 0%; transition: width .2s;
+      border-radius:4px;
     }
-    .push-title {
-      font-weight: bold;
-      font-size: 15px;
-      -webkit-line-clamp: 1;
-    }
-    .push-body {
-      font-size: 14px;
-      color: #333;
-      -webkit-line-clamp: 2;
-    }
-    .progress-container {
-      height: 6px;
-      background: #444;
-      border-radius: 3px;
-      overflow: hidden;
-    }
-    .progress-bar {
-      height: 100%;
-      background: #00c853;
-      width: 0%;
-      transition: width 0.2s;
-    }
-    .progress-bar.over {
-      background: #d50000;
-    }
-    label {
-      font-size: 14px;
-      margin-bottom: 6px;
-      display: block;
-    }
-
-    /* Устройства */
-    .iphone5se .push-preview { width: 320px; }
-    .iphonese2022 .push-preview { width: 375px; }
-    .iphone13mini .push-preview { width: 360px; }
-    .iphone14pro .push-preview { width: 393px; }
-    .iphone16 .push-preview { width: 360px; }
-    .iphone16pro .push-preview { width: 393px; }
-    .samsung-s21 .push-preview { width: 412px; }
-    .samsung-a52 .push-preview { width: 385px; }
-    .pixel6 .push-preview { width: 412px; }
-    .xiaomi-note11 .push-preview { width: 393px; }
-    .huawei .push-preview { width: 360px; }
+    .progress.over { background: #ff4d4f; }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="preview-area">
-      <label for="device-select">Выберите устройство:</label>
-      <select id="device-select" onchange="updateDeviceSize()">
+    <div class="preview">
+      <label for="device">Устройство:</label>
+      <select id="device" onchange="applyDevice()">
+        <option value="iphone-se">iPhone SE</option>
         <option value="iphone5se">iPhone 5 SE</option>
-        <option value="iphonese2022">iPhone SE (2022)</option>
         <option value="iphone13mini">iPhone 13 mini</option>
         <option value="iphone14pro">iPhone 14 Pro</option>
         <option value="iphone16">iPhone 16</option>
         <option value="iphone16pro">iPhone 16 Pro</option>
-        <option value="samsung-s21">Samsung Galaxy S21</option>
-        <option value="samsung-a52">Samsung Galaxy A52</option>
-        <option value="pixel6">Google Pixel 6</option>
-        <option value="xiaomi-note11">Xiaomi Redmi Note 11</option>
-        <option value="huawei">Huawei P30</option>
+        <option value="s21">Samsung S21</option>
+        <option value="galaxy-a52">Samsung A52</option>
+        <option value="pixel6">Pixel 6</option>
+        <option value="xiaomi-note11">Xiaomi Note 11</option>
+        <option value="huawei-p30">Huawei P30</option>
       </select>
-      <div id="push-preview" class="push-preview">
-        <div class="push-header">
-          <img src="https://avatars.mds.yandex.net/i?id=a6feb339a7435c9352e23cf14cefe89f_l-12394646-images-thumbs&n=13" alt="logo">
-          <span>Яндекс Про</span>
+      <div id="pushCard" class="push-card">
+        <div class="header">
+          <img src="https://avatars.mds.yandex.net/i?id=a6feb339a7435c9352e23cf14cefe89f_l-12394646-images-thumbs&n=13">
+          <span>Яндекс Про</span>
         </div>
-        <div class="push-title" id="preview-title">Заголовок</div>
-        <div class="push-body" id="preview-body">Текст уведомления</div>
+        <div class="title" id="mobileTitle">Заголовок</div>
+        <div class="body" id="mobileBody">Подзаголовок push-уведомления.</div>
       </div>
     </div>
-    <div class="control-area">
+    <div class="controls">
       <div>
-        <label for="title-input">Заголовок (до 25 символов)</label>
-        <textarea id="title-input" rows="2" maxlength="100"></textarea>
-        <div class="progress-container">
-          <div id="title-progress" class="progress-bar"></div>
-        </div>
+        <label>Заголовок (макс 25 символов)</label>
+        <textarea id="inputTitle" rows="1" maxlength="100"></textarea>
+        <div class="progress-wrapper"><div id="prTitle" class="progress"></div></div>
       </div>
       <div>
-        <label for="body-input">Подзаголовок (до 100 символов)</label>
-        <textarea id="body-input" rows="4" maxlength="200"></textarea>
-        <div class="progress-container">
-          <div id="body-progress" class="progress-bar"></div>
-        </div>
+        <label>Подзаголовок (макс 100 символов)</label>
+        <textarea id="inputBody" rows="3" maxlength="200"></textarea>
+        <div class="progress-wrapper"><div id="prBody" class="progress"></div></div>
       </div>
     </div>
   </div>
-  <script>
-    const titleInput = document.getElementById('title-input');
-    const bodyInput = document.getElementById('body-input');
-    const titlePreview = document.getElementById('preview-title');
-    const bodyPreview = document.getElementById('preview-body');
-    const titleProgress = document.getElementById('title-progress');
-    const bodyProgress = document.getElementById('body-progress');
-    const previewWrapper = document.getElementById('push-preview');
-    const deviceSelect = document.getElementById('device-select');
-
-    function updateProgressBar(input, bar, limit) {
-      const length = input.value.length;
-      const percent = Math.min((length / limit) * 100, 100);
-      bar.style.width = percent + '%';
-      bar.classList.toggle('over', length > limit);
+<script>
+  const inputTitle = document.getElementById('inputTitle');
+  const inputBody = document.getElementById('inputBody');
+  const mobileTitle = document.getElementById('mobileTitle');
+  const mobileBody = document.getElementById('mobileBody');
+  const prTitle = document.getElementById('prTitle');
+  const prBody = document.getElementById('prBody');
+  inputTitle.addEventListener('input', e=>{
+    mobileTitle.textContent = e.target.value || 'Заголовок';
+    updateProgress(e.target.value.length,25,prTitle);
+  });
+  inputBody.addEventListener('input', e=>{
+    mobileBody.textContent = e.target.value || 'Подзаголовок…';
+    updateProgress(e.target.value.length,100,prBody);
+  });
+  function updateProgress(len,lim,bar){
+    const pct = Math.min(len/lim*100,100)+'%';
+    bar.style.width = pct;
+    bar.classList.toggle('over', len>lim);
+  }
+  function applyDevice(){
+    const d = document.getElementById('device').value;
+    const pc = document.getElementById('pushCard');
+    let w='360px';
+    switch(d){
+      case 'iphone5se': w='320px'; break;
+      case 'iphone-se': w='375px'; break;
+      case 'iphone13mini': w='360px'; break;
+      case 'iphone14pro': w='390px'; break;
+      case 'iphone16': w='360px'; break;
+      case 'iphone16pro': w='393px'; break;
+      case 's21': case 'galaxy-a52': w='412px'; break;
+      case 'pixel6': w='412px'; break;
+      case 'xiaomi-note11': w='393px'; break;
+      case 'huawei-p30': w='360px'; break;
     }
-
-    titleInput.addEventListener('input', () => {
-      titlePreview.textContent = titleInput.value || 'Заголовок';
-      updateProgressBar(titleInput, titleProgress, 25);
-    });
-
-    bodyInput.addEventListener('input', () => {
-      bodyPreview.textContent = bodyInput.value || 'Текст уведомления';
-      updateProgressBar(bodyInput, bodyProgress, 100);
-    });
-
-    function updateDeviceSize() {
-      const frame = document.querySelector('.preview-area');
-      const selected = deviceSelect.value;
-      frame.className = 'preview-area ' + selected;
-    }
-
-    updateDeviceSize();
-  </script>
+    pc.style.width = w;
+  }
+  applyDevice();
+</script>
 </body>
 </html>
-"""
-
-# Сохраняем обновлённый HTML
-file_path = Path("/mnt/data/push_tester_extended.html")
-file_path.write_text(push_tester_updated, encoding="utf-8")
-file_path
 
