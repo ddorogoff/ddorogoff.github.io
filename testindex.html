@@ -1300,26 +1300,26 @@ function toggleNightMode() {
     sidebar.classList.toggle('night-mode');
 }
 
-        // Функция для переключения между разделами
-function toggleSection(sectionId) {
+        // Переключение между разделами
+  function showSection(id) {
     document.querySelectorAll('section').forEach(section => {
-        section.style.display = 'none';
+      section.style.display = 'none';
     });
-    document.getElementById(sectionId).style.display = 'block';
+    const target = document.getElementById(id);
+    if (target) target.style.display = 'block';
+  }
 
-    if (sectionId === 'time-section') {
-        showTime();
-    }
-}
-  function toggleSection(sectionId) {
-        const sections = document.querySelectorAll('section');
-        sections.forEach(section => {
-            if (section.id === sectionId) {
-                section.style.display = section.style.display === 'none' ? 'block' : 'none';
-            } else {
-                section.style.display = 'none';
-            }
-        });
+  // Показываем первый раздел по умолчанию
+  document.addEventListener("DOMContentLoaded", () => {
+    showSection('char-counter-section'); // или другой ID первого раздела
+  });
+
+  // Подключаем обработчики к навигации
+  document.querySelectorAll('.nav-button').forEach(button => {
+    button.addEventListener('click', () => {
+      const sectionId = button.getAttribute('data-section');
+      showSection(sectionId);
+    });
     }
 
    // Показ московского времени
