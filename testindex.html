@@ -776,58 +776,132 @@ label {
 .night-mode #typograph .output-container h2 {
     color: #e0e0e0;
 }
-      .push-preview {
-    border: 1px solid #ccc;
-    border-radius: 16px;
-    padding: 12px;
-    margin-bottom: 20px;
-    background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: width 0.3s, height 0.3s;
+   @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+  @font-face {
+    font-family: 'San Francisco';
+    font-weight: normal;
+    src: local('San Francisco');
   }
-  .push-header {
+
+  .device {
+    background: #000;
+    border-radius: 40px;
+    padding: 40px 0;
+    margin: 30px auto;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: hidden;
+  }
+
+  .device .notch {
+    width: 120px;
+    height: 24px;
+    background: #111;
+    border-radius: 10px;
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+  }
+
+  .screen {
+    background: #f0f0f0;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .notification {
+    background: #fff;
+    border-radius: 16px;
+    padding: 12px 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 360px;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  .notification.ios {
+    font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .notification.android {
+    font-family: 'Roboto', sans-serif;
+  }
+
+  .notification .header {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
   }
-  .push-logo {
-    width: 24px;
-    height: 24px;
-    border-radius: 5px;
+
+  .notification .logo {
+    width: 20px;
+    height: 20px;
     margin-right: 8px;
+    border-radius: 4px;
   }
-  .push-app-name {
-    font-weight: bold;
-    font-size: 14px;
+
+  .notification .app-name {
+    font-weight: 600;
+    font-size: 13px;
   }
-  .push-title {
+
+  .notification .title {
     font-weight: bold;
-    font-size: 16px;
+    font-size: 15px;
     margin-bottom: 4px;
+    color: #000;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  .push-body {
+
+  .notification .body {
     font-size: 14px;
     color: #333;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  /* Устройства */
-  .iphone-se { width: 300px; aspect-ratio: 16 / 9; }
-  .iphone-13-mini { width: 300px; aspect-ratio: 19.5 / 9; }
-  .iphone-14 { width: 320px; aspect-ratio: 19.5 / 9; }
-  .iphone-16-pro { width: 340px; aspect-ratio: 19.5 / 9; }
-  .iphone-16-pro-max { width: 360px; aspect-ratio: 19.5 / 9; }
-  .android { width: 330px; aspect-ratio: 20 / 9; }
-  .android-4 { width: 280px; aspect-ratio: 16 / 9; }
-  .huawei-p30 { width: 320px; aspect-ratio: 19.5 / 9; }
+  /* Размеры экранов */
+  .ios-se .screen { width: 320px; height: 568px; }
+  .ios-13-mini .screen { width: 375px; height: 812px; }
+  .ios-16-pro .screen { width: 393px; height: 852px; }
+  .ios-16-pro-max .screen { width: 430px; height: 932px; }
+  .android-12 .screen { width: 412px; height: 915px; }
+  .android-4 .screen { width: 360px; height: 640px; }
+  .huawei-p30 .screen { width: 360px; height: 750px; }
 
-  .night-mode .push-preview {
-    background-color: #1e1e1e;
-    border-color: #444;
+  .input-group {
+    margin-bottom: 16px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
   }
-  .night-mode .push-title,
-  .night-mode .push-body,
-  .night-mode .push-app-name {
-    color: #fff;
+
+  textarea {
+    width: 100%;
+    font-size: 15px;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    resize: vertical;
+    font-family: inherit;
   }
     </style>
 </head>
@@ -1129,49 +1203,46 @@ label {
 </script>
 
       <!-- Раздел с пуш-тестером -->
-<section id="char-counter-section" class="hidden">
+<!-- Push Notification Tester -->
+<section id="char-counter-section">
   <h1>Push-тестер</h1>
 
-  <!-- Выбор устройства -->
   <div class="input-group">
     <label for="push-device">Выберите устройство</label>
     <select id="push-device" onchange="updateDevicePreview()">
-      <option value="iphone-se">iPhone SE</option>
-      <option value="iphone-13-mini">iPhone 13 Mini</option>
-      <option value="iphone-14">iPhone 14</option>
-      <option value="iphone-16-pro">iPhone 16 Pro</option>
-      <option value="iphone-16-pro-max">iPhone 16 Pro Max</option>
-      <option value="android">Android 12</option>
+      <option value="ios-se">iPhone SE</option>
+      <option value="ios-13-mini">iPhone 13 Mini</option>
+      <option value="ios-16-pro">iPhone 16 Pro</option>
+      <option value="ios-16-pro-max">iPhone 16 Pro Max</option>
+      <option value="android-12">Android 12</option>
       <option value="android-4">Android 4</option>
       <option value="huawei-p30">Huawei P30</option>
     </select>
   </div>
 
-  <!-- Предпросмотр пуша -->
-  <div id="push-preview" class="push-preview iphone-se">
-    <div class="push-header">
-      <img src="https://avatars.mds.yandex.net/i?id=a6feb339a7435c9352e23cf14cefe89f_l-12394646-images-thumbs&n=13" alt="Логотип" class="push-logo">
-      <span class="push-app-name">Яндекс Про</span>
+  <!-- Макет устройства -->
+  <div id="device-frame" class="device ios-se">
+    <div class="notch"></div>
+    <div class="screen">
+      <div class="notification ios" id="push-preview">
+        <div class="header">
+          <img class="logo" src="https://avatars.mds.yandex.net/i?id=a6feb339a7435c9352e23cf14cefe89f_l-12394646-images-thumbs&n=13" alt="">
+          <span class="app-name">Яндекс Про</span>
+        </div>
+        <div class="title" id="preview-title">Заголовок</div>
+        <div class="body" id="preview-body">Текст уведомления</div>
+      </div>
     </div>
-    <div class="push-title" id="preview-title">Заголовок</div>
-    <div class="push-body" id="preview-body">Текст уведомления</div>
-  </div>
-
-  <!-- Поля ввода -->
-  <div class="input-group">
-    <label for="push-title">Заголовок (до 26 символов)</label>
-    <textarea id="push-title" rows="1" maxlength="100" placeholder="Введите заголовок..."></textarea>
-    <div class="progress-bar" id="title-progress"></div>
-    <div class="char-count" id="title-count">0 / 26</div>
   </div>
 
   <div class="input-group">
-    <label for="push-body">Подзаголовок (до 100 символов)</label>
-    <textarea id="push-body" rows="2" maxlength="200" placeholder="Введите текст..."></textarea>
-    <div class="progress-bar" id="body-progress"></div>
-    <div class="char-count" id="body-count">0 / 100</div>
+    <label>Заголовок (до 26 символов)</label>
+    <textarea id="push-title" maxlength="100"></textarea>
   </div>
-
+  <div class="input-group">
+    <label>Текст (до 100 символов)</label>
+    <textarea id="push-body" maxlength="200"></textarea>
+  </div>
 </section>
 
     <script>
@@ -1483,52 +1554,31 @@ function showSizeString() {
     };
     document.getElementById("sizeResult").textContent = formats[format];
 }
-// Расширим массив элементов из твоей системы
- window.addEventListener('DOMContentLoaded', () => {
-    const elements = [
-      {
-        textarea: document.getElementById('push-title'),
-        progressBar: document.getElementById('title-progress'),
-        charCount: document.getElementById('title-count'),
-        limits: { normal: 26, warning: 26, max: 26 }
-      },
-      {
-        textarea: document.getElementById('push-body'),
-        progressBar: document.getElementById('body-progress'),
-        charCount: document.getElementById('body-count'),
-        limits: { normal: 90, warning: 100, max: 100 }
-      }
-    ];
+  function updateDevicePreview() {
+    const frame = document.getElementById('device-frame');
+    const preview = document.getElementById('push-preview');
+    const selected = document.getElementById('push-device').value;
 
-    elements.forEach(({ textarea, progressBar, charCount, limits }) => {
-      textarea.addEventListener('input', () => {
-        updateCounter(textarea, progressBar, charCount, limits);
-        updatePushPreview();
-      });
-      updateCounter(textarea, progressBar, charCount, limits);
-      updatePushPreview();
-    });
+    frame.className = 'device ' + selected;
+
+    if (selected.startsWith('ios')) {
+      preview.classList.add('ios');
+      preview.classList.remove('android');
+    } else {
+      preview.classList.add('android');
+      preview.classList.remove('ios');
+    }
+  }
+
+  document.getElementById('push-title').addEventListener('input', () => {
+    const val = document.getElementById('push-title').value;
+    document.getElementById('preview-title').textContent = val || 'Заголовок';
   });
 
-  function updatePushPreview() {
-    const title = document.getElementById('push-title').value.trim();
-    const body = document.getElementById('push-body').value.trim();
-    document.getElementById('preview-title').textContent = title || 'Заголовок';
-    document.getElementById('preview-body').textContent = body || 'Текст уведомления';
-  }
-
-  function updateDevicePreview() {
-    const preview = document.getElementById('push-preview');
-    const device = document.getElementById('push-device').value;
-    preview.className = 'push-preview ' + device;
-  }
-
-  function copyPushPayload() {
-    const title = document.getElementById('push-title').value.trim();
-    const body = document.getElementById('push-body').value.trim();
-    const json = JSON.stringify({ title, message: body }, null, 2);
-    navigator.clipboard.writeText(json).then(() => alert("Скопировано!"));
-  }
+  document.getElementById('push-body').addEventListener('input', () => {
+    const val = document.getElementById('push-body').value;
+    document.getElementById('preview-body').textContent = val || 'Текст уведомления';
+  });
     </script>
 
 </body>
