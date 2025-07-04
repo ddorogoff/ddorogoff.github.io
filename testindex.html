@@ -1270,11 +1270,8 @@ bodyInput.addEventListener('input', () => {
 function updateProgress(len, max, bar) {
   const pct = Math.min((len / max) * 100, 100);
   bar.style.width = pct + '%';
-
-  // Удаляем предыдущие классы
   bar.classList.remove('normal', 'warning', 'limit');
 
-  // Добавляем нужный
   if (len > max) {
     bar.classList.add('limit');
   } else if (len > max * 0.8) {
