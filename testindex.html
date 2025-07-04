@@ -1257,13 +1257,13 @@ label {
 
   titleInput.addEventListener('input', () => {
     const val = titleInput.value || 'Заголовок';
-    for (let i = 0; i < 3; i++) document.getElementById('title' + i).textContent = val;
+    for (let i = 0; i < 2; i++) document.getElementById('title' + i).textContent = val;
     updateProgress(val.length, 25, titleProgress);
   });
 
   bodyInput.addEventListener('input', () => {
     const val = bodyInput.value || 'Текст уведомления';
-    for (let i = 0; i < 3; i++) document.getElementById('body' + i).textContent = val;
+    for (let i = 0; i < 2; i++) document.getElementById('body' + i).textContent = val;
     updateProgress(val.length, 100, bodyProgress);
   });
 
