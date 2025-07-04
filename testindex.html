@@ -1261,27 +1261,20 @@ const bodyProgress = document.getElementById('body-progress');
 
 titleInput.addEventListener('input', () => {
   const val = titleInput.value || 'Заголовок';
-
-  // Обновляем текст в пушах
   for (let i = 0; i < 2; i++) document.getElementById('title' + i).textContent = val;
-
-  // Обновляем прогресс
   updateProgress(val.length, 25, titleProgress);
 
-  // ✅ Обновляем счётчик
+  // 🔧 Добавь это:
   titleCount.textContent = val.length;
 });
 
 bodyInput.addEventListener('input', () => {
   const val = bodyInput.value || 'Текст уведомления';
-
   for (let i = 0; i < 2; i++) document.getElementById('body' + i).textContent = val;
-
   updateProgress(val.length, 100, bodyProgress);
 
-  // ✅ Счётчик подзаголовка
+  // 🔧 Добавь это:
   bodyCount.textContent = val.length;
-});
 
 function updateProgress(len, max, bar) {
   const pct = Math.min((len / max) * 100, 100);
