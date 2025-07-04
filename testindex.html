@@ -1267,10 +1267,20 @@ label {
     updateProgress(val.length, 100, bodyProgress);
   });
 
-  function updateProgress(len, max, bar) {
-    const pct = Math.min((len / max) * 100, 100);
-    bar.style.width = pct + '%';
-    bar.classList.toggle('over', len > max);
+ function updateProgress(len, max, bar) {
+  const pct = Math.min((len / max) * 100, 100);
+  bar.style.width = pct + '%';
+
+  // Снимаем все классы перед установкой нового
+  bar.classList.remove('normal', 'warning', 'limit');
+
+  if (len > max) {
+    bar.classList.add('limit');
+  } else if (len > max * 0.8) {
+    bar.classList.add('warning');
+  } else {
+    bar.classList.add('normal');
+  }
   }
 
       // Функция для переключения ночного режима
