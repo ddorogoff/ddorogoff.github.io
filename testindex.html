@@ -868,15 +868,15 @@ label {
 <body>
 
     <!-- Боковая панель -->
-   <nav class="sidebar">
-  <button class="nav-button" data-section="char-counter-section">Символы</button>
-  <button class="nav-button" data-section="push-tester-section">Push-тестер</button>
-  <button class="nav-button" data-section="time-section">Время</button>
-  <button class="nav-button" data-section="utm-section">UTM-метки</button>
-  <button class="nav-button" data-section="stopwords-section">Стоп-слова</button>
-  <button class="nav-button" data-section="typograph-section">Типограф</button>
-  <button class="nav-button" data-section="resize-section">Размеры постов</button>
-</nav>
+    <div class="sidebar">
+        <h2>Навигация</h2>
+        <a href="#copy-section" class="nav-button" onclick="toggleSection('copy-section')">Копирование символов</a>
+        <a href="#char-counter-section" class="nav-button" onclick="toggleSection('char-counter-section')">Счётчики символов</a>
+        <a href="#utm-generator" class="nav-button" onclick="toggleSection('utm-generator')">Генератор UTM-меток</a>
+        <a href="#time-section" class="nav-button" onclick="toggleSection('time-section')">Время</a>
+        <a href="#stop-words" class="nav-button" onclick="toggleSection('stop-words')">Детектор стоп-слов</a>
+        <a href="#typograph" class="nav-button" onclick="toggleSection('typograph')">Типограф</a>
+        <a href="#social-sizes" class="nav-button" onclick="toggleSection('social-sizes')">Размеры макетов</a>
 
 
         <!-- Переключатель для ночного режима -->
@@ -1531,7 +1531,9 @@ function showSizeString() {
     };
     document.getElementById("sizeResult").textContent = formats[format];
 }
-
+function toggleSection(id) {
+  showSection(id);
+}
 
     </script>
 
