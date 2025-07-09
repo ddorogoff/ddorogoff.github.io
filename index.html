@@ -156,21 +156,21 @@ body.night-mode .symbol:hover {
 
 /* Прогресс-бары */
 .progress-bar {
-    height: 8px;
-    border-radius: 4px;
-    margin-top: 8px;
+  height: 4px;
+  border-radius: 2px;
+  transition: width 0.3s ease, background-color 0.3s ease;
 }
 
 .progress-bar.normal {
-    background-color: #52c41a; /* Зеленый */
+  background-color: #52c41a; /* Зеленый */
 }
 
 .progress-bar.warning {
-    background-color: #faad14; /* Оранжевый */
+  background-color: #faad14; /* Оранжевый */
 }
 
 .progress-bar.limit {
-    background-color: #ff4d4f; /* Красный */
+  background-color: #ff4d4f; /* Красный */
 }
 
 /* Счётчик символов */
@@ -776,7 +776,94 @@ label {
 .night-mode #typograph .output-container h2 {
     color: #e0e0e0;
 }
-
+    .controls {
+      padding: 20px;
+      background: #1e1e1e;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .selectors {
+      display: flex;
+      gap: 10px;
+    }
+    select {
+      font-size: 14px;
+      padding: 4px;
+      flex: 1;
+    }
+    .progress-container {
+      height: 6px;
+      background: #444;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: #00c853;
+      width: 0%;
+      transition: width 0.2s;
+    }
+    .progress-bar.over {
+      background: #d50000;
+    }
+    textarea {
+      width: 100%;
+      font-size: 14px;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      resize: none;
+    }
+    .previews {
+      display: flex;
+      justify-content: space-around;
+      padding: 20px;
+    }
+    .device {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #ccc;
+    }
+    .push-card {
+      background: #fff;
+      color: #000;
+      border-radius: 16px;
+      padding: 12px;
+      margin-top: 10px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.3);
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      word-break: break-word;
+    }
+    .push-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .app-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: bold;
+    }
+    .push-logo {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+    }
+    .push-title {
+      font-weight: bold;
+      font-size: 15px;
+    }
+    .push-body {
+      font-size: 14px;
+      color: #333;
+      white-space: pre-wrap;
+    }
     </style>
 </head>
 <body>
@@ -1078,94 +1165,112 @@ label {
 
         <!-- Раздел с счётчиками символов -->
         <section id="char-counter-section" class="hidden">
-                <!-- Заголовок пуша -->
-                <div class="input-group">
-                  <label for="push-title">Заголовок пуша (до 26 символов)</label>
-                  <textarea id="push-title" rows="1" maxlength="100" placeholder="Введите заголовок..."></textarea>
-                  <div class="progress-bar" id="title-progress"></div>
-                  <div class="char-count" id="title-count">0 / 26</div>
-                </div>
-            
-                <!-- Тело пуша -->
-                <div class="input-group">
-                  <label for="push-body">Тело пуша (76–80 символов, максимум 100)</label>
-                  <textarea id="push-body" rows="2" maxlength="120" placeholder="Введите текст..."></textarea>
-                  <div class="progress-bar" id="body-progress"></div>
-                  <div class="char-count" id="body-count">0 / 100</div>
-                </div>
-              </div>
+               <div class="controls">
+  <div class="selectors">
+    <select onchange="updateDevice(0, this)">
+      <option value="se">iPhone SE</option>
+      <option value="16pro">iPhone 16 Pro</option>
+      <option value="13mini">iPhone 13 mini</option>
+      <option value="5se">iPhone 5 SE</option>
+      <option value="14pro">iPhone 14 Pro</option>
+      <option value="s21">Samsung S21</option>
+      <option value="pixel6">Pixel 6</option>
+      <option value="note11">Xiaomi Note 11</option>
+      <option value="p30">Huawei P30</option>
+    </select>
+    <select onchange="updateDevice(1, this)">
+      <option value="16pro">iPhone 16 Pro</option>
+      <option value="se">iPhone SE</option>
+      <option value="13mini">iPhone 13 mini</option>
+      <option value="5se">iPhone 5 SE</option>
+      <option value="14pro">iPhone 14 Pro</option>
+      <option value="s21">Samsung S21</option>
+      <option value="pixel6">Pixel 6</option>
+      <option value="note11">Xiaomi Note 11</option>
+      <option value="p30">Huawei P30</option>
+    </select>
+  </div>
+
+  <label>Заголовок (до 25 символов)</label>
+  <textarea id="title-input" rows="1" maxlength="100"></textarea>
+  <div class="progress-container"><div id="title-progress" class="progress-bar"></div></div>
+
+  <label>Подзаголовок (до 100 символов)</label>
+  <textarea id="body-input" rows="3" maxlength="200"></textarea>
+  <div class="progress-container"><div id="body-progress" class="progress-bar"></div></div>
+</div>
+
+<div class="previews">
+  <div class="device">
+    <div id="label0">iPhone SE</div>
+    <div class="push-card" id="card0" style="width: 320px;">
+      <div class="push-header">
+        <div class="app-info">
+          <img class="push-logo" src="https://avatars.mds.yandex.net/i?id=a6feb339a7435c9352e23cf14cefe89f_l-12394646-images-thumbs&n=13">
+          <span>Яндекс Про</span>
+        </div>
+        <span>Now</span>
+      </div>
+      <div class="push-title" id="title0">Заголовок</div>
+      <div class="push-body" id="body0">Текст уведомления</div>
+    </div>
+  </div>
+
+  <div class="device">
+    <div id="label1">iPhone 16 Pro</div>
+    <div class="push-card" id="card1" style="width: 393px;">
+      <div class="push-header">
+        <div class="app-info">
+          <img class="push-logo" src="https://avatars.mds.yandex.net/i?id=a6feb339a7435c9352e23cf14cefe89f_l-12394646-images-thumbs&n=13">
+          <span>Яндекс Про</span>
+        </div>
+        <span>Now</span>
+      </div>
+      <div class="push-title" id="title1">Заголовок</div>
+      <div class="push-body" id="body1">Текст уведомления</div>
+    </div>
+  </div>
         </section>
     </div>
 
     <script>
-         // Универсальная функция обновления прогресса
-    function updateCounter(textarea, progressBar, charCount, limits) {
-      const length = textarea.value.trim().length;
-      charCount.textContent = `${length} / ${limits.max}`;
+        const widths = {
+    se: 320, "16pro": 393, "13mini": 360, "5se": 320,
+    "14pro": 390, s21: 412, pixel6: 412, note11: 393, p30: 360
+  };
+  const names = {
+    se: "iPhone SE", "16pro": "iPhone 16 Pro", "13mini": "iPhone 13 mini", "5se": "iPhone 5 SE",
+    "14pro": "iPhone 14 Pro", s21: "Samsung S21", pixel6: "Pixel 6", note11: "Xiaomi Note 11", p30: "Huawei P30"
+  };
 
-      // Сброс классов
-      progressBar.className = 'progress-bar';
-      charCount.classList.remove('exceeded');
+  function updateDevice(index, select) {
+    const val = select.value;
+    document.getElementById('card' + index).style.width = widths[val] + 'px';
+    document.getElementById('label' + index).textContent = names[val];
+  }
 
-      // Логика изменения стилей
-      if (length <= limits.normal) {
-        progressBar.classList.add('normal');
-      } else if (length <= limits.warning) {
-        progressBar.classList.add('warning');
-      } else {
-        progressBar.classList.add('limit');
-        if (length > limits.max) charCount.classList.add('exceeded');
-      }
+  const titleInput = document.getElementById('title-input');
+  const bodyInput = document.getElementById('body-input');
+  const titleProgress = document.getElementById('title-progress');
+  const bodyProgress = document.getElementById('body-progress');
 
-      // Обновление ширины прогресса
-      progressBar.style.width = `${Math.min((length / limits.max) * 100, 100)}%`;
-    }
+  titleInput.addEventListener('input', () => {
+    const val = titleInput.value || 'Заголовок';
+    for (let i = 0; i < 2; i++) document.getElementById('title' + i).textContent = val;
+    updateProgress(val.length, 25, titleProgress);
+  });
 
-    // Настройки элементов
-    const elements = [
-      {
-        textarea: document.getElementById('push-title'),
-        progressBar: document.getElementById('title-progress'),
-        charCount: document.getElementById('title-count'),
-        limits: { normal: 26, warning: 26, max: 26 }
-      },
-      {
-        textarea: document.getElementById('push-body'),
-        progressBar: document.getElementById('body-progress'),
-        charCount: document.getElementById('body-count'),
-        limits: { normal: 76, warning: 80, max: 100 }
-      }
-    ];
+  bodyInput.addEventListener('input', () => {
+    const val = bodyInput.value || 'Текст уведомления';
+    for (let i = 0; i < 2; i++) document.getElementById('body' + i).textContent = val;
+    updateProgress(val.length, 100, bodyProgress);
+  });
 
-    // Привязка событий и инициализация
-    elements.forEach(({ textarea, progressBar, charCount, limits }) => {
-      textarea.addEventListener('input', () => updateCounter(textarea, progressBar, charCount, limits));
-      updateCounter(textarea, progressBar, charCount, limits); // Инициализация
-    });
-        // Функция для переключения между секциями
-        function toggleSection(sectionId) {
-            const sections = document.querySelectorAll('.content > section');
-            sections.forEach(section => {
-                section.classList.add('hidden');
-            });
-            document.getElementById(sectionId).classList.remove('hidden');
-        }
-
-        function copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(function() {
-        }).catch(function(err) {
-            console.error('Ошибка копирования: ', err);
-        });
-    }
-
-        // Функция для обновления счётчика символов
-        function countCharacters() {
-            const text = document.getElementById('text-area').value;
-            const withSpaces = text.length;
-            const withoutSpaces = text.replace(/\s+/g, '').length;
-            document.getElementById('with-spaces').innerText = withSpaces;
-            document.getElementById('without-spaces').innerText = withoutSpaces;
-        }
+  function updateProgress(len, max, bar) {
+    const pct = Math.min((len / max) * 100, 100);
+    bar.style.width = pct + '%';
+    bar.classList.toggle('over', len > max);
+  }
 
       // Функция для переключения ночного режима
 function toggleNightMode() {
