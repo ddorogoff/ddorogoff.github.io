@@ -1,1 +1,99 @@
 <!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Длинно короче, а коротко длиннее — UTM парсер</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: sans-serif;
+      padding: 40px;
+      margin: 0;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      background: #222;
+      color: #fff;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #444;
+    }
+
+    #status {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <h2>Вставь ссылку с UTM-метками</h2>
+  <input type="text" id="utmInput" placeholder="https://example.com/?utm_source=vk&utm_medium=cpc&utm_campaign=sale" />
+  <button onclick="submitUTM()">Отправить</button>
+  <p id="status"></p>
+
+  <script>
+    function parseUTM(url) {
+      const params = new URL(url).searchParams;
+      return {
+        utm_source: params.get("utm_source") || "",
+        utm_medium: params.get("utm_medium") || "",
+        utm_campaign: params.get("utm_campaign") || "",
+        utm_content: params.get("utm_content") || "",
+        utm_term: params.get("utm_term") || "",
+        original_url: url
+      };
+    }
+
+    async function submitUTM() {
+      const url = document.getElementById("utmInput").value;
+      const status = document.getElementById("status");
+
+      if (!url.includes("?")) {
+        status.textContent = "Невалидная ссылка";
+        return;
+      }
+
+      const data = parseUTM(url);
+
+      try {
+        await fetch("https://script.google.com/macros/s/AKfycbyuyK-9ivvB2HfQpb8QvGIkrPJPBEp98whOgQxyz-QlLPk9TversptuDz_IePI8E6JTYA/exec", {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        status.textContent = "Отправлено!";
+      } catch (error) {
+        status.textContent = "Ошибка отправки";
+      }
+    }
+  </script>
+</body>
+</html>
