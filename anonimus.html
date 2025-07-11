@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Анонимайзер</title>
+  <link rel="icon" href="https://i.ibb.co/84BQt8tY/Chat-GPT-Image-11-2025-11-01-55.png" type="image/png"> 
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      background-color: white;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .container {
+      display: flex;
+      gap: 20px;
+      position: relative;
+    }
+
+    textarea {
+      width: 100%;
+      height: 300px;
+      border-radius: 10px;
+      border: none;
+      padding: 15px;
+      font-size: 16px;
+      background: white;
+      color: black;
+      resize: none;
+    }
+
+    .controls {
+      margin: 20px 0;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    select, .button {
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+    }
+
+    .button {
+      background: white;
+      color: black;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background: #ddd;
+    }
+
+    .wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .copy-button {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      padding: 6px 10px;
+      font-size: 12px;
+      background-color: #eee;
+      color: #000;
+      border-radius: 6px;
+      cursor: pointer;
+      border: none;
+    }
+
+    .copy-button:hover {
+      background-color: #ccc;
+    }
+
+    .note {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 13px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <img class="logo" src="https://i.ibb.co/84BQt8tY/Chat-GPT-Image-11-2025-11-01-55.png" alt="логотип">
+      <div class="title">анонимайзер</div>
+    </div>
+
+    <div class="container">
+      <textarea id="inputText" placeholder="Введите текст для анонимизации..."></textarea>
+      <div style="position: relative; width: 100%;">
+        <textarea id="outputText" placeholder="Здесь появится анонимизированный текст..." readonly></textarea>
+        <button class="copy-button" onclick="copyOutput()">скопировать</button>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <div class="controls">
+        <label for="service">Выберите сервис:</label>
+        <select id="service">
+          <option value="food">Е</option>
+          <option value="taxi">Т</option>
+        </select>
+      </div>
+      <button class="button" onclick="anonymizeText()">анонимизация</button>
+    </div>
+
+    <p class="note" style="text-align: left;">*проверяйте, могут быть ошибки</p>
+  </div>
+
+  <script>
+    const wordBanks = {
+      food: ["заказ", "доставка", "еда"],
+      taxi: ["поездка", "водитель", "пробка"]
+    };
+
+    function anonymizeText() {
+      const selectedService = document.getElementById("service").value;
+      const sensitiveWords = wordBanks[selectedService] || [];
+
+      const input = document.getElementById("inputText").value;
+      let output = input;
+
+      // Расширенная маскировка ссылок
+      const urlPattern = /\b(?:https?:\/\/|www\.)[^\s]+|\b(?:[a-z0-9-]+\.)+[a-z]{2,}(\/[^\s]*)?/gi;
+      output = output.replace(urlPattern, match => '*'.repeat(match.length));
+
+      // Маскировка ключевых слов сервиса
+      sensitiveWords.forEach(word => {
+        const regex = new RegExp(word, "gi");
+        const replacement = "*".repeat(word.length);
+        output = output.replace(regex, replacement);
+      });
+
+      document.getElementById("outputText").value = output;
+    }
+
+    function copyOutput() {
+      const output = document.getElementById("outputText");
+      output.select();
+      output.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+    }
+  </script>
+</body>
+</html>
