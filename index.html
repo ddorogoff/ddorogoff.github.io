@@ -1511,22 +1511,12 @@ function showSizeString() {
     };
     document.getElementById("sizeResult").textContent = formats[format];
 }
-const copyBtn = document.getElementById('copy-btn');
-const textToCopy = document.getElementById('text-to-copy').innerText;
-const copyMsg = document.getElementById('copy-msg');
-
-async function copyContent() {
-  try {
-    await navigator.clipboard.writeText(textToCopy);
-    copyMsg.textContent = '✔️ Скопировано!';
-    setTimeout(() => copyMsg.textContent = '', 2000);
-  } catch (err) {
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    console.log(`Символ "${text}" скопирован`);
+  }).catch(err => {
     console.error('Ошибка копирования:', err);
-    copyMsg.textContent = '❌ Ошибка';
-  }
-}
-
-copyBtn.addEventListener('click', copyContent);
+  });
 }
 
     </script>
