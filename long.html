@@ -39,11 +39,15 @@
       font-weight: bold;
     }
 
-    .input-block input {
+    .input-block input,
+    .input-block textarea,
+    select {
       padding: 10px;
       font-size: 16px;
       border-radius: 6px;
       border: none;
+      background-color: #1c1c1c;
+      color: #fff;
     }
 
     .progress-wrapper {
@@ -78,22 +82,31 @@
       color: #bbb;
     }
 
-    .preview {
+    .preview, .ui-preview {
       background-color: #1c1c1c;
       border-radius: 12px;
       padding: 16px;
+      margin-top: 20px;
       box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
     }
 
-    .push-title {
+    .push-title, .ui-title {
       font-weight: bold;
       font-size: 16px;
       margin-bottom: 6px;
     }
 
-    .push-body {
+    .push-body, .ui-body {
       font-size: 14px;
       color: #ccc;
+    }
+
+    #extra-ui-section {
+      margin-top: 40px;
+    }
+
+    #extra-preview .input-block {
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -124,16 +137,39 @@
       <div class="push-title" id="preview-title">Заголовок</div>
       <div class="push-body" id="preview-body">Тело пуша</div>
     </div>
+
+    <div id="extra-ui-section">
+      <label for="elementType">Дополнительный UI-элемент:</label>
+      <select id="elementType" onchange="renderUIElement()" style="margin-top: 10px;">
+        <option value="none">—</option>
+        <option value="stub">Заглушка (заголовок + описание)</option>
+        <option value="placeholder">Плейсхолдер (только описание)</option>
+        <option value="popup">Popup (заголовок + описание)</option>
+        <option value="alert">Alert (заголовок + описание)</option>
+        <option value="bottomsheet">Bottomsheet (заголовок + описание)</option>
+        <option value="stories">Сторис (заголовок + описание)</option>
+      </select>
+
+      <div id="extra-preview"></div>
+    </div>
   </section>
 
   <script>
+    const uiElementLimits = {
+      stub: { title: 20, body: 80 },
+      placeholder: { title: 0, body: 25 },
+      popup: { title: 25, body: 80 },
+      alert: { title: 20, body: 60 },
+      bottomsheet: { title: 25, body: 120 },
+      stories: { title: 25, body: 150 }
+    };
+
     const titleInput = document.getElementById('title-input');
     const bodyInput = document.getElementById('body-input');
     const titleProgress = document.getElementById('title-progress');
     const bodyProgress = document.getElementById('body-progress');
     const titleCount = document.getElementById('title-count');
     const bodyCount = document.getElementById('body-count');
-
     const previewTitle = document.getElementById('preview-title');
     const previewBody = document.getElementById('preview-body');
 
@@ -164,7 +200,76 @@
 
       countDisplay.textContent = `${length} / ${max}`;
     }
+
+    function renderUIElement() {
+      const selected = document.getElementById('elementType').value;
+      const container = document.getElementById('extra-preview');
+      container.innerHTML = '';
+
+      if (selected === 'none') return;
+
+      const limits = uiElementLimits[selected];
+      const hasTitle = limits.title > 0;
+      const hasBody = limits.body > 0;
+
+      let html = '';
+
+      if (hasTitle) {
+        html += `
+          <div class="input-block">
+            <label for="extra-title">Заголовок</label>
+            <input type="text" id="extra-title" placeholder="Заголовок элемента" oninput="updateExtraPreview()">
+            <div class="progress-wrapper"><div class="progress-bar" id="extra-title-bar"></div></div>
+            <div class="char-count" id="extra-title-count">0 / ${limits.title}</div>
+          </div>
+        `;
+      }
+
+      if (hasBody) {
+        html += `
+          <div class="input-block">
+            <label for="extra-body">Описание</label>
+            <textarea id="extra-body" placeholder="Описание элемента" oninput="updateExtraPreview()" rows="3"></textarea>
+            <div class="progress-wrapper"><div class="progress-bar" id="extra-body-bar"></div></div>
+            <div class="char-count" id="extra-body-count">0 / ${limits.body}</div>
+          </div>
+        `;
+      }
+
+      html += `
+        <div class="ui-preview" id="ui-element-preview">
+          ${hasTitle ? '<div class="ui-title">Заголовок элемента</div>' : ''}
+          ${hasBody ? '<div class="ui-body">Описание элемента</div>' : ''}
+        </div>
+      `;
+
+      container.innerHTML = html;
+      container.setAttribute('data-title-limit', limits.title);
+      container.setAttribute('data-body-limit', limits.body);
+    }
+
+    function updateExtraPreview() {
+      const container = document.getElementById('extra-preview');
+      const titleLimit = parseInt(container.getAttribute('data-title-limit')) || 0;
+      const bodyLimit = parseInt(container.getAttribute('data-body-limit')) || 0;
+
+      const title = document.getElementById('extra-title')?.value || '';
+      const body = document.getElementById('extra-body')?.value || '';
+      const preview = document.getElementById('ui-element-preview');
+
+      const titleBar = document.getElementById('extra-title-bar');
+      const titleCount = document.getElementById('extra-title-count');
+      const bodyBar = document.getElementById('extra-body-bar');
+      const bodyCount = document.getElementById('extra-body-count');
+
+      if (preview) {
+        preview.querySelector('.ui-title') && (preview.querySelector('.ui-title').textContent = title || 'Заголовок элемента');
+        preview.querySelector('.ui-body') && (preview.querySelector('.ui-body').textContent = body || 'Описание элемента');
+      }
+
+      if (titleBar && titleCount) updateProgress(title.length, titleLimit, titleBar, titleCount);
+      if (bodyBar && bodyCount) updateProgress(body.length, bodyLimit, bodyBar, bodyCount);
+    }
   </script>
 </body>
 </html>
-
