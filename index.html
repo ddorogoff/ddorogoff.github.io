@@ -866,6 +866,84 @@ label {
       color: #333;
       white-space: pre-wrap;
     }
+        /* === Mobile patch (≤ 600px) === */
+@media (max-width: 600px){
+  /* убираем флекс-центрирование body, чтобы не было паразитных прокруток */
+  body{
+    display:block;
+    padding:12px;
+  }
+
+  /* контейнеры и карточки тянутся на всю ширину экрана */
+  .counter-container,
+  #utm-generator,
+  #stop-words,
+  #typograph,
+  .sidebar{
+    width:100%;
+    max-width:100%;
+    padding:16px;
+    box-sizing:border-box;
+    border-radius:10px;
+  }
+
+  /* блок с несколькими превью — в колонку */
+  .previews{
+    flex-direction:column;
+    gap:16px;
+    padding:12px 0;
+  }
+  .device{
+    align-items:stretch;
+  }
+  .push-card{
+    width:100%;
+    border-radius:12px;
+    font-size:14px;
+    word-break:break-word;
+    overflow-wrap:anywhere;
+  }
+
+  /* сетка городов — компактнее */
+  .grid-container{
+    grid-template-columns: 1fr;
+    gap:8px;
+  }
+
+  /* формы: не зумим iOS и делаем удобные тапы */
+  input[type="text"],
+  textarea,
+  select,
+  button{
+    font-size:16px;           /* анти-зум на iOS */
+    min-height:44px;          /* размер тапа */
+  }
+  textarea{
+    padding:12px;
+  }
+
+  /* кнопки — на всю ширину по умолчанию */
+  button{
+    width:100%;
+  }
+
+  /* заголовки/тексты — адаптивные размеры */
+  h1{ font-size: clamp(18px, 6vw, 24px); margin: 0 0 12px; }
+  h2{ font-size: clamp(16px, 5vw, 20px); }
+  label{ font-size: 14px; }
+
+  /* карточки предпросмотра UI/текста компактнее */
+  .preview, .ui-preview{
+    padding:12px;
+    margin-top:12px;
+  }
+
+  /* изображения и медиа не выпирают */
+  img, video{ max-width:100%; height:auto; display:block; }
+
+  /* страховка от неожиданных переполнений */
+  *{ min-width:0; }
+}
     </style>
 </head>
 <body>
