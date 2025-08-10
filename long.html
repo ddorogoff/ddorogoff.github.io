@@ -10,17 +10,19 @@
   --container: clamp(320px, 90vw, 980px);
   --tap: 44px;
 }
-.push-section{ width: var(--container); margin-inline:auto; }
-@media (max-width: 720px){ .controls{ grid-template-columns: 1fr; } }
-@media (max-width: 480px){
-  :root{ --pad: 12px; --gap: 14px; }
-  .preview, .ui-preview{ padding: 12px; }
+.push-section{ width: var(--container);
+  max-width: 800px; /* или убери, если мешает */
+  padding: 20px; /* внутренний отступ контейнера */
+  box-sizing: border-box;
 }
     body {
       background-color: #000;
       color: #fff;
       font-family: Arial, sans-serif;
-      padding: 20px;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center; /* горизонтальный центр */
     }
 
     h1 {
