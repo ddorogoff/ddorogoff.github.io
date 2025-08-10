@@ -6,16 +6,21 @@
   <title>Длинно короче, а коротко длиннее</title>
   <link rel="icon" type="image/png" href="https://i.ibb.co/84KZv4xR/Chat-GPT-Image-9-2025-14-21-43.png">
   <style>
+    :root{
+  --container: clamp(320px, 90vw, 980px);
+  --tap: 44px;
+}
+.push-section{ width: var(--container); margin-inline:auto; }
+@media (max-width: 720px){ .controls{ grid-template-columns: 1fr; } }
+@media (max-width: 480px){
+  :root{ --pad: 12px; --gap: 14px; }
+  .preview, .ui-preview{ padding: 12px; }
+}
     body {
       background-color: #000;
       color: #fff;
       font-family: Arial, sans-serif;
       padding: 20px;
-    }
-
-    .push-section {
-      max-width: 800px;
-      margin: 0 auto;
     }
 
     h1 {
@@ -108,33 +113,7 @@
 
     #extra-preview .input-block {
       margin-top: 10px;
-      :root{
-  --container: clamp(320px, 90vw, 980px);
-  --tap: 44px; /* минимальный размер тапа для мобильных */
-}
 
-/* Базовая ширина контейнера */
-.push-section{
-  width: var(--container);
-  margin-inline: auto;
-}
-
-/* Две колонки на десктопе, одна на мобилке */
-@media (max-width: 720px){
-  .controls{
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Уменьшаем отступы на узких экранах */
-@media (max-width: 480px){
-  :root{
-    --pad: 12px;
-    --gap: 14px;
-  }
-  .preview, .ui-preview{
-    padding: 12px;
-  }
     }
   </style>
 </head>
@@ -297,14 +276,6 @@
 
       if (titleBar && titleCount) updateProgress(title.length, titleLimit, titleBar, titleCount);
       if (bodyBar && bodyCount) updateProgress(body.length, bodyLimit, bodyBar, bodyCount);
-    }
-    function autoScale(){
-  const shellWidth = deviceFrame.parentElement.getBoundingClientRect().width;
-  const frameWidth = parseFloat(deviceFrame.style.width);
-  const scale = Math.min(shellWidth / frameWidth, 1);
-  deviceFrame.style.transform = `scale(${scale})`;
-}
-window.addEventListener('resize', autoScale);
     }
   </script>
 </body>
