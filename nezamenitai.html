@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Материал про нейросети — макет</title>
+  <meta name="color-scheme" content="light dark">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Literata:opsz,wght@7..72,400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-edge: #0f1012;
+      --bg-surface: #ffffff;
+      --text: #14171a;
+      --muted: #5b6168;
+      --accent: #2563eb;
+      --card: #f7f8f9;
+      --border: #e6e8eb;
+      --shadow: 0 10px 30px rgba(0,0,0,.12);
+
+      --radius: 16px;
+      --radius-lg: 20px;
+      --container-w: 72ch;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root { --bg-edge: #0b0c0f; }
+    }
+
+    html[data-theme="dark"] {
+      --bg-edge: #0b0c0f;
+      --bg-surface: #14171a;
+      --text: #eaeef2;
+      --muted: #9aa3ad;
+      --accent: #60a5fa;
+      --card: #1b2026;
+      --border: #262b33;
+      --shadow: 0 10px 30px rgba(0,0,0,.4);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg-edge);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .page {
+      display: grid;
+      grid-template-columns: 1fr minmax(0, var(--container-w)) 1fr;
+      min-height: 100dvh;
+    }
+
+    .center-rail {
+      grid-column: 2;
+      padding: clamp(16px, 2vw, 28px);
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      background: color-mix(in srgb, var(--bg-surface) 90%, transparent);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 10px;
+      backdrop-filter: blur(8px);
+    }
+
+    .brand { font-weight: 600; letter-spacing: .2px; opacity: .8; margin-left: 12px; }
+
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform .04s ease, background .2s ease;
+      user-select: none;
+    }
+    .btn:hover { background: color-mix(in srgb, var(--card) 85%, #fff 15%); }
+    .btn:active { transform: translateY(1px); }
+    .btn[data-variant="primary"] { background: var(--accent); color: #0b0c0f; border-color: transparent; }
+
+    .article {
+      margin-top: 16px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+    }
+
+    .article-header {
+      padding: clamp(20px, 3vw, 32px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    h1 { font-family: Literata, Georgia, serif; font-size: clamp(28px, 4vw, 44px); margin: 0 0 8px; line-height: 1.2; }
+    h2 { font-family: Literata, Georgia, serif; font-size: clamp(22px, 3vw, 30px); margin: 32px 0 8px; line-height: 1.3; }
+    h3 { font-size: clamp(18px, 2.2vw, 22px); margin: 24px 0 8px; line-height: 1.4; }
+
+    .lede { color: var(--muted); font-size: clamp(16px, 2.3vw, 18px); max-width: 66ch; }
+
+    .article-content { padding: clamp(20px, 3vw, 32px); }
+
+    .grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    @media (min-width: 680px) { .grid { grid-template-columns: 1fr 1fr; } }
+
+    .card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      transition: transform .06s ease, box-shadow .2s ease;
+    }
+    .card:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+    .card h3 { margin: 0 0 6px; font-family: Literata, Georgia, serif; }
+    .card p { margin: 0; color: var(--muted); }
+
+    .group-separator {
+      border-top: 2px solid var(--border);
+      margin: 24px 0;
+    }
+
+    .article-footer {
+      display: flex;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .figure img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      display: block;
+      margin: 0 auto 8px;
+    }
+    .figure figcaption {
+      text-align: center;
+      font-size: 14px;
+      color: var(--muted);
+    }
+  </style>
+  <!-- Подключаем Typograf.js -->
+  <script src="https://cdn.jsdelivr.net/npm/typograf@6.12.0/dist/typograf.min.js"></script>
+</head>
+<body>
+  <div class="page">
+    <div class="center-rail">
+      <div class="toolbar" role="toolbar">
+        <div class="brand">@ddorogoff для связи</div>
+        <button class="btn" id="btn-theme" data-variant="primary">Тёмная тема</button>
+      </div>
+
+      <article class="article" id="article">
+        <header class="article-header">
+          <h1 id="title">Добро пожаловать</h1>
+          <p class="lede" id="lede">Главы названы в соответствии с задачами, которые они решают. Например, если нужен рабочий промт под “корректора-редактора”, ищите его в главе с таким названием. Пока что, тут будет только те задачи и примеры, которые можно решить с помощью текста. Как создавать картинки, видео и т.д будут позже, следите за обновлениями.<br><br>
+Новичкам удобнее начать с главы 0. — так будет проще втянуться. Главы начинающиеся с 1. — как подступиться, написать промт под задачу и шаблон самого промта.</p>
+        </header>
+        <div class="article-content" id="content" aria-live="polite"></div>
+        <footer class="article-footer">
+          <button class="btn" id="btn-home">На главную</button>
+          <button class="btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Наверх ↑</button>
+        </footer>
+      </article>
+    </div>
+  </div>
+
+  <script>
+    const themeBtn = document.getElementById('btn-theme');
+    function applyTheme(t) {
+      document.documentElement.setAttribute('data-theme', t);
+      themeBtn.textContent = t === 'dark' ? 'Тёмная тема' : 'Светлая тема';
+    }
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) applyTheme(savedTheme);
+    themeBtn.addEventListener('click', () => {
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+
+    const titleEl = document.getElementById('title');
+    const ledeEl = document.getElementById('lede');
+    const contentEl = document.getElementById('content');
+    const homeBtn = document.getElementById('btn-home');
+
+    const typograf = new Typograf({ locale: ['ru', 'en-US'] });
+
+    function applyTypograf(text) {
+      return typograf.execute(text);
+    }
+
+    const PAGES = {
+      '00-eto-luchshe-prochitat': {
+        title: '00. Это лучше прочитать',
+        lede: 'Главы названы в соответствии с задачами, которые они решают.',
+        html: applyTypograf(`<p>Главы названы в соответствии с задачами, которые они решают. Например, если нужен рабочий промт под "корректора-редактора", ищите его в главе с таким названием. Пока что, тут будет только те задачи и примеры, которые можно решить с помощью текста. Как создавать картинки, видео и т.д будут позже, следите за обновлениями.<br><br>
+Новичкам удобнее начать с главы 0. — так будет проще втянуться. Главы начинающиеся с 1. — как подступиться, написать промт под задачу и шаблон самого промта.</p>`)
+      },
+      '01-vvedenie': {
+        title: '01. Введение',
+        lede: 'Задачи нейросетей.',
+        html: applyTypograf(`<p>Введение в тему.</p><img src="https://placehold.co/600x300/png" alt="Пример изображения">`)
+      },
+      '02-praktika': {
+        title: '02. Практика',
+        lede: 'Приёмы и шаблоны.',
+        html: applyTypograf(`<p>Практика.</p>`)
+      },
+      '03-dopolnitelno': {
+        title: '03. Как написать промт о задаче, которую ты не знаешь',
+        lede: applyTypograf('Многие говорят, что нейросети помогают не только в решении задач, но и могут неплохо обучать. Это действительно так, но, опять же, тут нужен хороший промт. Разберем на трёх ситуациях, как можно получить полезную информацию от нейросети'),
+        html: applyTypograf(`<p>Многие говорят, что нейросети помогают не только в решении задач, но и могут неплохо обучать. Это действительно так, но, опять же, тут нужен хороший промт. Разберем на трёх ситуациях, как можно получить полезную информацию от нейросети:<br><br>
+1. Когда мы ничего не знаем, но очень хотим сделать.<br>
+<div class="figure"><img src="https://placehold.co/600x300/png" alt="Картинка для варианта 1"><figcaption>Вариант 1: без паттерна</figcaption></div>
+2. Когда мы хотим что-то сделать или понять, но не умеем этого делать — и даже не имеем представления, кто и как вообще этим занимается.<br>
+<div class="figure"><img src="https://placehold.co/600x300/png" alt="Картинка для варианта 2"><figcaption>Вариант 2: как для эксперта</figcaption></div>
+3. Когда мы уже эксперт в этой области.<br><br>
+<div class="figure"><img src="https://placehold.co/600x300/png" alt="Картинка для варианта 3"><figcaption>Вариант 3: как для 10–11-летнего ребёнка</figcaption></div>
+Для этого подходит такое слово как паттерн или, в этом случае, модель/формат/особенность ответов от нейросети.<br><br>`)
+      },
+        '04-factchecking': {
+  title: '0.4 Как настроить фактчекинг и самопроверку нейросети',
+  lede: applyTypograf('Нейросеть часто врёт, выдумывает и путает чёрное с белым. В большинстве случаев, если указать на ошибку, она извинится и исправится. Тем не менее полагаться стоит только на себя'),
+  html: applyTypograf(`
+<div class="figure"><img src="https://i.ibb.co/21y3YqhQ/Group-11-3.png" alt="Пример из ИИ"><figcaption>Выглядит как типичный пресс-релиз региональной конференции. Но есть нюанс: всё, что выделено цветными блоками, — выдумка нейросети</figcaption></div>
+
+<h3>Что стоит проверять особенно внимательно</h3>
+<ul>
+<li><strong>Слишком точные цифры.</strong> Если в тексте десятки или сотни с дробными значениями — почти наверняка это фантазия.</li>
+<li><strong>Ссылки на исследования.</strong> Как бы лестно ни звучало, Harvard Business School вряд ли читает мой Telegram-канал.</li>
+<li><strong>Цитаты и ссылки.</strong> Нейросеть легко «придумывает» реплики любых личностей и вставляет нерабочие ссылки. При попытке перехода вы получите 404.</li>
+</ul>
+
+<h3>Встраиваем фактчекинг прямо в промт</h3>
+<ol>
+<li><strong>Когда у неё есть файл (документ или таблица).</strong><br>
+Тут всё просто: в промт можно добавить условие проверки:</li>
+
+<section class="quote-card">
+  <style>
+    .quote-card { background: color-mix(in srgb, var(--bg-surface) 85%, #000 10%); border-left: 4px solid var(--accent); border-radius: 8px; padding: 12px; margin: 10px 0; font-style: italic; }
+  </style>
+  <div>Все рассуждения, цифры и данные сверяй с файлом, который я прислал. Перед ответом обязательно проверь их по файлу и прикрепи детали</div>
+</section>
+
+<li><strong>Когда файла нет, только промт.</strong><br>
+Если в ответе должны быть цитаты, цифры или исследования, можно заранее задать нейросети правило:</li>
+
+<section class="quote-card">
+  <div>Если используешь цитаты, цифры или исследования — обязательно указывай ссылки на источник</div>
+</section>
+
+<p>Но и здесь есть нюанс: нейросеть может придумать не только исследование, но и саму ссылку. Поэтому используйте такие приёмы, но всегда проверяйте ответы вручную.</p>
+</ol>`)
+},
+      '05-itogi': {
+        title: '05. Итоги',
+        lede: 'Заключение.',
+        html: applyTypograf(`<p>Итоговый блок.</p>`)
+      },
+        '08-images-video': {
+title: '0.8 Картинки и видео для продвижения',
+lede: applyTypograf('Базовые рекомендации для генерации изображений и видео с помощью нейросетей.'),
+html: applyTypograf(`
+<p>Картинки и видео — главный маркетинговый инструмент для продвижения LLM‑моделей. Бомбардиро‑крокодило или «бабушка, прогуливающаяся с бегемотом по городу» не дадут соврать.</p>
+
+
+<p>Тут будут базовые рекомендации для генерации картинок и видеороликов. Тема очень большая, поэтому в ней должно быть намного больше блоков, чем есть сейчас. Если вы не помешаны на детализацию и хотите просто попробовать или сделать базовую картинку для блока или лендинга, тексты ниже — для вас.</p>
+
+
+<p>Для генерации изображений и тем более видеороликов важен не только каждый кадр, но и буквально каждая деталь. Проще показать на примере «редактора Богдана» — смотрите, как он изменялся, когда я добавлял детали.</p>
+
+
+<div class="figure"><img src="https://i.ibb.co/jktfJFMb/Group-11.png" alt="Редактор Богдан — пример 1"><figcaption>Пример 1: базовый промт</figcaption></div>
+<div class="figure"><img src="https://i.ibb.co/hzvG0wx/Group-11-1.png" alt="Редактор Богдан — пример 2"><figcaption>Пример 2: добавлены детали</figcaption></div>
+<div class="figure"><img src="https://i.ibb.co/zT1wXBQN/Group-10.png" alt="Редактор Богдан — пример 3"><figcaption>Пример 3: максимально детализированный промт</figcaption></div>
+
+
+<p>С генерацией изображений, как и в вайбкодинге, вам нужно обладать хорошими знаниями по графическому дизайну, фотографии или видеосъёмке, чтобы создавать действительно что‑то уникальное и запоминающееся. Для генерации несложных изображений и при наличии базовых навыков всё равно можно создать что‑то хорошее.</p>`)
+},
+        '09-json-promt': {
+        title: '0.9 JSON-промт: как работать правильно',
+        lede: applyTypograf('JSON помогает описывать промт максимально точно и понятно для ИИ. Это быстрее, гибче и качественнее обычного текста.'),
+        html: applyTypograf(`<p>Не пугайтесь, я тоже не знаю, что означают эти четыре латинские буквы. JSON — язык, который помогает описывать промт максимально точно и понятно для ИИ. Это проще и быстрее, а главное — позволяет тонко настраивать запрос. Поэтому JSON часто используют при генерации изображений и видео.</p>
+
+<p>По моим наблюдениям, json-промт помогает увеличивать качество ответа на 60–70%.</p>
+
+<p>Если провести аналогию с математикой, одно и то же уравнение можно написать по-разному:</p>
+<ol>
+<li>Нужно найти сумму чисел X и Y, чтобы получилось число Z. При этом Z должно быть больше 0, но меньше или равно 12. Найдите Z. — промт с помощью слов по гайдам из глав выше.</li>
+<li>или х+y=z, где 0<Z<=12 — json-промт. О нём ниже.</li>
+</ol>
+
+<p>Разберем сразу на примере. Это JSON-промт — «Корректор-редактор в духе Ильяхова»:</p>
+
+<section class="code-card">
+  <style>
+    /* Стили только для этого блока */
+    .code-card { background: color-mix(in srgb, var(--bg-surface) 85%, #000 15%); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); padding: 12px; margin: 12px 0 20px; }
+    .code-card pre { margin: 0; overflow-x: auto; padding: 12px; background: var(--card); border: 1px dashed var(--border); border-radius: 8px; }
+    .code-card code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 13.5px; line-height: 1.55; tab-size: 2; white-space: pre; }
+    .code-legend { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font-size: 12.5px; margin: 0 0 8px; opacity: .9; }
+    .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    /* Цвета токенов */
+    .k { font-weight: 600; }
+    .instruction { color: #60a5fa; } /* синий */
+    .context { color: #10b981; }     /* зелёный */
+    .style { color: #c084fc; }       /* фиолетовый */
+    .constraints { color: #f59e0b; } /* оранжевый */
+    .examples { color: #94a3b8; }    /* сланце-серый */
+    .input { color: #38bdf8; }
+    .output { color: #f472b6; }
+  </style>
+
+  <div class="code-legend">
+    <span class="legend-item"><span class="dot instruction" style="background:#60a5fa"></span>instruction</span>
+    <span class="legend-item"><span class="dot context" style="background:#10b981"></span>context</span>
+    <span class="legend-item"><span class="dot style" style="background:#c084fc"></span>style</span>
+    <span class="legend-item"><span class="dot constraints" style="background:#f59e0b"></span>constraints</span>
+    <span class="legend-item"><span class="dot examples" style="background:#94a3b8"></span>examples</span>
+  </div>
+
+  <pre><code>{
+  <span class="k instruction">"instruction"</span>: "Проверь и отредактируй текст. Исправь орфографические и пунктуационные ошибки, убери мусорные слова, уточни лексику. Если нужно — переформулируй предложения для ясности и логики, но не искажай смысл.",
+  <span class="k context">"context"</span>: "Ты — редактор, знакомый с принципами Ильяхова (‘Пиши, сокращай’). Твоя задача — сделать текст чище, точнее и логичнее. Читатель — умный, но занятой человек. Тон — нейтральный или деловой.",
+  <span class="k style">"style"</span>: "Ясный, деловой, без канцелярита и лишней воды. Не используй сложные конструкции и штампы. Избегай слишком личного тона, если это не блог.",
+  <span class="k constraints">"constraints"</span>: "Не добавляй новых смыслов. Не переписывай полностью, если достаточно локальных правок. Если ошибок нет — возвращай оригинал.",
+  <span class="k examples">"examples"</span>: [
+    {
+      <span class="k input">"input"</span>: "В настоящий момент ведутся работы по улучшению пользовательского интерфейса, с целью повышения уровня удобства использования.",
+      <span class="k output">"output"</span>: "Сейчас мы улучшаем интерфейс, чтобы им было удобнее пользоваться."
+    },
+    {
+      <span class="k input">"input"</span>: "Учитывая высокую степень актуальности вопроса, было принято решение о пересмотре текущих условий сотрудничества.",
+      <span class="k output">"output"</span>: "Мы решили пересмотреть условия сотрудничества — тема актуальна."
+    },
+    {
+      <span class="k input">"input"</span>: "Планируется осуществление запуска новой версии продукта в самое ближайшее время.",
+      <span class="k output">"output"</span>: "Скоро запустим новую версию продукта."
+    }
+  ]
+}</code></pre>
+</section>
+
+<p>При кажущейся сложности, самостоятельно писать json-промт не нужно — нейросеть это сделает за вас.</p>
+
+<h3>Генерируем JSON-промт с помощью нейросети</h3>
+<ol>
+<li>Пишем промт под свою задачу (об этом в главе 0.5).</li>
+<li>Открываем чат с нейросетью. Вставляем наш готовый промт и в конце добавляем: «оформи этот промт в json-формате».</li>
+<li>Готово — вы получили рабочий json-промт, который можно с помощью той же ИИ точнее настраивать.</li>
+</ol>
+
+<h3>Как использовать JSON-промт</h3>
+<ol>
+<li>Откройте новый чат в нейросети.</li>
+<li>Вставьте готовый JSON-промт и отправьте.</li>
+<li>Отправляйте запрос, под который JSON-промт был создан.</li>
+<li>Готово.</li></ol>`)
+      },
+      '010-uristy': {
+       title: '0.10  Юристы против нейросети и безопасность',
+       lede: 'Тема сырая и не изученная. У юристов нет единой позиции по вопросу использования нейросетей и авторского права. Сейчас лучше опираться на собственные убеждения и корпоративные FAQ',
+       html: applyTypograf(`
+ <div class="figure"><img src="https://placehold.co/600x300/png" alt="Картинка для варианта 3"><figcaption>пупу</figcaption></div>
+<p>Посмотрите, что обсуждают специалисты и какие позиции у юристов на начало осени 2025 года, вот подборка статей:
+<a href="https://ezybrand.ru/blog/avtorskie-prava-na-kontent-nejrosetej/" target="_blank" rel="noopener">Первая</a> — на русском языке, а
+<a href="https://www.copyright.gov/ai/" target="_blank" rel="noopener">вторая</a>,
+<a href="https://www.ft.com/content/74b1841f-bf57-4934-a06a-3611d61e4319" target="_blank" rel="noopener">третья</a>
+и <a href="https://www.gov.uk/government/consultations/copyright-and-artificial-intelligence/copyright-and-artificial-intelligence" target="_blank" rel="noopener">четвёртая</a> — на английском.</p>
+
+    <h3>Советы по безопасности</h3>
+    <ul>
+      <li>Не делитесь информацией под NDA. Избегайте упоминаний текущего места работы, финансов, кода, нюансов безопасности, паролей, email, а также проектов — настоящих и будущих.</li>
+      <li>Не передавайте персональные данные: даты рождения, фотографии без разрешения изображённых людей, данные детей, адреса, паспортные или медицинские сведения.</li>
+      <li>Используйте анонимайзеры или правьте данные вручную: заменяйте их на универсальные обозначения, например «Лицо Х».</li>
+    </ul>
+
+    <p><strong>Возьмите за правило:</strong> если информация прямо сейчас недоступна в интернете в открытом доступе — не загружайте её в нейросеть.</p>
+
+    <p>Если используете ИИ для личных целей, без желания заработать и передать ИИ рабочие данные компании, переживать не о чём.</p>`)
+}   
+    };
+
+    function renderHome() {
+  titleEl.textContent = 'Главы';
+  ledeEl.innerHTML = applyTypograf(`Главы названы в соответствии с задачами, которые они решают…`);
+
+  const slugs = Object.keys(PAGES);
+  let html = '';
+
+  for (let i = 0; i < slugs.length; i += 3) {
+    const group = slugs.slice(i, i + 3).map((slug) => {
+      const page = PAGES[slug];
+      const lede = page.lede ? page.lede : '';
+      return `<a class="card" href="#/${slug}"><h3>${page.title}</h3><p>${lede}</p></a>`;
+    }).join('');
+    html += `<div class="grid">${group}</div>`;
+    if (i + 3 < slugs.length) html += `<div class="group-separator"></div>`;
+  }
+
+  contentEl.innerHTML = html;
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+    function renderPage(slug) {
+      const page = PAGES[slug];
+      if (!page) { renderHome(); return; }
+      titleEl.textContent = page.title;
+      ledeEl.textContent = applyTypograf(page.lede || '');
+      contentEl.innerHTML = page.html;
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
+    function route() {
+      const hash = location.hash.replace(/^#\/?/, '');
+      if (!hash) { renderHome(); return; }
+      renderPage(hash);
+    }
+
+    window.addEventListener('hashchange', route);
+    homeBtn.addEventListener('click', () => { location.hash = ''; });
+
+    // Автоматически оттипографировать статический текст при загрузке
+    window.addEventListener('DOMContentLoaded', () => {
+      ledeEl.innerHTML = applyTypograf(ledeEl.innerHTML);
+      titleEl.textContent = applyTypograf(titleEl.textContent);
+    });
+
+    route();
+  </script>
+</body>
+</html>
