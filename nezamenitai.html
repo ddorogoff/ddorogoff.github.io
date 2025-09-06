@@ -157,6 +157,24 @@
       font-size: 14px;
       color: var(--muted);
     }
+    .img-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    cursor: zoom-out;
+  }
+  .img-overlay img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  }
+  /* уже есть .img-overlay {...} и .img-overlay img {...} */
+.figure img { cursor: zoom-in; } /* можно так, если хочешь только на фигурах */
   </style>
   <!-- Подключаем Typograf.js -->
   <script src="https://cdn.jsdelivr.net/npm/typograf@6.12.0/dist/typograf.min.js"></script>
@@ -171,10 +189,9 @@
 
       <article class="article" id="article">
         <header class="article-header">
-          <h1 id="title">Добро пожаловать</h1>
-          <p class="lede" id="lede">Главы названы в соответствии с задачами, которые они решают. Например, если нужен рабочий промт под “корректора-редактора”, ищите его в главе с таким названием. Пока что, тут будет только те задачи и примеры, которые можно решить с помощью текста. Как создавать картинки, видео и т.д будут позже, следите за обновлениями.<br><br>
-Новичкам удобнее начать с главы 0. — так будет проще втянуться. Главы начинающиеся с 1. — как подступиться, написать промт под задачу и шаблон самого промта.</p>
-        </header>
+            <h1 id="title">Пипи-пупу</h1>
+            <p class="lede" id="lede"> </p>
+          </header>
         <div class="article-content" id="content" aria-live="polite"></div>
         <footer class="article-footer">
           <button class="btn" id="btn-home">На главную</button>
@@ -211,20 +228,63 @@
 
     const PAGES = {
       '00-eto-luchshe-prochitat': {
-        title: '00. Это лучше прочитать',
-        lede: 'Главы названы в соответствии с задачами, которые они решают.',
-        html: applyTypograf(`<p>Главы названы в соответствии с задачами, которые они решают. Например, если нужен рабочий промт под "корректора-редактора", ищите его в главе с таким названием. Пока что, тут будет только те задачи и примеры, которые можно решить с помощью текста. Как создавать картинки, видео и т.д будут позже, следите за обновлениями.<br><br>
-Новичкам удобнее начать с главы 0. — так будет проще втянуться. Главы начинающиеся с 1. — как подступиться, написать промт под задачу и шаблон самого промта.</p>`)
+        title: '0.0 Это лучше прочитать',
+        lede: '',
+        html: applyTypograf(`<p>Это описание опыта работы с нейросетями и попытка его систематизировать. Если что-то у вас получится иначе, чем у меня, — это нормально. Главы названы по задачам, которые они помогают решать. Новичкам удобнее начать с главы 0. — так проще втянуться. Главы с 1. посвящены тому, как подступиться к нейросети: написать промт и сам шаблон промта</p>`)
       },
-      '01-vvedenie': {
-        title: '01. Введение',
-        lede: 'Задачи нейросетей.',
-        html: applyTypograf(`<p>Введение в тему.</p><img src="https://placehold.co/600x300/png" alt="Пример изображения">`)
-      },
-      '02-praktika': {
-        title: '02. Практика',
-        lede: 'Приёмы и шаблоны.',
-        html: applyTypograf(`<p>Практика.</p>`)
+  '01-chto-takoe': {
+  title: '0.1 Что такое нейросеть и промт',
+  lede: applyTypograf(''),
+  html: applyTypograf(`
+<style>
+  .hl-orange { background: rgba(245, 158, 11, 0.4); padding: 0 2px; border-radius: 3px; }
+  .hl-green { background: rgba(16, 185, 129, 0.4); padding: 0 2px; border-radius: 3px; }
+</style>
+
+<p>Представьте библиотеку. В ней тысячи книг по самым разным темам: художественная литература, физика, математика, редактура и даже детективы. Можно самостоятельно искать стеллаж и полку с книгой, а можно <span class="hl-orange">подойти к библиотекарю</span> и сказать: <span class="hl-green">«Мне нужен Тихий Дон Шолохова в красной обложке 1941 года, под редакцией Ю. Лукина»</span>. И библиотекарь принесёт именно её.</p>
+
+<p>Здорово, правда? Этот библиотекарь — <span class="hl-orange">нейросеть</span>. А книга, которую вы просите — <span class="hl-green">это промт</span>.</p>
+<div class="figure"><img src="https://i.ibb.co/Fqq5h5qs/Group-15-2.png" alt="Картинка для варианта 1"><figcaption>Вариант 1: без паттерна</figcaption></div>
+
+<p>Нейросеть — не «искусственный интеллект» в привычном смысле, а библиотека знаний, собранная руками инженеров. Она ищет информацию и формирует ответ в зависимости от того, как вы сформулируете запрос.</p>
+
+<p>Запрос или промт бывает хорошим или плохим. Хороший промт приведёт к решению задачи, плохой — запутает и утащит в сторону. Главы ниже — о написании таких промтов.</p>
+
+<p><strong>Нейросеть — это инструмент.</strong> Она не думает за вас и не принимает решений. Результат зависит от того, как именно вы её используете. Всё остальное — ваша работа.</p>`)
+},
+      '02-first-promt': {
+  title: '0.2 Пишем свой первый правильный промт',
+  lede: applyTypograf(''),
+  html: applyTypograf(`
+<p>При написании промта удобно использовать приём «от общего к частному». Например: есть статья (общее), в ней — абзацы (частное), а в абзацах — предложения (ещё более частное).</p>
+
+<p>Представим задачу: хотим, чтобы нейросеть проверяла текст на ошибки и исправляла их, то есть выполняла роль корректора.</p>
+
+<p><strong>Общее:</strong> Корректор.</p>
+
+<p>Примерно понимаем, какими инструментами и знаниями пользуется корректор: он проверяет текст на ошибки в лексике, пунктуации и орфографии.</p>
+
+<p><strong>Общее + частное:</strong> Ты корректор. Проверяешь тексты на ошибки в лексике, пунктуации, орфографии.</p>
+
+<p>Пример выше — наш первый простой промт. Остаётся только дать нейросети материал, с которым она будет работать.</p>
+
+<div class="figure"><img src="https://i.ibb.co/3mMg51Y8/image-1.png" alt="Скрин использования промта"><figcaption>Пример работы с простым промтом</figcaption></div>
+
+<p>Конечно, с таким промтом горы не свернёшь. Чтобы результат был точнее, добавляем уточнения — контекст.</p>
+
+<p>Например, мы хотим, чтобы нейросеть не только исправила ошибки, но и сохранила разговорный стиль текста. Или наоборот — переписала его в литературной манере, в духе А. С. Пушкина.</p>
+
+<p><strong>Формула:</strong> общее + частное + контекст.</p>
+
+<div class="figure"><img src="https://i.ibb.co/5h1HggmY/Group-15-4.png" alt="Скрин использования промта с контекстом"><figcaption>Пример промта с добавленным контекстом</figcaption></div>
+
+<p>Было бы неплохо, если нейросеть добавит какие-то смайлики в текст, чтобы было повеселее.</p>
+
+<div class="figure"><img src="https://i.ibb.co/YTYhyXdB/Group-15-5.png" alt="Скрин использования промта со смайликами"><figcaption>Пример промта с уточнением для смайликов</figcaption></div>
+
+<p>Вообщем, предела фантазии здесь нет. Добавляйте уточнения — чем их больше, тем точнее будет результат. Главное, чтобы они были логичными и не противоречили друг другу.</p>
+
+<p><strong>Тема на повторение:</strong> возьмите структуру из примера и адаптируйте её под свою задачу — будь то аналитика, HR или психология. Попробуйте, и вы сами увидите, как это работает.</p>`)
       },
       '03-dopolnitelno': {
         title: '03. Как написать промт о задаче, которую ты не знаешь',
@@ -403,9 +463,10 @@ html: applyTypograf(`
 }   
     };
 
+
     function renderHome() {
-  titleEl.textContent = 'Главы';
-  ledeEl.innerHTML = applyTypograf(`Главы названы в соответствии с задачами, которые они решают…`);
+  titleEl.textContent = 'Меня не заменить ИИ';
+  ledeEl.innerHTML = applyTypograf(``);
 
   const slugs = Object.keys(PAGES);
   let html = '';
@@ -419,10 +480,60 @@ html: applyTypograf(`
     html += `<div class="grid">${group}</div>`;
     if (i + 3 < slugs.length) html += `<div class="group-separator"></div>`;
   }
+ // Функция увеличения картинки
+ function enableImageZoom() {
+    document.addEventListener('click', (e) => {
+      if (e.target.tagName === 'IMG') {
+        const overlay = document.createElement('div');
+        overlay.className = 'img-overlay';
+        overlay.innerHTML = `<img src="${e.target.src}" alt="${e.target.alt}">`;
+        document.body.appendChild(overlay);
 
+        overlay.addEventListener('click', () => {
+          overlay.remove();
+        });
+      }
+    });
+  }
+
+  // Активируем после загрузки страницы
+  window.addEventListener('DOMContentLoaded', enableImageZoom);
   contentEl.innerHTML = html;
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
+// 2) Зум изображений — глобально, один раз
+function enableImageZoom() {
+  // курсор-намёк на кликабельность
+  document.documentElement.addEventListener('mouseover', (e) => {
+    if (e.target.tagName === 'IMG') e.target.style.cursor = 'zoom-in';
+  });
+
+  document.addEventListener('click', (e) => {
+    if (e.target.tagName !== 'IMG') return;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'img-overlay';
+    overlay.innerHTML = `<img src="${e.target.src}" alt="${e.target.alt}">`;
+    document.body.appendChild(overlay);
+
+    const close = () => {
+      overlay.remove();
+      document.removeEventListener('keydown', onKey);
+    };
+    const onKey = (ev) => { if (ev.key === 'Escape') close(); };
+
+    overlay.addEventListener('click', close);
+    document.addEventListener('keydown', onKey);
+  });
+}
+
+// Инициализируем один раз после загрузки
+window.addEventListener('DOMContentLoaded', () => {
+  enableImageZoom();
+  // Уже было: автотипограф статических заголовков
+  ledeEl.innerHTML = applyTypograf(ledeEl.innerHTML);
+  titleEl.textContent = applyTypograf(titleEl.textContent);
+});
 
     function renderPage(slug) {
       const page = PAGES[slug];
