@@ -305,144 +305,130 @@ homeBtnTop.addEventListener('click', () => { location.hash = ''; });
 
 <p>Нейросеть — не «искусственный интеллект» в привычном смысле, а библиотека знаний, собранная руками инженеров. Она ищет информацию и формирует ответ в зависимости от того, как вы сформулируете запрос.</p>
 
-<p>Запрос или промт бывает хорошим или плохим. Хороший промт приведёт к решению задачи, плохой — запутает и утащит в сторону. Блоки в этом продукте — о написании таких промтов.</p>
+<p>Запрос или промт бывает хорошим или плохим. Хороший промт приведёт к решению задачи, плохой — запутает и утащит в сторону. Блоки в этом продукте — о написании хороших промтов.</p>
 
-<p><strong>Нейросеть — это инструмент.</strong> Она не думает за вас и не принимает решений. Результат зависит от того, как именно вы её используете.</p>`)
+<p><strong>Нейросеть — это инструмент.</strong> Результат зависит от того, как именно вы его используете.</p>`)
 },
     '02-first-promt': {
   title: '0.2 Пишем свой первый правильный промт',
   lede: applyTypograf('Используйте приём «от общего к частному»'),
   html: applyTypograf(`
 <style>
-  /* Локальные стили только для главы 0.2 */
-  .kicker{font-weight:600; letter-spacing:.2px; opacity:.85; margin:12px 0 8px;}
-  .case{border:1px solid var(--border); border-radius:12px; padding:14px 16px; background:var(--bg-surface); margin:16px 0 22px;}
-  .case h3{margin-top:0}
-  .prompt-card{background: color-mix(in srgb, var(--bg-surface) 90%, #000 10%); border:1px solid var(--border);
-               border-left:4px solid var(--accent); border-radius:10px; padding:12px 14px; margin:12px 0;}
-  .chat{display:grid; gap:8px; margin:10px 0 12px;}
-  .msg{border:1px solid var(--border); border-radius:12px; padding:12px 14px; background:var(--card);}
-  .msg .who{font-size:12px; text-transform:uppercase; letter-spacing:.04em; opacity:.7; margin-bottom:6px;}
-  .msg.user{background: color-mix(in srgb, var(--card) 78%, #fef0c7 22%);}   /* тёплый фон для пользователя */
-  .figure{margin:12px 0 18px;}
+  /* Упрощённая стилизация только для этой главы */
+  .prompt-example {
+    background: color-mix(in srgb, var(--bg-surface) 90%, #000 10%);
+    border-left: 4px solid var(--accent);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 14px 0;
+    font-style: italic;
+  }
+  .figure { margin: 14px 0 20px; }
 </style>
 
 <p>При написании промта удобно использовать приём «от общего к частному». Например: есть статья (общее), в ней — абзацы (частное), а в абзацах — предложения (ещё более частное).</p>
 
 <p>Представим задачу: хотим, чтобы нейросеть проверяла текст на ошибки и исправляла их, то есть выполняла роль корректора.</p>
 
-<section class="case">
-  <h3>Базовая формула</h3>
-  <p><strong>Общее:</strong> Корректор.</p>
-  <p>Примерно понимаем, какими инструментами и знаниями пользуется корректор: он проверяет текст на ошибки в лексике, пунктуации и орфографии.</p>
-  <p><strong>Общее + частное:</strong> Ты корректор. Проверяешь тексты на ошибки в лексике, пунктуации, орфографии.</p>
+<h3>Базовая формула</h3>
+<p><strong>Общее:</strong> Корректор.</p>
+<p>Примерно понимаем, какими инструментами и знаниями пользуется корректор: он проверяет текст на ошибки в лексике, пунктуации и орфографии.</p>
 
-  <div class="prompt-card">
-    <strong>Простой промт:</strong><br>
-    <em>Ты корректор. Проверяешь тексты на ошибки в лексике, пунктуации, орфографии. Ниже я добавлю текст: &lt;ваш текст&gt;</em>
-  </div>
+<div class="prompt-example">
+  <strong>Общее + частное:</strong> Ты корректор. Проверяешь тексты на ошибки в лексике, пунктуации, орфографии.  
+  Ниже я добавлю текст: &lt;ваш текст&gt;
+</div>
 
-  <p>Пример выше — наш первый простой промт. Остаётся только дать нейросети материал, с которым она будет работать.</p>
-  <div class="figure"><img src="https://i.ibb.co/3mMg51Y8/image-1.png" alt="Скрин использования промта"><figcaption>Пример работы с простым промтом</figcaption></div>
-</section>
+<div class="figure"><img src="https://i.ibb.co/3mMg51Y8/image-1.png" alt="Скрин использования промта"><figcaption>Пример работы с простым промтом</figcaption></div>
 
-<section class="case">
-  <h3>Добавляем контекст</h3>
-  <p>Конечно, с таким промтом горы не свернёшь. Чтобы результат был точнее, добавляем уточнения — контекст.</p>
-  <p>Например, мы хотим, чтобы нейросеть не только исправила ошибки, но и сохранила разговорный стиль текста. Или наоборот — переписала его в литературной манере, в духе А. С. Пушкина.</p>
-  <p><strong>Формула:</strong> общее + частное + контекст.</p>
+<h3>Добавляем контекст</h3>
+<p>Конечно, с таким промтом горы не свернёшь. Чтобы результат был точнее, добавляем уточнения — контекст.</p>
+<p>Например, мы хотим, чтобы нейросеть не только исправила ошибки, но и сохранила разговорный стиль текста. Или наоборот — переписала его в литературной манере, в духе А. С. Пушкина.</p>
 
-  <div class="prompt-card">
-    <strong>Промт с контекстом:</strong><br>
-    <em>Ты корректор. Проверяешь тексты на ошибки в лексике, пунктуации, орфографии. Проверь и перепиши текст в литературном стиле, в духе Пушкина. Ниже я добавлю текст: &lt;ваш текст&gt;</em>
-  </div>
+<div class="prompt-example">
+  Ты корректор. Проверяешь тексты на ошибки в лексике, пунктуации, орфографии.  
+  Проверь и перепиши текст в литературном стиле, в духе Пушкина.  
+  Ниже я добавлю текст: &lt;ваш текст&gt;
+</div>
 
-  <div class="figure"><img src="https://i.ibb.co/5h1HggmY/Group-15-4.png" alt="Скрин использования промта с контекстом"><figcaption>Пример промта с добавленным контекстом</figcaption></div>
-</section>
+<div class="figure"><img src="https://i.ibb.co/5h1HggmY/Group-15-4.png" alt="Скрин использования промта с контекстом"><figcaption>Пример промта с добавленным контекстом</figcaption></div>
 
-<section class="case">
-  <h3>Контекст + дополнительные требования</h3>
-  <p>Было бы неплохо, если нейросеть добавит какие-то смайлики в текст, чтобы было повеселее.</p>
+<h3>Контекст + дополнительные требования</h3>
+<p>Было бы неплохо, если нейросеть добавит какие-то смайлики в текст, чтобы было повеселее.</p>
 
-  <div class="prompt-card">
-    <strong>Промт со смайликами:</strong><br>
-    <em>Ты корректор. Проверяешь тексты на ошибки в лексике, пунктуации, орфографии. Проверь и перепиши его в литературном стиле, в духе Пушкина. Отбивай абзацы подходящими под контекст смайликами. Ниже я добавлю текст: &lt;ваш текст&gt;</em>
-  </div>
+<div class="prompt-example">
+  Ты корректор. Проверяешь тексты на ошибки в лексике, пунктуации, орфографии.  
+  Проверь и перепиши его в литературном стиле, в духе Пушкина.  
+  Отбивай абзацы подходящими под контекст смайликами.  
+  Ниже я добавлю текст: &lt;ваш текст&gt;
+</div>
 
-  <div class="figure"><img src="https://i.ibb.co/YTYhyXdB/Group-15-5.png" alt="Скрин использования промта со смайликами"><figcaption>Пример промта с уточнением для смайликов</figcaption></div>
-</section>
+<div class="figure"><img src="https://i.ibb.co/YTYhyXdB/Group-15-5.png" alt="Скрин использования промта со смайликами"><figcaption>Пример промта с уточнением для смайликов</figcaption></div>
 
 <p>Вообщем, предела фантазии здесь нет. Добавляйте уточнения — чем их больше, тем точнее будет результат. Главное, чтобы они были логичными и не противоречили друг другу.</p>
 
 <p><strong>Тема на повторение:</strong> возьмите структуру из примера и адаптируйте её под свою задачу — будь то аналитика, HR или психология. Попробуйте, и вы сами увидите, как это работает.</p>
 `)
 },
-      '03-unknown-task': {
-  title: '0.3 Как написать промт о задаче, которую ты не знаешь',
+
+    '03-unknown-task': {
+  title: '0.3 Пишем промт к задаче, которую не знаешь',
   lede: applyTypograf('Учимся с помощью нейросети'),
   html: applyTypograf(`
 <style>
-  /* Локальные стили блока 0.3 */
-  .case{border:1px solid var(--border); border-radius:12px; padding:14px 16px; background:var(--bg-surface); margin:16px 0 22px;}
-  .case h3{margin-top:0}
-  .chat{display:grid; gap:8px; margin:10px 0 12px;}
-  .msg{border:1px solid var(--border); border-radius:12px; padding:12px 14px; background:var(--card);}
-  .msg .who{font-size:12px; text-transform:uppercase; letter-spacing:.04em; opacity:.7; margin-bottom:6px;}
-  .msg.user{background: color-mix(in srgb, var(--card) 78%, #fef0c7 22%);} /* тёплый «пользователь» */
-  /* если когда-нибудь добавим ответ ИИ */
-  .msg.ai{background: color-mix(in srgb, var(--card) 85%, #c7f9e1 15%);}
-  .figure{margin:10px 0 0;}
+  /* Локальные стили для главы 0.3 */
+  .chat { display: grid; gap: 8px; margin: 12px 0 16px; }
+  .msg { border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; background: var(--card); }
+  .msg .who { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; opacity: .7; margin-bottom: 6px; }
+  .msg.user { background: color-mix(in srgb, var(--card) 78%, #fef0c7 22%); }   /* тёплый фон для пользователя */
+  .msg.ai   { background: color-mix(in srgb, var(--card) 85%, #c7f9e1 15%); }   /* холодный фон для ИИ */
+  .figure { margin: 14px 0 20px; }
 </style>
 
 <p>Многие говорят, что нейросети помогают не только решать задачи, но и обучать. Это действительно так, но всё зависит от промта. Разберём три ситуации, как получить полезную информацию от нейросети.</p>
 
 <p><strong>Ключевой приём — паттерны.</strong> Мы задаём нейросети модель поведения.</p>
 
-<section class="case">
-  <h3>1. Мы ничего не знаем, но очень хотим узнать</h3>
-  <p>Насколько хорошо вы разбираетесь в чёрных дырах? Я плоховато. Когда есть тема, которую нужно долго изучать или спросить у профессионала, используем паттерн «как для ребёнка».</p>
+<h3>1. Мы ничего не знаем, но очень хотим узнать</h3>
+<p>Насколько хорошо вы разбираетесь в чёрных дырах? Я плоховато. Когда есть тема, которую нужно долго изучать или спросить у профессионала, используем паттерн «как для ребёнка».</p>
 
-  <div class="chat">
-    <div class="msg user">
-      <div class="who">Пользователь</div>
-      <p><em>«Объясни, что такое чёрные дыры так, как если бы ты объяснял это 10-летнему ребёнку. Используй простые слова, короткие абзацы и 2–3 понятные метафоры. Добавь один бытовой пример».</em></p>
-    </div>
+<div class="chat">
+  <div class="msg user">
+    <div class="who">Пользователь</div>
+    <p><em>«Объясни, что такое чёрные дыры так, как если бы ты объяснял это 10-летнему ребёнку. Используй простые слова, короткие абзацы и 2–3 понятные метафоры. Добавь один бытовой пример».</em></p>
   </div>
+</div>
 
-  <div class="figure"><img src="https://i.ibb.co/zW1gKQRM/Group-19.png" alt="Пример объяснения для ребёнка"><figcaption>Пример: объяснение как для ребёнка</figcaption></div>
-</section>
+<div class="figure"><img src="https://i.ibb.co/zW1gKQRM/Group-19.png" alt="Пример объяснения для ребёнка"><figcaption>Пример: объяснение как для ребёнка</figcaption></div>
 
-<section class="case">
-  <h3>2. Мы неплохо разбираемся в теме, но есть люди куда экспертнее нас</h3>
-  <p>Мы — молодые учёные. В таких случаях просим объяснение на профессиональном языке, без избыточной сложности.</p>
+<h3>2. Мы неплохо разбираемся в теме, но есть люди куда экспертнее нас</h3>
+<p>Мы — молодые учёные. В таких случаях просим объяснение на профессиональном языке, без избыточной сложности.</p>
 
-  <div class="chat">
-    <div class="msg user">
-      <div class="who">Пользователь</div>
-      <p><em>«Расскажи про чёрные дыры так, будто перед тобой молодой учёный, написавший магистерскую работу по теме. Дай краткую теоретическую часть, перечисли ключевые эффекты (по пунктам) и укажи 2–3 базовые публикации/фамилии исследователей».</em></p>
-    </div>
+<div class="chat">
+  <div class="msg user">
+    <div class="who">Пользователь</div>
+    <p><em>«Расскажи про чёрные дыры так, будто перед тобой молодой учёный, написавший магистерскую работу по теме. Дай краткую теоретическую часть, перечисли ключевые эффекты (по пунктам) и укажи 2–3 базовые публикации/фамилии исследователей».</em></p>
   </div>
+</div>
 
-  <div class="figure"><img src="https://i.ibb.co/XrJQHbcs/Group-19-2.png" alt="Пример объяснения для учёного"><figcaption>Пример: объяснение как для молодого учёного</figcaption></div>
-</section>
+<div class="figure"><img src="https://i.ibb.co/XrJQHbcs/Group-19-2.png" alt="Пример объяснения для учёного"><figcaption>Пример: объяснение как для молодого учёного</figcaption></div>
 
-<section class="case">
-  <h3>3. Мы PhD и прекрасно разбираемся в теме</h3>
-  <p>Хотим «говорить формулами»: просим глубину, цифры и графики.</p>
+<h3>3. Мы PhD и прекрасно разбираемся в теме</h3>
+<p>Хотим «говорить формулами»: просим глубину, цифры и графики.</p>
 
-  <div class="chat">
-    <div class="msg user">
-      <div class="who">Пользователь</div>
-      <p><em>«Представь, что перед тобой PhD и нобелевский лауреат. Дай строгое изложение: основные формулы (ЛТИ/ОВТ по теме), краткую оценку порядков величин и схему эксперимента/наблюдений. Без вводных, больше формализма».</em></p>
-    </div>
+<div class="chat">
+  <div class="msg user">
+    <div class="who">Пользователь</div>
+    <p><em>«Представь, что перед тобой PhD и нобелевский лауреат. Дай строгое изложение: основные формулы (ЛТИ/ОВТ по теме), краткую оценку порядков величин и схему эксперимента/наблюдений. Без вводных, больше формализма».</em></p>
   </div>
+</div>
 
-  <div class="figure"><img src="https://i.ibb.co/Kj16FQYB/Group-19-3.png" alt="Пример объяснения для PhD"><figcaption>Пример: объяснение как для PhD</figcaption></div>
-</section>
+<div class="figure"><img src="https://i.ibb.co/Kj16FQYB/Group-19-3.png" alt="Пример объяснения для PhD"><figcaption>Пример: объяснение как для PhD</figcaption></div>
 
 <p>Полученные таким образом знания можно использовать для написания промтов по темам, в которых вы разбираетесь мало или поверхностно. А ещё — в бытовых ситуациях: прочитали интересную статью про какую-то тему, и вместо поисковика идёте сразу в ChatGPT.</p>
 `)
 },
+
         '04-factchecking': {
   title: '0.4 Как настроить фактчекинг и самопроверку нейросети',
   lede: applyTypograf('Нейросеть часто врёт, выдумывает и путает чёрное с белым. Если указать на ошибку, она извинится и исправится'),
@@ -480,7 +466,7 @@ homeBtnTop.addEventListener('click', () => { location.hash = ''; });
 },
     '05-writing-with-ai': {
   title: '0.5 Пишем промт с помощью нейросети',
-  lede: applyTypograf('Помогаем структурировать промт и оставить только «сухие факты».'),
+  lede: applyTypograf('Просим сделать стркутурированный промт'),
   html: applyTypograf(`
 <style>
   /* Локальные стили только для этой главы */
@@ -536,8 +522,8 @@ homeBtnTop.addEventListener('click', () => { location.hash = ''; });
 `)
 },
 '06-images-video': {
-  title: '0.6 Картинки и видео для продвижения',
-  lede: applyTypograf('Базовые рекомендации для генерации изображений и видео с помощью нейросетей.'),
+  title: '0.6 Изображение и видео',
+  lede: applyTypograf('Базовые рекомендации для генерации'),
   html: applyTypograf(`
 <p>Картинки и видео — главный маркетинговый инструмент для продвижения LLM-моделей. Бомбардиро-крокодило или «бабушка, прогуливающаяся с бегемотом по городу» не дадут соврать.</p>
 
@@ -637,7 +623,7 @@ homeBtnTop.addEventListener('click', () => { location.hash = ''; });
       },
 '08-decomposition': {
   title: '0.8 Декомпозиция: как справляться с большими задачами',
-  lede: applyTypograf('Большую задачу проще решить, если разбить её на несколько маленьких.'),
+  lede: applyTypograf('Большую задачу проще решить, если разбить её на несколько маленьких'),
   html: applyTypograf(`
 <style>
   /* Локальные стили для чата и цитаты в 0.9 */
@@ -680,7 +666,7 @@ homeBtnTop.addEventListener('click', () => { location.hash = ''; });
 <li>Итоговый отчёт с KPI.</li>
 </ul>
 
-<div class="figure"><img src="https://placehold.co/600x300/png" alt="Пример декомпозиции"><figcaption>Разбиваем задачу на подзадачи</figcaption></div>
+<div class="figure"><img src="https://i.ibb.co/TJtrn32/Group-19-5.png" alt="Пример декомпозиции"><figcaption>Разбиваем задачу на подзадачи</figcaption></div>
 
 <section class="quote-card">
   <div><strong>Каждая подзадача — это отдельный промт.</strong> Если смешать всё в одном запросе, результат получится поверхностным и придётся тратить время на бесконечные уточнения.</div>
@@ -690,15 +676,15 @@ homeBtnTop.addEventListener('click', () => { location.hash = ''; });
 `)
 },
 '09-vaybcoding': {
-  title: '0.9 Вайбкодим. Делаем простые штуки для себя любимых',
-  lede: applyTypograf('Что реально можно «навайбкодить» с ИИ и какие подводные камни встретятся.'),
+  title: '0.9 Вайбкодим. Делаем штуки для себя любимых',
+  lede: applyTypograf('Что реально можно «навайбкодить»'),
   html: applyTypograf(`
 <p>То, где вы читаете этот текст, сделал человек, ничего не понимающий в программировании, но немного разбирающийся в «вайбкодинге». Так называют попытки людей, знающих, что айтишники хорошо зарабатывают, с помощью нейросети написать «какой-то код» для себя любимого.</p>
 
 <p>Не верьте материалам в популярных журналах о том, как «16-летний подросток с помощью ИИ сделал аналог Авито», и уж тем более промо-роликам OpenAI. На деле всё наоборот: нейросеть — джун, а вы должны быть всезнающим разработчиком.</p>
 
 <p>Чтобы ИИ сгенерировал хоть что-то похожее на MVP, ему нужно поставить не только задачу, но и описать каждый экран, каждую кнопку, выбрать фреймворк. Поэтому, если ожидание не совпадёт с реальностью — это нормально. Пробуйте, экспериментируйте и учитесь. И не расстраивайтесь слишком сильно, если ничего не получится. Повторю, это нормально.</p>
-
+ <div class="figure"><img src="https://i.ibb.co/VYHjFhGg/Group-19-6.png" alt="Картинка для варианта 3"><figcaption>*мысль, что можно что-то навайбкодить    *</figcaption></div>
 <p>Ладно, а что реально можно «на вайбкодить»? Да много чего. Например, ИИ нормально пишет простые HTML-странички, может собрать «Сапёра», калькулятор, «Hello, world!» на Python или «Змейку», как на кнопочном телефоне. Главное — хорошо описать задачу.</p>
 
 <p>Но для вещей посложнее, как я писал выше, вам придётся быть хотя бы продакт-менеджером, а ещё лучше — опытным разработчиком.</p>
@@ -715,7 +701,7 @@ homeBtnTop.addEventListener('click', () => { location.hash = ''; });
 },
 
 '10-uristy': {
-       title: '0.10  Юристы против нейросети и безопасность',
+       title: '0.10  Юристы против нейросети и NDA',
        lede: 'Тема сырая и не изученная. Сейчас лучше опираться на собственные убеждения и корпоративные FAQ',
        html: applyTypograf(`
  <div class="figure"><img src="https://i.ibb.co/VWZCJR4c/Group-19-4.png" alt="Картинка для варианта 3"><figcaption>*корпоративный юрист*</figcaption></div>
@@ -741,33 +727,27 @@ homeBtnTop.addEventListener('click', () => { location.hash = ''; });
 
 
 function renderHome() {
-  titleEl.textContent = 'Меня не заменить ИИ';
+  titleEl.textContent = 'Меня не заменит Искуственный Интеллект';
   ledeEl.innerHTML = applyTypograf(``);
 
-  // Фиксированные группы (задаём вручную нужный порядок)
   const fixedGroups = [
-    ['00-eto-luchshe-prochitat', '01-chto-takoe'],                       // 1-я строка
-    ['02-first-promt', '03-unknown-task', '04-factchecking', '05-writing-with-ai'] // 2-я строка (0.2 вместе с 0.3–0.5)
+    ['00-eto-luchshe-prochitat', '01-chto-takoe'],
+    ['02-first-promt', '03-unknown-task', '04-factchecking', '05-writing-with-ai']
   ];
 
-  // Собираем set уже использованных слагов
   const used = new Set(fixedGroups.flat());
-
-  // Остальные страницы — автоматически, в том порядке, как объявлены в PAGES
   const rest = Object.keys(PAGES).filter(slug => !used.has(slug));
 
-  // Формируем итоговые ряды: сначала фиксированные, затем автоматические по 3
   const rows = [];
   fixedGroups.forEach(group => {
-    const existing = group.filter(slug => PAGES[slug]); // на случай, если чего-то нет
+    const existing = group.filter(slug => PAGES[slug]);
     if (existing.length) rows.push(existing);
   });
   for (let i = 0; i < rest.length; i += 3) {
     rows.push(rest.slice(i, i + 3));
   }
 
-  // Рендер карточек
-  const html = rows.map(group => {
+  let html = rows.map(group => {
     const cards = group.map(slug => {
       const page = PAGES[slug];
       return `<a class="card" href="#/${slug}"><h3>${page.title}</h3><p>${page.lede || ''}</p></a>`;
@@ -775,10 +755,64 @@ function renderHome() {
     return `<div class="grid">${cards}</div>`;
   }).join('<div class="group-separator"></div>');
 
+  // --- библиотека: список слагов для тизеров ---
+  const librarySlugs = [
+    '10-1-editor-corrector',
+    '10-2-audio-transcript',
+    '10-3-summary',
+    '10-4-parsing',
+    '10-5-excel',
+    '10-6-white-page',
+    '10-7-headline',
+    '10-8-naming',
+    '10-9-competitors',
+    '10-10-resizer',
+    '10-11-push',
+    '10-12-evaluator',
+    '10-13-vaybcoding'
+  ];
+
+  const libraryCards = librarySlugs.map(slug => {
+    const page = PAGES[slug];
+    return page
+      ? `<a class="card" href="#/${slug}"><h3>${page.title}</h3><p>${page.lede || ''}</p></a>`
+      : `<div class="card"><h3>${slug.replace(/^\d+-\d+\-/, '').replace(/-/g,' ')}</h3><p>Скоро…</p></div>`;
+  }).join('');
+
+  html += `
+    <div class="group-separator"></div>
+    <button class="btn" id="toggle-library" aria-expanded="false" aria-controls="library-section" style="width:100%;margin:8px 0;">
+      Библиотека горизонтальных промтов (в работе) ▸
+    </button>
+    <div id="library-section" hidden>
+      <div class="grid" style="margin-top:12px;">${libraryCards}</div>
+    </div>
+  `;
+
   contentEl.innerHTML = html;
+
+  const toggle = document.getElementById('toggle-library');
+  const lib = document.getElementById('library-section');
+
+  const saved = localStorage.getItem('libOpen') === '1';
+  if (saved) {
+    lib.hidden = false;
+    toggle.setAttribute('aria-expanded', 'true');
+    toggle.textContent = 'Библиотека горизонтальных промтов ▾';
+  }
+
+  toggle.addEventListener('click', () => {
+    const willOpen = lib.hidden;           
+    lib.hidden = !willOpen;
+    toggle.setAttribute('aria-expanded', String(willOpen));
+    toggle.textContent = willOpen
+      ? 'Библиотека горизонтальных промтов ▾'
+      : 'Библиотека горизонтальных промтов ▸';
+    localStorage.setItem('libOpen', willOpen ? '1' : '0');
+  });
+
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
-
 
 function enableImageZoom() {
 // курсор-подсказка
@@ -852,5 +886,6 @@ route();
 </script>
 </body>
 </html>
+
 
 
