@@ -854,10 +854,62 @@ function route() {
 
 window.addEventListener('hashchange', route);
 homeBtnTop.addEventListener('click', () => { location.hash = ''; });
+// --- Swipe right -> go Home (mobile only) ---
+(function addSwipeToHome(){
+  const isMobile = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+  if (!isMobile) return;
+
+  let startX = 0, startY = 0, startTime = 0, tracking = false;
+
+  // элементы, по которым свайп не должен срабатывать (ссылки, кнопки, формы и т.п.)
+  const isInteractive = (el) => !!el.closest('a, button, input, textarea, select, [contenteditable], .no-swipe');
+
+  // не срабатывает, если открыт оверлей с картинкой
+  const overlayOpen = () => !!document.querySelector('.img-overlay');
+
+  // начинаем отслеживание
+  document.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) return;                 // не жест мультитуча
+    const t = e.touches[0];
+    const target = e.target;
+
+    if (isInteractive(target)) return;                  // не мешаем кликам по интерактиву
+    if (overlayOpen()) return;                          // не уводим со страницы при zoom overlay
+    if (t.clientX > 30) return;                         // свайп должен начаться у левого края (30px)
+
+    startX = t.clientX;
+    startY = t.clientY;
+    startTime = Date.now();
+    tracking = true;
+  }, { passive: true });
+
+  // просто держим флаг; скролл не блокируем
+  document.addEventListener('touchmove', () => {}, { passive: true });
+
+  // завершаем и решаем — был ли это «свайп вправо»
+  document.addEventListener('touchend', (e) => {
+    if (!tracking) return;
+    tracking = false;
+
+    const t = e.changedTouches[0];
+    const dx = t.clientX - startX;
+    const dy = Math.abs(t.clientY - startY);
+    const dt = Date.now() - startTime;
+
+    // Порог жеста: быстрей 600ms, горизонталь > 80px, вертикаль < 50px, движение вправо
+    if (dx > 80 && dy < 50 && dt < 600) {
+      if (location.hash !== '') location.hash = '';     // вернуться «на главную»
+    }
+  }, { passive: true });
+})();
+
 route();
 </script>
 </body>
 </html>
+
+
+
 
 
 
