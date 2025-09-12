@@ -9,221 +9,144 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Literata:opsz,wght@7..72,400;600&display=swap" rel="stylesheet">
   <style>
-:root {
-  /* базовая (светлая) тема */
-  --bg-edge: #0f1012;
-  --bg-surface: #ffffff;
-  --text: #14171a;
-  --muted: #5b6168;
-  --accent: #ffffff;
-  --card: #f7f8f9;
-  --border: #e6e8eb;
-  --shadow: 0 10px 30px rgba(0,0,0,.12);
+:root{
+  /* светлая тема по умолчанию */
+  --bg-edge:#f5f7fb;
+  --bg-surface:#ffffff;
+  --text:#14171a;
+  --muted:#5b6168;
+  --accent:#2563eb;
+  --card:#f7f8f9;
+  --border:#e6e8eb;
+  --shadow:0 10px 30px rgba(0,0,0,.12);
 
-  --radius: 16px;
-  --radius-lg: 20px;
+  --radius:16px;
+  --radius-lg:20px;
 
-  :root {
-  /* ...твои переменные... */
-  --container-w: clamp(68ch, 56vw, 1200px);
+  /* одна формула ширины — плавно и без медиа-правил */
+  --container-w:clamp(72ch,56vw,1200px);
 }
 
+/* уважить системную тёмную, пока юзер сам не выбрал */
+@media (prefers-color-scheme: dark){
+  :root{ --bg-edge:#0b0c0f; }
 }
 
-/* лёгкий «намёк» на тёмный фон для предпочитающих тёмную */
-@media (prefers-color-scheme: dark) {
-  :root { --bg-edge: #0b0c0f; }
+/* ручная тёмная тема */
+html[data-theme="dark"]{
+  --bg-edge:#0b0c0f;
+  --bg-surface:#14171a;
+  --text:#eaeef2;
+  --muted:#9aa3ad;
+  --accent:#60a5fa;
+  --card:#1b2026;
+  --border:#262b33;
+  --shadow:0 10px 30px rgba(0,0,0,.4);
 }
 
-/* принудительная тёмная тема (переключается кнопкой) */
-html[data-theme="dark"] {
-  --bg-edge: #0b0c0f;
-  --bg-surface: #14171a;
-  --text: #eaeef2;
-  --muted: #9aa3ad;
-  --accent: #ffffff;
-  --card: #1b2026;
-  --border: #262b33;
-  --shadow: 0 10px 30px rgba(0,0,0,.4);
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  background:var(--bg-edge);
+  color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
-/* адаптация ширины: на ≥ 992px делаем шире, на ≥ 1200px — треть экрана */
-@media (min-width: 992px) {
-  :root { --container-w: 88ch; } /* промежуточная ширина для ноутбуков */
-}
-@media (min-width: 1200px) {
-  :root { --container-w: min(33vw, 1200px); }
+.page{
+  display:grid;
+  grid-template-columns:1fr minmax(0,var(--container-w)) 1fr;
+  min-height:100dvh;
 }
 
-/* немного расширим подзаголовок на широких */
-@media (min-width: 1200px) {
-  .lede { max-width: 80ch; }
+.center-rail{ grid-column:2; padding:clamp(16px,2vw,28px); }
+
+.toolbar{
+  position:sticky; top:0; z-index:50;
+  display:flex; gap:10px; align-items:center; justify-content:space-between;
+  background:color-mix(in srgb, var(--bg-surface) 90%, transparent);
+  border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow);
+  padding:10px; backdrop-filter:blur(8px);
 }
 
+.brand{ font-weight:600; letter-spacing:.2px; opacity:.8; margin-left:12px; }
 
-    body {
-      margin: 0;
-      background: var(--bg-edge);
-      color: var(--text);
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      line-height: 1.65;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    .page {
-      display: grid;
-      grid-template-columns: 1fr minmax(0, var(--container-w)) 1fr;
-      min-height: 100dvh;
-    }
-
-    .center-rail {
-      grid-column: 2;
-      padding: clamp(16px, 2vw, 28px);
-    }
-
-    .toolbar {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      justify-content: space-between;
-      background: color-mix(in srgb, var(--bg-surface) 90%, transparent);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 10px;
-      backdrop-filter: blur(8px);
-    }
-
-    .brand { font-weight: 600; letter-spacing: .2px; opacity: .8; margin-left: 12px; }
-
-    .btn {
-      border: 1px solid var(--border);
-      background: var(--card);
-      color: var(--text);
-      border-radius: 12px;
-      padding: 8px 12px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: transform .04s ease, background .2s ease;
-      user-select: none;
-    }
-    .btn:hover { background: color-mix(in srgb, var(--card) 85%, #fff 15%); }
-    .btn:active { transform: translateY(1px); }
-    .btn[data-variant="primary"] { background: var(--accent); color: #0b0c0f; border-color: transparent; }
-
-    .article {
-      margin-top: 16px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-    }
-
-    .article-header {
-      padding: clamp(20px, 3vw, 32px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    h1 { font-family: Literata, Georgia, serif; font-size: clamp(28px, 4vw, 44px); margin: 0 0 8px; line-height: 1.2; }
-    h2 { font-family: Literata, Georgia, serif; font-size: clamp(22px, 3vw, 30px); margin: 32px 0 8px; line-height: 1.3; }
-    h3 { font-size: clamp(18px, 2.2vw, 22px); margin: 24px 0 8px; line-height: 1.4; }
-
-    .lede { color: var(--muted); font-size: clamp(16px, 2.3vw, 18px); max-width: 66ch; }
-
-    .article-content { padding: clamp(20px, 3vw, 32px); }
-
-    .grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-    @media (min-width: 680px) { .grid { grid-template-columns: 1fr 1fr; } }
-
-    .card {
-      display: block;
-      text-decoration: none;
-      color: inherit;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px;
-      transition: transform .06s ease, box-shadow .2s ease;
-    }
-    .card:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
-    .card h3 { margin: 0 0 6px; font-family: Literata, Georgia, serif; }
-    .card p { margin: 0; color: var(--muted); }
-
-    .group-separator {
-      border-top: 2px solid var(--border);
-      margin: 24px 0;
-    }
-
-    .article-footer {
-      display: flex;
-      justify-content: space-between;
-      padding: 16px 20px;
-      border-top: 1px solid var(--border);
-    }
-
-    .figure img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 8px;
-      display: block;
-      margin: 0 auto 8px;
-    }
-    .figure figcaption {
-      text-align: center;
-      font-size: 14px;
-      color: var(--muted);
-    }
-    .img-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.85);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    cursor: zoom-out;
-  }
-  .img-overlay img {
-    max-width: 90%;
-    max-height: 90%;
-    border-radius: 8px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
-  }
-  .img-overlay__close{
-  position:absolute;
-  top:16px; right:16px;
-  width:40px; height:40px;
-  display:flex; align-items:center; justify-content:center;
-  border-radius:9999px;
-  background: rgba(0,0,0,.55);
-  color:#fff;
-  border:1px solid rgba(255,255,255,.2);
-  font-size:22px; line-height:1;
-  cursor:pointer;
-  -webkit-tap-highlight-color: transparent;
+.btn{
+  border:1px solid var(--border); background:var(--card); color:var(--text);
+  border-radius:12px; padding:8px 12px; font-size:14px; cursor:pointer;
+  transition:transform .04s ease, background .2s ease; user-select:none;
 }
-.img-overlay__close:focus { outline: 2px solid rgba(255,255,255,.6); outline-offset: 2px; }
-@media (hover:hover){
-  .img-overlay__close:hover{ background: rgba(0,0,0,.75); }
+.btn:hover{ background:color-mix(in srgb, var(--card) 85%, #fff 15%); }
+.btn:active{ transform:translateY(1px); }
+.btn[data-variant="primary"]{ background:var(--accent); color:#0b0c0f; border-color:transparent; }
+
+.article{
+  margin-top:16px; background:var(--bg-surface);
+  border:1px solid var(--border); border-radius:20px; box-shadow:var(--shadow);
+}
+.article-header{ padding:clamp(20px,3vw,32px); border-bottom:1px solid var(--border); }
+
+h1{ font-family:Literata,Georgia,serif; font-size:clamp(28px,4vw,44px); margin:0 0 8px; line-height:1.2; }
+h2{ font-family:Literata,Georgia,serif; font-size:clamp(22px,3vw,30px); margin:32px 0 8px; line-height:1.3; }
+h3{ font-size:clamp(18px,2.2vw,22px); margin:24px 0 8px; line-height:1.4; }
+.lede{ color:var(--muted); font-size:clamp(16px,2.3vw,18px); max-width:80ch; }
+
+.article-content{ padding:clamp(20px,3vw,32px); }
+
+/* карточки: 1 → 2 → 3 */
+.grid{ display:grid; grid-template-columns:1fr; gap:12px; }
+@media (min-width:700px){  .grid{ grid-template-columns:1fr 1fr; } }
+@media (min-width:1100px){ .grid{ grid-template-columns:1fr 1fr 1fr; } }
+
+.card{
+  display:block; text-decoration:none; color:inherit;
+  background:var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:16px; transition:transform .06s ease, box-shadow .2s ease;
+}
+.card:hover{ transform:translateY(-1px); box-shadow:var(--shadow); }
+.card h3{ margin:0 0 6px; font-family:Literata,Georgia,serif; }
+.card p{ margin:0; color:var(--muted); }
+
+.group-separator{ border-top:2px solid var(--border); margin:24px 0; }
+
+.article-footer{
+  display:flex; justify-content:space-between;
+  padding:16px 20px; border-top:1px solid var(--border);
 }
 
-  /* уже есть .img-overlay {...} и .img-overlay img {...} */
-.figure img { cursor: zoom-in; } /* можно так, если хочешь только на фигурах */
- /* Локальные стили только для этой главы */
- .gallery-3{display:grid;gap:12px;grid-template-columns:1fr;}
-  @media (min-width:680px){ .gallery-3{grid-template-columns:repeat(3,1fr);} }
-  .gallery-3 .figure{margin:0;}
+/* фигуры/оверлей */
+.figure img{ max-width:100%; height:auto; border-radius:8px; display:block; margin:0 auto 8px; }
+.figure figcaption{ text-align:center; font-size:14px; color:var(--muted); }
+.figure img{ cursor:zoom-in; }
 
-  /* ЧАТ — как в других главах */
-  .chat{display:grid; gap:8px; margin:12px 0;}
-  .msg{border:1px solid var(--border); border-radius:12px; padding:12px 14px; background:var(--card);}
-  .msg .who{font-size:12px; text-transform:uppercase; letter-spacing:.04em; opacity:.7; margin-bottom:6px;}
-  .msg.user{background: color-mix(in srgb, var(--card) 80%, #fef0c7 20%);}  /* тёплый фон */
-  .msg.ai{background: color-mix(in srgb, var(--card) 85%, #c7f9e1 15%);}     /* на будущее */
+.img-overlay{
+  position:fixed; inset:0; background:rgba(0,0,0,.85);
+  display:flex; align-items:center; justify-content:center; z-index:9999; cursor:zoom-out;
+}
+.img-overlay img{ max-width:90%; max-height:90%; border-radius:8px; box-shadow:0 0 20px rgba(0,0,0,.5); }
+.img-overlay__close{
+  position:absolute; top:16px; right:16px; width:40px; height:40px;
+  display:flex; align-items:center; justify-content:center; border-radius:9999px;
+  background:rgba(0,0,0,.55); color:#fff; border:1px solid rgba(255,255,255,.2);
+  font-size:22px; line-height:1; cursor:pointer; -webkit-tap-highlight-color:transparent;
+}
+.img-overlay__close:focus{ outline:2px solid rgba(255,255,255,.6); outline-offset:2px; }
+@media (hover:hover){ .img-overlay__close:hover{ background:rgba(0,0,0,.75); } }
+
+/* чат/галерея — как у тебя */
+.chat{ display:grid; gap:8px; margin:12px 0; }
+.msg{ border:1px solid var(--border); border-radius:12px; padding:12px 14px; background:var(--card); }
+.msg .who{ font-size:12px; text-transform:uppercase; letter-spacing:.04em; opacity:.7; margin-bottom:6px; }
+.msg.user{ background:color-mix(in srgb, var(--card) 80%, #fef0c7 20%); }
+.msg.ai{ background:color-mix(in srgb, var(--card) 85%, #c7f9e1 15%); }
+
+.gallery-3{ display:grid; gap:12px; grid-template-columns:1fr; }
+@media (min-width:680px){ .gallery-3{ grid-template-columns:repeat(3,1fr); } }
+.gallery-3 .figure{ margin:0; }
+
   </style>
   <!-- Подключаем Typograf.js -->
   <script src="https://cdn.jsdelivr.net/npm/typograf@6.12.0/dist/typograf.min.js"></script>
@@ -935,6 +858,8 @@ route();
 </script>
 </body>
 </html>
+
+
 
 
 
