@@ -3,554 +3,244 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Калькулятор автоматизации</title>
+  <title>SMS‑калькулятор</title>
   <meta name="color-scheme" content="light dark">
   <style>
-    :root {
-      --bg: #0b0c10;
-      --panel: #121419;
-      --panel-2: #151821;
-      --text: #e6e8ee;
-      --muted: #9aa3b2;
-      --brand: #6aa6ff;
-      --accent: #77f2c8;
-      --danger: #ff7a7a;
-      --ok: #8bd17c;
-      --border: #232635;
-      --ring: #2a2f42;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-    }
+    :root{--bg:#0b0c10;--panel:#121419;--panel2:#151821;--text:#e6e8ee;--muted:#9aa3b2;--brand:#6aa6ff;--accent:#77f2c8;--border:#232635;--ring:#2a2f42;--shadow:0 10px 28px rgba(0,0,0,.35)}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);background:linear-gradient(180deg,#0c0e13,#0b0c10)}
+    .wrap{max-width:960px;margin:0 auto;padding:20px}
+    header{position:sticky;top:0;z-index:10;background:rgba(12,14,19,.6);backdrop-filter:saturate(130%) blur(6px);border-bottom:1px solid var(--border)}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--accent));box-shadow:var(--shadow)}
+    .brand h1{margin:0;font-size:18px}
+    .brand span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
 
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, sans-serif;
-      background: linear-gradient(180deg, #0c0e13 0%, #0b0c10 100%);
-      color: var(--text);
-    }
+    .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow)}
+    .body{padding:16px}
 
-    header {
-      position: sticky; top: 0; z-index: 10;
-      backdrop-filter: saturate(130%) blur(6px);
-      background: rgba(12,14,19,.6);
-      border-bottom: 1px solid var(--border);
-    }
-    .wrap { max-width: 1200px; margin: 0 auto; padding: 18px 20px; }
-    .brand { display:flex; align-items:center; gap:12px; }
-    .logo { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, var(--brand), var(--accent)); box-shadow: var(--shadow); }
-    .brand h1 { margin:0; font-size: 18px; font-weight: 700; letter-spacing: .2px; }
-    .brand span { display:block; font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .grid{display:grid;gap:16px;grid-template-columns:1fr 360px}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}}
 
-    .grid {
-      display: grid; gap: 16px; grid-template-columns: 320px 1fr; align-items: start;
-      padding: 20px; max-width: 1200px; margin: 0 auto;
-    }
-    @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
+    .h3{margin:0 0 8px 0;font-size:16px}
+    .controls{display:grid;gap:14px}
+    .row{display:grid;gap:8px}
+    .label{color:var(--muted);font-size:13px}
 
-    .card {
-      background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
-      border: 1px solid var(--border);
-      border-radius: 16px; box-shadow: var(--shadow);
-    }
-    .card h3 { margin:0 0 8px 0; font-size: 16px; }
-    .card .body { padding: 16px; }
+    .select,.text,.rangeWrap{width:100%}
+    .radioGroup{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{padding:9px 12px;border-radius:999px;border:1px solid var(--border);background:#0f1117;cursor:pointer}
+    .chip.active{outline:2px solid var(--ring)}
+    input[type="range"]{width:100%}
+    .hint{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}
+    .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#0f1117;color:var(--muted);font-size:12px}
 
-    .sidebar { position: sticky; top: 76px; }
-    .steps { display: grid; gap: 10px; }
-    .step { padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: #0f1117; display:flex; align-items:center; gap:10px; }
-    .step.active { outline: 2px solid var(--ring); background: #10131b; }
-    .step .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand); box-shadow: 0 0 0 3px rgba(106,166,255,.15); }
-    .step span { color: var(--muted); font-size: 12px; }
+    .summary{display:grid;gap:10px}
+    .line{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:#0f1117}
+    .big{font-size:22px;font-weight:700}
+    .muted{color:var(--muted);font-size:12px}
 
-    .controls { display: grid; gap: 14px; }
-    .row { display:grid; gap: 12px; grid-template-columns: repeat(12, 1fr); align-items: center; }
-    .row > label { grid-column: span 4; color: var(--muted); font-size: 13px; }
-    .row > .input { grid-column: span 8; }
-    @media (max-width: 720px) {
-      .row { grid-template-columns: 1fr; }
-      .row > label { grid-column: auto; }
-      .row > .input { grid-column: auto; }
-    }
+    button{padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:#0f1117;color:var(--text);cursor:pointer}
+    .primary{background:linear-gradient(135deg,var(--brand),var(--accent));border:none;color:#0b0c10;font-weight:700}
 
-    .select, .text, .number { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: #0f1117; color: var(--text); }
-    .checkboxes, .chips { display:flex; flex-wrap: wrap; gap: 8px; }
-    .chip { padding: 8px 10px; border-radius: 999px; border: 1px solid var(--border); background: #0f1117; cursor: pointer; user-select: none; font-size: 13px; }
-    .chip.active { border-color: var(--brand); box-shadow: inset 0 0 0 1px var(--brand); }
-
-    .range { width:100%; }
-    .range + .hint { display:flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
-
-    .summary { display:grid; gap: 12px; }
-    .summary .line { display:flex; justify-content: space-between; align-items:center; padding: 10px 12px; border-radius: 10px; background: #0f1117; border: 1px solid var(--border); }
-    .summary .big { font-size: 22px; font-weight: 700; }
-
-    .toolbar { display:flex; gap: 10px; flex-wrap: wrap; }
-    button { padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border); background: #0f1117; color: var(--text); cursor: pointer; }
-    button.primary { background: linear-gradient(135deg, var(--brand), var(--accent)); color: #0b0c10; border: none; font-weight: 700; }
-    button.ghost { background: transparent; }
-
-    .muted { color: var(--muted); font-size: 12px; }
-    .divider { height: 1px; background: var(--border); margin: 8px 0; }
-
-    .pill { display:inline-flex; align-items:center; gap:6px; padding: 6px 10px; border-radius:999px; background:#0f1117; border:1px solid var(--border); font-size:12px; color:var(--muted); }
-
-    .two-col { display:grid; gap: 16px; grid-template-columns: 1fr 1fr; }
-    @media (max-width: 980px) { .two-col { grid-template-columns: 1fr; } }
-
-    /* Modal */
-    .modal { position: fixed; inset: 0; display:none; place-items:center; background: rgba(0,0,0,.55); backdrop-filter: blur(3px); }
-    .modal .sheet { width: min(560px, 92vw); background: linear-gradient(180deg, var(--panel), var(--panel-2)); border:1px solid var(--border); border-radius: 16px; padding: 16px; box-shadow: var(--shadow); }
-
-    .small { font-size: 12px; }
-    .badge { padding: 2px 8px; border-radius: 999px; background: rgba(119,242,200,.14); color: var(--accent); border: 1px solid rgba(119,242,200,.28); font-weight: 600; font-size: 11px; }
-    .danger { color: var(--danger); }
+    .foot{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .badge{padding:2px 8px;border-radius:999px;background:rgba(119,242,200,.14);color:var(--accent);border:1px solid rgba(119,242,200,.28);font-weight:600;font-size:11px}
+    .note{font-size:12px;color:var(--muted)}
   </style>
 </head>
 <body>
   <header>
-    <div class="wrap" style="display:flex; align-items:center; justify-content: space-between; gap:16px;">
+    <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;gap:16px">
       <div class="brand">
         <div class="logo" aria-hidden="true"></div>
         <div>
           <h1>Крутая компания</h1>
-          <span>Автоматизируем бизнес</span>
+          <span>SMS‑калькулятор стоимости</span>
         </div>
       </div>
-      <div class="toolbar">
-        <span class="pill">Версия калькулятора: <strong>v1.0</strong></span>
-        <select id="currency" class="select" aria-label="Валюта">
-          <option value="RUB" selected>₽ RUB</option>
-          <option value="EUR">₽ RUB</option>
-        </select>
-        <label class="pill"><input type="checkbox" id="vat" style="accent-color: var(--brand);" checked> c НДС 20%</label>
+      <div class="foot">
+        <label class="pill"><input type="checkbox" id="vat" style="accent-color:var(--brand)" checked> с НДС 20%</label>
       </div>
     </div>
   </header>
 
-  <main class="grid">
-    <aside class="sidebar">
+  <main class="wrap">
+    <div class="grid">
+      <!-- LEFT: Inputs -->
       <div class="card">
         <div class="body">
-          <div class="steps" id="steps"></div>
-        </div>
-      </div>
-      <div class="card" style="margin-top:12px">
-        <div class="body">
-          <div style="display:flex; align-items:center; justify-content: space-between; gap:8px;">
-            <h3>Быстрая справка</h3>
-            <span class="badge">demo</span>
-          </div>
-          <p class="muted">Оценка делится на <strong>ежемесячную</strong> (лицензии, поддержка) и <strong>разовую</strong> (внедрение, миграция, обучение) части. Все цифры — пример для пресейла, не публичная оферта.</p>
-        </div>
-      </div>
-    </aside>
+          <h3 class="h3">Параметры рассылки</h3>
+          <div class="controls">
 
-    <section class="content">
+            <div class="row">
+              <div class="label">Регион доставки</div>
+              <div id="region" class="radioGroup">
+                <button class="chip active" data-id="ru">Россия</button>
+                <button class="chip" data-id="cis">СНГ</button>
+                <button class="chip" data-id="eu">Европа</button>
+                <button class="chip" data-id="ww">Остальной мир</button>
+              </div>
+              <div class="note">Цена за <u>1 сегмент</u> зависит от региона и объёма (внутренние референс‑цены для пресейла).</div>
+            </div>
+
+            <div class="row">
+              <div class="label">Сообщений в месяц</div>
+              <div class="rangeWrap">
+                <input id="messages" type="range" min="500" max="1000000" value="20000" step="100">
+                <div class="hint"><span>500</span><span id="messagesOut">20 000</span><span>1 000 000+</span></div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="label">Средняя длина сообщения (символов)</div>
+              <div class="rangeWrap">
+                <input id="chars" type="range" min="10" max="500" value="120" step="1">
+                <div class="hint"><span>10</span><span id="charsOut">120</span><span>500</span></div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="label">Кодировка</div>
+              <div id="enc" class="radioGroup">
+                <button class="chip active" data-id="gsm">GSM 7‑bit</button>
+                <button class="chip" data-id="uni">Unicode (UTF‑16)</button>
+              </div>
+              <div class="note">GSM: 160 / 153 символов на сегмент; Unicode: 70 / 67 символов.</div>
+            </div>
+
+            <div class="row">
+              <div class="label">Альфа‑имя (аренда)</div>
+              <div id="alfa" class="radioGroup">
+                <button class="chip active" data-id="none">Не нужен</button>
+                <button class="chip" data-id="rent">Нужен (+₽1 500/мес)</button>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="label">Ожидаемая доставляемость</div>
+              <div class="rangeWrap">
+                <input id="dlr" type="range" min="80" max="99" value="95" step="1">
+                <div class="hint"><span>80%</span><span id="dlrOut">95%</span><span>99%</span></div>
+              </div>
+              <div class="note">Биллинг обычно по отправленным. Показатель доставляемости — для прогноза «дошедших» сообщений.</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Result -->
       <div class="card">
         <div class="body">
-          <h3>1) Профиль компании</h3>
-          <div class="controls">
-            <div class="row">
-              <label for="industry">Отрасль</label>
-              <div class="input"><select id="industry" class="select">
-                <option>Ритейл</option>
-                <option>Сервис / услуги</option>
-                <option>Производство</option>
-                <option>Логистика</option>
-                <option>IT / SaaS</option>
-                <option>Образование</option>
-                <option>Медицина</option>
-                <option>HoReCa</option>
-              </select></div>
-            </div>
-            <div class="row">
-              <label>Штат пользователей</label>
-              <div class="input">
-                <input type="range" min="3" max="500" value="30" step="1" id="users" class="range">
-                <div class="hint"><span>3</span><span id="usersOut">30</span><span>500+</span></div>
-              </div>
-            </div>
-            <div class="row">
-              <label>Тариф лицензий</label>
-              <div class="input checkboxes" id="tiers"></div>
-            </div>
+          <h3 class="h3">Итоги</h3>
+          <div class="summary" id="summary"></div>
+          <div class="summary" id="breakdown" style="margin-top:8px"></div>
+          <div class="foot" style="margin-top:12px">
+            <button class="primary" id="cta">Устал считать. Хочу автоматизировать </button>
+            <span class="muted">Черновая оценка. Не публичная оферта</span>
           </div>
         </div>
-      </div>
-
-      <div class="card" style="margin-top:16px">
-        <div class="body">
-          <h3>2) Модули и интеграции</h3>
-          <div class="controls">
-            <div class="row">
-              <label>Функциональные модули</label>
-              <div class="input chips" id="modules"></div>
-            </div>
-            <div class="row">
-              <label>Интеграции (шт.)</label>
-              <div class="input">
-                <input type="range" min="0" max="15" value="2" step="1" id="integrations" class="range">
-                <div class="hint"><span>0</span><span id="integrationsOut">2</span><span>15+</span></div>
-              </div>
-            </div>
-            <div class="row">
-              <label>Сложность внедрения</label>
-              <div class="input checkboxes" id="complexity"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-top:16px">
-        <div class="body">
-          <h3>3) Обучение, миграция, поддержка</h3>
-          <div class="controls">
-            <div class="row">
-              <label>Обучение (часы)</label>
-              <div class="input">
-                <input type="range" min="0" max="80" value="8" step="1" id="training" class="range">
-                <div class="hint"><span>0</span><span id="trainingOut">8</span><span>80</span></div>
-              </div>
-            </div>
-            <div class="row">
-              <label>Миграция данных</label>
-              <div class="input checkboxes" id="migration"></div>
-            </div>
-            <div class="row">
-              <label>План поддержки</label>
-              <div class="input checkboxes" id="support"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="two-col" style="margin-top:16px">
-        <div class="card">
-          <div class="body">
-            <h3>Итоги и параметры</h3>
-            <div class="controls">
-              <div class="row">
-                <label>Скидка / промокод</label>
-                <div class="input" style="display:flex; gap:8px;">
-                  <input id="coupon" class="text" placeholder="например, WELCOME10" />
-                  <button id="applyCoupon">Применить</button>
-                </div>
-              </div>
-              <div class="row">
-                <label>Срок пилота</label>
-                <div class="input">
-                  <select id="pilot" class="select">
-                    <option value="0">Без пилота</option>
-                    <option value="1">1 месяц</option>
-                    <option value="2">2 месяца</option>
-                    <option value="3">3 месяца</option>
-                  </select>
-                </div>
-              </div>
-              <div class="row">
-                <label>Оценка сроков внедрения</label>
-                <div class="input"><span id="timeline" class="pill">~ 6–8 недель</span></div>
-              </div>
-              <div class="divider"></div>
-              <div class="summary" id="summary"></div>
-              <div class="toolbar">
-                <button class="primary" id="contactBtn">Отправить заявку</button>
-                <button id="resetBtn" class="ghost">Сбросить</button>
-                <span class="muted">PDF-коммерческое доступно по запросу.</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="body">
-            <h3>Разбивка стоимости</h3>
-            <div class="summary small" id="breakdown"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Modal -->
-  <div class="modal" id="modal">
-    <div class="sheet">
-      <div style="display:flex; justify-content: space-between; align-items:center; gap:8px; margin-bottom:6px;">
-        <h3 style="margin:0;">Оставить заявку</h3>
-        <button id="closeModal" class="ghost">Закрыть</button>
-      </div>
-      <p class="muted" style="margin-top:0">Мы пришлём расчёт и предложим слоты для созвона. Отправляя форму, вы соглашаетесь с обработкой персональных данных.</p>
-      <div class="controls" style="margin-top:10px">
-        <input class="text" id="fCompany" placeholder="Компания" />
-        <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr;">
-          <input class="text" id="fName" placeholder="Контактное лицо" />
-          <input class="text" id="fRole" placeholder="Должность" />
-        </div>
-        <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr;">
-          <input class="text" id="fPhone" placeholder="Телефон" />
-          <input class="text" id="fEmail" placeholder="Email" />
-        </div>
-        <textarea class="text" id="fComment" placeholder="Комментарий" rows="4"></textarea>
-        <button class="primary" id="sendLead">Отправить</button>
-        <div class="muted" id="leadStatus"></div>
       </div>
     </div>
-  </div>
+  </main>
 
   <script>
-    // --- Demo pricing model ---
-    const fx = { EUR: 1, RUB: 100 }; // фиктивный курс для примера: 1€ ≈ 100₽ — замените на актуальный на бэкенде
-    const model = {
-      tiers: [
-        { id:'start', name:'Start', monthlyPerUser: 9, features:'Базовые процессы' },
-        { id:'pro', name:'Pro', monthlyPerUser: 17, features:'Расширенная аналитика' },
-        { id:'enterprise', name:'Enterprise', monthlyPerUser: 29, features:'SLA, SSO, RBAC' },
-      ],
-      modules: [
-        { id:'crm', label:'CRM', monthly: 120, oneoff: 800 },
-        { id:'erp', label:'ERP / учёт', monthly: 140, oneoff: 1200 },
-        { id:'wms', label:'Склад (WMS)', monthly: 110, oneoff: 900 },
-        { id:'hrm', label:'HR / KPI', monthly: 90, oneoff: 600 },
-        { id:'bi', label:'BI‑отчётность', monthly: 130, oneoff: 950 },
-        { id:'omni', label:'Омниканал', monthly: 100, oneoff: 700 },
-        { id:'rpa', label:'RPA / интеграции', monthly: 150, oneoff: 1000 },
-      ],
-      complexity: [
-        { id:'basic', label:'Базовая', mult: 1.0, weeks:[4,6] },
-        { id:'std', label:'Стандарт', mult: 1.4, weeks:[6,9] },
-        { id:'adv', label:'Сложная', mult: 2.0, weeks:[9,14] },
-      ],
-      migration: [
-        { id:'none', label:'Нет', oneoff: 0 },
-        { id:'light', label:'Базовая (до 50К записей)', oneoff: 800 },
-        { id:'full', label:'Расширенная (50К–500К)', oneoff: 2400 },
-      ],
-      support: [
-        { id:'std', label:'Standard (раб. время)', monthly: 250 },
-        { id:'ext', label:'Extended (10×5)', monthly: 480 },
-        { id:'sla', label:'Premium SLA (24×7)', monthly: 950 },
-      ],
-      trainingPerHour: 40,
-      integrationOneOff: 450,
-      integrationMonthly: 50,
-      coupons: {
-        'WELCOME10': { type:'monthly', value: .10 },
-        'BUNDLE15': { type:'total', value: .15 },
-        'NPO20': { type:'monthly', value: .20 },
-      }
+    // Простая тарифная сетка (₽ за сегмент) с объёмными скидками
+    const pricing = {
+      ru:  { steps: [[0, 1.60],[10000, 1.40],[100000, 1.20]] },
+      cis: { steps: [[0, 2.50],[10000, 2.20],[100000, 2.00]] },
+      eu:  { steps: [[0, 4.00],[10000, 3.50],[100000, 3.20]] },
+      ww:  { steps: [[0, 5.00],[10000, 4.50],[100000, 4.00]] }
     };
 
-    // --- UI bootstrap ---
-    const steps = [
-      'Профиль компании',
-      'Модули и интеграции',
-      'Обучение, миграция, поддержка',
-      'Итоги и параметры'
-    ];
+    const fees = { alfaMonthly: 1500 };
 
-    const el = (sel) => document.querySelector(sel);
-    const els = (sel) => Array.from(document.querySelectorAll(sel));
+    const $ = (s)=>document.querySelector(s);
+    const $$ = (s)=>Array.from(document.querySelectorAll(s));
+    const setActive = (wrap, el)=>{ $$(wrap+' .chip').forEach(x=>x.classList.remove('active')); el.classList.add('active'); recalc(); };
 
-    const stepsWrap = el('#steps');
-    steps.forEach((name, i) => {
-      const d = document.createElement('div');
-      d.className = 'step' + (i===0 ? ' active' : '');
-      d.innerHTML = `<div class="dot"></div><div><div>${i+1}. ${name}</div><span>шаг ${i+1} из ${steps.length}</span></div>`;
-      stepsWrap.appendChild(d);
-    });
+    // Bind
+    $$('#region .chip').forEach(b=>b.addEventListener('click',()=>setActive('#region',b)));
+    $$('#enc .chip').forEach(b=>b.addEventListener('click',()=>setActive('#enc',b)));
+    $$('#alfa .chip').forEach(b=>b.addEventListener('click',()=>setActive('#alfa',b)));
 
-    const tiersWrap = el('#tiers');
-    model.tiers.forEach((t,i)=>{
-      const b=document.createElement('button');
-      b.type='button'; b.className='chip'+(i===1?' active':''); // Pro по умолчанию
-      b.dataset.id=t.id; b.title=t.features;
-      b.textContent = `${t.name} — ₽${t.monthlyPerUser}/польз.`;
-      b.addEventListener('click',()=>{ els('#tiers .chip').forEach(x=>x.classList.remove('active')); b.classList.add('active'); recalc(); });
-      tiersWrap.appendChild(b);
-    });
+    $('#messages').addEventListener('input',e=>{ $('#messagesOut').textContent=intlNum(+e.target.value); recalc(); });
+    $('#chars').addEventListener('input',e=>{ $('#charsOut').textContent=e.target.value; recalc(); });
+    $('#dlr').addEventListener('input',e=>{ $('#dlrOut').textContent=e.target.value+'%'; recalc(); });
+    $('#vat').addEventListener('change', recalc);
 
-    const modulesWrap = el('#modules');
-    model.modules.forEach(m=>{
-      const b=document.createElement('button');
-      b.type='button'; b.className='chip'; b.dataset.id=m.id;
-      b.textContent = `${m.label}`;
-      b.addEventListener('click',()=>{ b.classList.toggle('active'); recalc(); });
-      modulesWrap.appendChild(b);
-    });
+    function intlNum(n){ return new Intl.NumberFormat('ru-RU').format(n); }
+    function money(v){ return new Intl.NumberFormat('ru-RU',{style:'currency',currency:'RUB',maximumFractionDigits:0}).format(v); }
 
-    const complexityWrap = el('#complexity');
-    model.complexity.forEach((c,i)=>{
-      const b=document.createElement('button');
-      b.type='button'; b.className='chip'+(i===1?' active':''); // Стандарт по умолчанию
-      b.dataset.id=c.id; b.textContent=c.label;
-      b.addEventListener('click',()=>{ els('#complexity .chip').forEach(x=>x.classList.remove('active')); b.classList.add('active'); recalc(); });
-      complexityWrap.appendChild(b);
-    });
+    function getState(){
+      const region = $('#region .chip.active').dataset.id;
+      const messages = +$('#messages').value;
+      const chars = +$('#chars').value;
+      const enc = $('#enc .chip.active').dataset.id; // gsm | uni
+      const alfa = $('#alfa .chip.active').dataset.id; // none | rent
+      const withVAT = $('#vat').checked;
+      const dlr = +$('#dlr').value / 100;
+      return { region, messages, chars, enc, alfa, withVAT, dlr };
+    }
 
-    const migrationWrap = el('#migration');
-    model.migration.forEach((m,i)=>{
-      const b=document.createElement('button');
-      b.type='button'; b.className='chip'+(i===0?' active':'');
-      b.dataset.id=m.id; b.textContent=m.label;
-      b.addEventListener('click',()=>{ els('#migration .chip').forEach(x=>x.classList.remove('active')); b.classList.add('active'); recalc(); });
-      migrationWrap.appendChild(b);
-    });
+    function segmentsPerMessage(chars, enc){
+      const single = enc==='gsm' ? 160 : 70;
+      const concat = enc==='gsm' ? 153 : 67;
+      if (chars <= single) return 1;
+      return Math.ceil(chars / concat);
+    }
 
-    const supportWrap = el('#support');
-    model.support.forEach((s,i)=>{
-      const b=document.createElement('button');
-      b.type='button'; b.className='chip'+(i===0?' active':'');
-      b.dataset.id=s.id; b.textContent=s.label;
-      b.addEventListener('click',()=>{ els('#support .chip').forEach(x=>x.classList.remove('active')); b.classList.add('active'); recalc(); });
-      supportWrap.appendChild(b);
-    });
+    function pricePerSegment(region, volume){
+      const steps = pricing[region].steps;
+      let price = steps[0][1];
+      for (const [from, p] of steps){ if (volume >= from) price = p; }
+      return price;
+    }
 
-    // --- Inputs listeners ---
-    el('#users').addEventListener('input', e=>{ el('#usersOut').textContent=e.target.value; recalc(); });
-    el('#integrations').addEventListener('input', e=>{ el('#integrationsOut').textContent=e.target.value; recalc(); });
-    el('#training').addEventListener('input', e=>{ el('#trainingOut').textContent=e.target.value; recalc(); });
-    el('#currency').addEventListener('change', recalc);
-    el('#vat').addEventListener('change', recalc);
-    el('#pilot').addEventListener('change', recalc);
+    function recalc(){
+      const s = getState();
+      const segPerMsg = segmentsPerMessage(s.chars, s.enc);
+      const totalSegments = segPerMsg * s.messages;
+      const unit = pricePerSegment(s.region, s.messages);
+      const alfaFee = s.alfa==='rent' ? fees.alfaMonthly : 0;
 
-    el('#applyCoupon').addEventListener('click', ()=>{ recalc(true); });
-    el('#resetBtn').addEventListener('click', ()=>{ window.location.reload(); });
-
-    // Modal handlers
-    const modal = el('#modal');
-    el('#contactBtn').addEventListener('click', ()=>{ modal.style.display='grid'; });
-    el('#closeModal').addEventListener('click', ()=>{ modal.style.display='none'; });
-    modal.addEventListener('click', (e)=>{ if(e.target===modal) modal.style.display='none'; });
-
-    el('#sendLead').addEventListener('click', ()=>{
-      const payload = collectState();
-      const lead = {
-        company: el('#fCompany').value.trim(),
-        name: el('#fName').value.trim(),
-        role: el('#fRole').value.trim(),
-        phone: el('#fPhone').value.trim(),
-        email: el('#fEmail').value.trim(),
-        comment: el('#fComment').value.trim(),
-        estimate: payload.quote
-      };
-      // Здесь вы можете отправить lead на ваш бэкенд
-      console.log('LEAD_DATA', lead);
-      el('#leadStatus').innerHTML = '<span class="pill" style="color:var(--ok); border-color:rgba(139,209,124,.3); background:rgba(139,209,124,.12)">Заявка сформирована. Мы свяжемся с вами.</span>';
-    });
-
-    function collectState(){
-      const currency = el('#currency').value;
-      const rate = currency==='EUR' ? 1 : fx.RUB; // внутренние цены в EUR
-      const withVAT = el('#vat').checked;
-      const users = +el('#users').value;
-      const integrations = +el('#integrations').value;
-      const training = +el('#training').value;
-      const tierId = el('#tiers .chip.active')?.dataset.id || 'pro';
-      const tier = model.tiers.find(t=>t.id===tierId);
-      const mods = els('#modules .chip.active').map(x=>x.dataset.id).map(id=>model.modules.find(m=>m.id===id));
-      const cxId = el('#complexity .chip.active')?.dataset.id || 'std';
-      const cx = model.complexity.find(c=>c.id===cxId);
-      const migId = el('#migration .chip.active')?.dataset.id || 'none';
-      const mig = model.migration.find(m=>m.id===migId);
-      const supId = el('#support .chip.active')?.dataset.id || 'std';
-      const sup = model.support.find(s=>s.id===supId);
-      const pilotMonths = +el('#pilot').value;
-
-      // Pricing core (EUR)
-      const licenseMonthly = users * tier.monthlyPerUser;
-      const modulesMonthly = mods.reduce((s,m)=> s + m.monthly, 0);
-      const modulesOneOff = mods.reduce((s,m)=> s + m.oneoff, 0) * cx.mult;
-      const integrationsMonthly = integrations * model.integrationMonthly;
-      const integrationsOneOff = integrations * model.integrationOneOff * cx.mult;
-      const migrationOneOff = mig.oneoff;
-      const trainingOneOff = training * model.trainingPerHour;
-      const supportMonthly = sup.monthly;
-
-      let monthly = licenseMonthly + modulesMonthly + integrationsMonthly + supportMonthly;
-      let oneoff = modulesOneOff + integrationsOneOff + migrationOneOff + trainingOneOff;
-
-      // Pilot discount: 20% на ежемесячные платежи в период пилота
-      const pilotDiscount = pilotMonths>0 ? 0.2 : 0;
-      const monthlyPilot = monthly * (1 - pilotDiscount);
-
-      // Coupon
-      const rawCoupon = el('#coupon').value.trim().toUpperCase();
-      const coupon = model.coupons[rawCoupon];
-      let couponNote = '';
-      if (coupon) {
-        if (coupon.type==='monthly') { monthly *= (1 - coupon.value); monthlyPilot *= (1 - coupon.value); }
-        if (coupon.type==='total') { oneoff *= (1 - coupon.value); }
-        couponNote = `${rawCoupon} применён`;
-      }
-
-      // VAT
-      const vatRate = withVAT ? 0.2 : 0;
+      let monthly = totalSegments * unit + alfaFee; // биллинг по отправленным
+      const vatRate = s.withVAT ? 0.20 : 0;
       const monthlyVAT = monthly * vatRate;
-      const oneoffVAT = oneoff * vatRate;
+      const total = monthly + monthlyVAT;
 
-      const totalMonthly = monthly + monthlyVAT;
-      const totalOneOff = oneoff + oneoffVAT;
+      const delivered = Math.round(s.messages * s.dlr);
 
-      // Timeline estimate
-      const baseWeeksMin = cx.weeks[0] + Math.ceil(integrations * 0.5);
-      const baseWeeksMax = cx.weeks[1] + Math.ceil(integrations * 0.8);
-
-      return {
-        currency, rate, withVAT,
-        users, integrations, training, tier, mods, cx, mig, sup, pilotMonths,
-        pricing: { licenseMonthly, modulesMonthly, modulesOneOff, integrationsMonthly, integrationsOneOff, migrationOneOff, trainingOneOff, supportMonthly, vatRate, pilotDiscount, couponNote },
-        totals: { monthly, monthlyPilot, oneoff, monthlyVAT, oneoffVAT, totalMonthly, totalOneOff },
-        timeline: [baseWeeksMin, baseWeeksMax]
-      };
-    }
-
-    function money(v, curr){
-      const isEUR = curr==='EUR';
-      const n = new Intl.NumberFormat('ru-RU', { style:'currency', currency: isEUR? 'EUR':'RUB', maximumFractionDigits: 0 });
-      return n.format(v);
-    }
-
-    function recalc(applyCoupon=false){
-      const state = collectState();
-      const { currency, rate } = state;
-      el('#timeline').textContent = `~ ${state.timeline[0]}–${state.timeline[1]} недель`;
-
-      // Summary
-      const s = state.totals;
-      const monthly = s.totalMonthly * (currency==='EUR'?1:fx.RUB);
-      const oneoff = s.totalOneOff * (currency==='EUR'?1:fx.RUB);
-
-      el('#summary').innerHTML = `
-        <div class="line"><div>Ежемесячно</div><div class="big">${money(monthly, currency)}</div></div>
-        <div class="line"><div>Разово при внедрении</div><div class="big">${money(oneoff, currency)}</div></div>
-        <div class="line"><div class="muted">Пилот (${state.pilotMonths} мес.)</div><div>${money(state.totals.monthlyPilot * (currency==='EUR'?1:fx.RUB), currency)}/мес</div></div>
-        <div class="line"><div class="muted">Пользователей</div><div>${state.users}</div></div>
+      // Render summary
+      $('#summary').innerHTML = `
+        <div class="line"><div>Итого за месяц</div><div class="big">${money(total)}</div></div>
+        <div class="line"><div class="muted">Без НДС</div><div>${money(monthly)}</div></div>
+        <div class="line"><div class="muted">Цена за 1 сегмент</div><div>${money(unit)}</div></div>
+        <div class="line"><div class="muted">Цена за 1000 сообщений*</div><div>${money(unit * segPerMsg * 1000)}</div></div>
+        <div class="line"><div class="muted">Оценка «дошедших»</div><div>${intlNum(delivered)} из ${intlNum(s.messages)}</div></div>
       `;
 
       // Breakdown
-      const b = state.pricing;
-      const rows = [
-        ['Лицензии ('+state.tier.name+')', b.licenseMonthly, 'monthly'],
-        ['Модули: '+ (state.mods.length? state.mods.map(m=>m.label).join(', ') : '—'), b.modulesMonthly, 'monthly'],
-        ['Интеграции', b.integrationsMonthly, 'monthly'],
-        ['Поддержка: '+ state.sup.label, b.supportMonthly, 'monthly'],
-        ['Обучение ('+state.training+' ч.)', b.trainingOneOff, 'oneoff'],
-        ['Миграция: '+state.mig.label, b.migrationOneOff, 'oneoff'],
-        ['Внедрение модулей × '+state.cx.label, b.modulesOneOff, 'oneoff'],
-        ['Интеграции × '+state.cx.label, b.integrationsOneOff, 'oneoff'],
-        ['НДС ('+(Math.round(b.vatRate*100))+'%)', state.totals.monthlyVAT + state.totals.oneoffVAT, 'both'],
-      ];
-
-      el('#breakdown').innerHTML = rows.map(([label, val, kind])=>{
-        const curr = currency;
-        const v = val * (curr==='EUR'?1:fx.RUB);
-        return `<div class="line"><div>${label}</div><div>${money(v,curr)}${kind==='monthly'?' / мес.':''}</div></div>`;
-      }).join('') + (b.couponNote? `<div class="muted">${b.couponNote}</div>`:'');
+      $('#breakdown').innerHTML = `
+        <div class="line"><div>Сегментов на 1 сообщение</div><div>${segPerMsg}</div></div>
+        <div class="line"><div>Всего сегментов</div><div>${intlNum(totalSegments)}</div></div>
+        <div class="line"><div>Тариф (регион)</div><div>${unit.toFixed(2)} ₽ / сегмент</div></div>
+        <div class="line"><div>Альфа‑имя</div><div>${alfaFee? money(alfaFee)+' / мес':'—'}</div></div>
+        <div class="line"><div>НДС (20%)</div><div>${money(monthlyVAT)}</div></div>
+        <div class="note">* Цена за 1000 сообщений рассчитывается при выбранной длине и кодировке.</div>
+      `;
     }
 
-    // Initial calc
+    // CTA
+    $('#cta').addEventListener('click',()=>{
+      const s = getState();
+      console.log('LEAD_SMS', s);
+      alert('Заявка отправлена. Мы свяжемся для уточнения маршрутов и альфа‑имени.');
+    });
+
+    // init
     recalc();
   </script>
 </body>
 </html>
+
