@@ -9,10 +9,14 @@
       --bg1:#fff7da;
       --bg2:#fff2c0;
       --text:#111;
-      --muted: rgba(17,17,17,0.65);
+      --muted: rgba(17,17,17,0.62);
       --btn:#111;
       --btnText:#fff;
       --shadow: rgba(0,0,0,0.12);
+
+      --ball1:#fff6cf;
+      --ball2:#ffe57a;
+      --ball3:#ffde40;
     }
 
     html, body { height:100%; }
@@ -36,7 +40,7 @@
       opacity:0.9;
     }
 
-    /* ПРАЗДНИЧНЫЙ ФОН (ёлка + подарки) */
+    /* ФОН: только лёгкая ёлочка + световые пятна, без подарков */
     .bg {
       position:fixed;
       inset:0;
@@ -44,13 +48,8 @@
       pointer-events:none;
       opacity:0.9;
     }
-    .bg svg {
-      width:100%;
-      height:100%;
-      display:block;
-    }
+    .bg svg { width:100%; height:100%; display:block; }
 
-    /* КОНТЕНТ */
     .wrap{
       position:relative;
       z-index:2;
@@ -59,6 +58,7 @@
       align-items:center;
       justify-content:center;
       padding: 20px;
+      text-align:center;
     }
 
     .ui{
@@ -66,13 +66,12 @@
       display:flex;
       flex-direction:column;
       align-items:center;
-      gap: 16px;
-      text-align:center;
+      gap: 14px;
     }
 
     .title{
       font-size: 20px;
-      font-weight: 800;
+      font-weight: 850;
       letter-spacing: 0.2px;
       margin:0;
     }
@@ -80,60 +79,81 @@
       margin:0;
       font-size: 13px;
       color: var(--muted);
+      max-width: 420px;
     }
 
-    /* СПИРАЛЬКА */
+    /* Блок со спиралью */
     .spiral-wrap{
       position:relative;
-      width: 220px;
-      height: 220px;
+      width: 230px;
+      height: 230px;
       display:grid;
       place-items:center;
+      margin: 8px 0 2px;
       filter: drop-shadow(0 18px 40px var(--shadow));
     }
 
-    /* мягкое свечение под спиралью */
+    /* “Шар” за спиралькой */
+    .ball{
+      position:absolute;
+      inset: 10px;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 30% 28%, rgba(255,255,255,0.95), rgba(255,255,255,0.00) 45%),
+        radial-gradient(circle at 55% 65%, var(--ball1) 0%, var(--ball2) 45%, var(--ball3) 100%);
+      box-shadow:
+        inset 0 0 0 1px rgba(0,0,0,0.06),
+        inset 0 -18px 40px rgba(0,0,0,0.10);
+    }
+
+    /* лёгкое внешнее свечение */
     .glow{
       position:absolute;
-      inset:-22px;
+      inset:-20px;
       border-radius:999px;
       background: radial-gradient(circle at 50% 55%,
-        rgba(255,255,255,0.95),
-        rgba(255,255,255,0.60) 35%,
+        rgba(255,255,255,0.85),
+        rgba(255,255,255,0.45) 35%,
         rgba(255,255,255,0.00) 70%);
-      filter: blur(10px);
-      opacity: 0.9;
+      filter: blur(12px);
+      opacity: 0.85;
+      pointer-events:none;
     }
 
-    .spiral{
-      width: 220px;
-      height: 220px;
-      transform: translateZ(0);
+    /* ВАЖНО: крутим ВЕСЬ контейнер со спиралькой (самый надёжный способ) */
+    .spinner{
+      position:relative;
+      width: 230px;
+      height: 230px;
+      display:grid;
+      place-items:center;
+
+      /* для SVG-вращений иногда нужно явно */
+      transform-origin: 50% 50%;
     }
 
-    .spin .spiral{
+    .spin .spinner{
       animation: spin 1.05s linear infinite;
     }
-
-    /* легкое “световое” подмигивание во время вращения */
     .spin .glow{
       animation: pulse 1.05s ease-in-out infinite;
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes pulse {
-      0%,100% { opacity: .80; }
+      0%,100% { opacity: .75; }
       50% { opacity: 1; }
     }
 
-    /* ТЕКСТ ПРЕДСКАЗАНИЯ */
-    .pred{
-      width:min(560px, 100%);
-      font-size: 18px;
-      line-height: 1.35;
-      font-weight: 650;
-      padding: 0 6px;
-      min-height: 56px;
+    .spiral{
+      width: 210px;
+      height: 210px;
+      display:block;
+      z-index:2;
+
+      /* чтобы у SVG точно был центр вращения, если вдруг решишь крутить именно svg */
+      transform-box: fill-box;
+      transform-origin: 50% 50%;
     }
 
     .status{
@@ -142,14 +162,22 @@
       min-height: 18px;
     }
 
-    /* КНОПКА */
+    .pred{
+      width:min(560px, 100%);
+      font-size: 18px;
+      line-height: 1.35;
+      font-weight: 700;
+      padding: 0 6px;
+      min-height: 56px;
+    }
+
     .btn{
       width:min(360px, 100%);
       border: 0;
       border-radius: 18px;
       padding: 14px 16px;
       font-size: 16px;
-      font-weight: 800;
+      font-weight: 850;
       background: var(--btn);
       color: var(--btnText);
       cursor:pointer;
@@ -159,17 +187,17 @@
     .btn:active{ transform: scale(0.99); }
     .btn:disabled{ opacity:.6; cursor:not-allowed; }
 
-    /* маленькая подпись */
     .note{
       font-size: 12px;
       color: var(--muted);
     }
 
-    /* чтобы на маленьких экранах всё помещалось */
     @media (max-height: 720px){
-      .spiral-wrap{ width: 190px; height: 190px; }
-      .spiral{ width:190px; height:190px; }
+      .spiral-wrap{ width: 200px; height: 200px; }
+      .spinner{ width: 200px; height: 200px; }
+      .spiral{ width: 180px; height: 180px; }
       .pred{ font-size: 16px; }
+      .ball{ inset: 10px; }
     }
   </style>
 </head>
@@ -177,18 +205,16 @@
 <body>
   <canvas id="snow"></canvas>
 
-  <!-- ЛЁГКИЙ ПРАЗДНИЧНЫЙ ФОН: ёлка и подарки (сильно приглушено, чтобы не мешать тексту) -->
   <div class="bg" aria-hidden="true">
     <svg viewBox="0 0 1000 700" preserveAspectRatio="none">
-      <!-- световые пятна -->
       <defs>
         <radialGradient id="g1" cx="20%" cy="25%" r="60%">
-          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.75"/>
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.70"/>
           <stop offset="55%" stop-color="#ffffff" stop-opacity="0.10"/>
           <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
         </radialGradient>
         <radialGradient id="g2" cx="78%" cy="35%" r="70%">
-          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.55"/>
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.50"/>
           <stop offset="60%" stop-color="#ffffff" stop-opacity="0.10"/>
           <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
         </radialGradient>
@@ -197,31 +223,15 @@
       <rect x="0" y="0" width="1000" height="700" fill="url(#g1)"/>
       <rect x="0" y="0" width="1000" height="700" fill="url(#g2)"/>
 
-      <!-- ёлка (слева снизу) -->
-      <g opacity="0.22" transform="translate(110,170)">
+      <!-- ёлка (очень лёгкая, снизу слева) -->
+      <g opacity="0.18" transform="translate(120,210)">
         <path d="M180 360 L 80 520 H 280 Z" fill="#2b6b3a"/>
         <path d="M180 280 L 60 460 H 300 Z" fill="#2f7a40"/>
         <path d="M180 200 L 70 390 H 290 Z" fill="#33884a"/>
         <rect x="160" y="520" width="40" height="60" rx="10" fill="#7a4b2a"/>
-        <!-- простые игрушки -->
-        <circle cx="150" cy="330" r="10" fill="#d43f3f"/>
-        <circle cx="210" cy="360" r="9" fill="#1e6bd6"/>
-        <circle cx="185" cy="430" r="11" fill="#d4a21f"/>
-      </g>
-
-      <!-- подарки (справа снизу) -->
-      <g opacity="0.20" transform="translate(650,430)">
-        <rect x="0" y="70" width="120" height="90" rx="14" fill="#e45050"/>
-        <rect x="46" y="70" width="28" height="90" fill="#fff"/>
-        <rect x="0" y="105" width="120" height="22" fill="#fff"/>
-
-        <rect x="140" y="40" width="130" height="120" rx="16" fill="#2b7be4"/>
-        <rect x="190" y="40" width="30" height="120" fill="#fff"/>
-        <rect x="140" y="92" width="130" height="22" fill="#fff"/>
-
-        <rect x="300" y="80" width="110" height="80" rx="14" fill="#2f7a40"/>
-        <rect x="342" y="80" width="26" height="80" fill="#fff"/>
-        <rect x="300" y="110" width="110" height="18" fill="#fff"/>
+        <circle cx="150" cy="330" r="9" fill="#d43f3f"/>
+        <circle cx="210" cy="360" r="8" fill="#1e6bd6"/>
+        <circle cx="185" cy="430" r="10" fill="#d4a21f"/>
       </g>
     </svg>
   </div>
@@ -235,17 +245,19 @@
 
       <div class="spiral-wrap" id="spinZone">
         <div class="glow"></div>
+        <div class="ball"></div>
 
-        <!-- Спиралька (SVG). Рисуем спираль “по формуле”, толстой чёрной линией -->
-        <svg class="spiral" viewBox="0 0 220 220" aria-hidden="true">
-          <path id="spiralPath"
-                d=""
-                fill="none"
-                stroke="#111"
-                stroke-width="18"
-                stroke-linecap="round"
-                stroke-linejoin="round"/>
-        </svg>
+        <div class="spinner" aria-hidden="true">
+          <svg class="spiral" viewBox="0 0 220 220">
+            <path id="spiralPath"
+                  d=""
+                  fill="none"
+                  stroke="#111"
+                  stroke-width="18"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+          </svg>
+        </div>
       </div>
 
       <div class="status" id="status">Готово</div>
@@ -258,11 +270,10 @@
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script>
-    // Telegram WebApp (опционально)
     const tg = window.Telegram?.WebApp;
     if (tg) tg.ready();
 
-    // ====== ТВОИ ПРЕДСКАЗАНИЯ (вставь 300+) ======
+    // ====== ПРЕДСКАЗАНИЯ (вставь 300+) ======
     const PREDICTIONS = [
       "В этом году сработает простое правило: меньше шума — больше результата.",
       "Самое полезное знакомство случится случайно, но ты его не проигнорируешь.",
@@ -272,13 +283,12 @@
     ];
     document.getElementById("note").textContent = `Вариантов: ${PREDICTIONS.length}`;
 
-    // ====== СПИРАЛЬ (генерация path, чтобы она была “чёткая” и похожая на референс) ======
-    // Делаем архимедову спираль + небольшой "хвостик" наружу (как в логотипе)
+    // ====== СПИРАЛЬ (генерация path) ======
     function buildSpiralPath() {
       const cx = 110, cy = 110;
-      const a = 2.0;      // стартовый радиус
-      const b = 3.6;      // шаг витка
-      const thetaMax = 5.35 * Math.PI; // сколько витков
+      const a = 2.0;
+      const b = 3.55;
+      const thetaMax = 5.35 * Math.PI;
       const step = 0.10;
 
       const pts = [];
@@ -289,11 +299,10 @@
         pts.push([x, y]);
       }
 
-      // Добавим "хвостик" — выведем последнюю точку чуть вправо-вниз
+      // “хвостик” как в логотипе
       const last = pts[pts.length - 1];
-      pts.push([last[0] + 24, last[1] + 10]);
+      pts.push([last[0] + 26, last[1] + 10]);
 
-      // Перевод в SVG path (M + L)
       let d = `M ${pts[0][0].toFixed(2)} ${pts[0][1].toFixed(2)}`;
       for (let i = 1; i < pts.length; i++) {
         d += ` L ${pts[i][0].toFixed(2)} ${pts[i][1].toFixed(2)}`;
@@ -302,16 +311,14 @@
     }
     document.getElementById("spiralPath").setAttribute("d", buildSpiralPath());
 
-    // ====== ЛОГИКА "ПРОКРУТКИ" ======
+    // ====== ЛОГИКА “ПРОКРУТКИ” ======
     const btn = document.getElementById("btn");
     const pred = document.getElementById("pred");
     const status = document.getElementById("status");
     const spinZone = document.getElementById("spinZone");
 
-    function pick() {
-      return PREDICTIONS[Math.floor(Math.random() * PREDICTIONS.length)];
-    }
     const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+    const pick = () => PREDICTIONS[Math.floor(Math.random() * PREDICTIONS.length)];
 
     async function spinAndShow() {
       btn.disabled = true;
@@ -319,21 +326,15 @@
       status.textContent = "Крутим спиральку…";
 
       spinZone.classList.add("spin");
-
-      // чуть “живой” тайминг
       await sleep(900 + Math.floor(Math.random() * 800));
-
       spinZone.classList.remove("spin");
 
       pred.textContent = pick();
       status.textContent = "Готово";
 
-      // если ты используешь удаление стартового сообщения в боте
       if (tg) tg.sendData(JSON.stringify({ action: "opened", ts: Date.now() }));
-
       btn.disabled = false;
     }
-
     btn.addEventListener("click", spinAndShow);
 
     // ====== СНЕГ (canvas) ======
@@ -380,14 +381,13 @@
         f.x += f.vx + Math.sin(f.drift) * 0.25;
         f.y += f.vy;
 
-        // снежинка мягкая + чуть свечения
         ctx.globalAlpha = f.a;
         ctx.beginPath();
         ctx.arc(f.x, f.y, f.r, 0, Math.PI*2);
         ctx.fillStyle = "#ffffff";
         ctx.fill();
 
-        ctx.globalAlpha = f.a * 0.25;
+        ctx.globalAlpha = f.a * 0.22;
         ctx.beginPath();
         ctx.arc(f.x, f.y, f.r * 2.2, 0, Math.PI*2);
         ctx.fillStyle = "#ffffff";
@@ -412,4 +412,5 @@
   </script>
 </body>
 </html>
+
 
