@@ -32,13 +32,29 @@
   }
 
   /* 🔹 СЛОТ 1 — GIF */
-  .bg-gif{
-    position:absolute;
-    right: 16px;
-    bottom: 16px;
-    width: 140px;
-    opacity:0.35;
+  .bg-tree{
+  position: absolute;
+  left: -10px;
+  bottom: -18px;
+
+  width: 160px;          /* размер */
+  opacity: 0.18;         /* чтобы не перетягивала внимание */
+
+  filter:
+    blur(0.3px)
+    drop-shadow(0 8px 18px rgba(0,0,0,0.08));
+
+  pointer-events: none;
+}
+
+/* на больших экранах чуть больше, но всё равно спокойно */
+@media (min-width: 420px){
+  .bg-tree{
+    width: 190px;
+    opacity: 0.16;
   }
+}
+
 
   /* 🔹 СЛОТ 2 — PNG */
   .bg-png-1{
@@ -165,15 +181,15 @@
 
 <!-- ===== ФОН С АССЕТАМИ ===== -->
 <div class="bg">
-  <!-- GIF снежинки -->
-  <img src="https://i.ibb.co/5h7sM3k/snow.gif" class="bg-gif" alt="">
-
-  <!-- PNG ёлка -->
-  <img src="https://i.ibb.co/cSnfSkTd/Chat-GPT-Image-14-2025-02-07-11.png" class="bg-png-1" alt="">
-
-  <!-- webp PNG-эквивалент -->
-  <img src="https://3dbuy.ru/uploads/images_main/dc/eb/700_700_143497-SvJWbHRXZP.webp" class="bg-png-2" alt="">
+  <!-- ёлка -->
+  <img
+    src="https://i.ibb.co/cSnfSkTd/Chat-GPT-Image-14-2025-02-07-11.png"
+    class="bg-tree"
+    alt=""
+    onerror="this.style.display='none'"
+  >
 </div>
+
 
 <div class="wrap">
   <div class="ui">
