@@ -97,6 +97,7 @@
     display:grid;
     place-items:center;
     margin:10px 0;
+    filter: drop-shadow(0 18px 40px rgba(0,0,0,0.12));
   }
 
   /* ШАР */
@@ -109,22 +110,15 @@
       radial-gradient(circle at 55% 65%, #FFEFA3 0%, #FFD900 55%, #F5C400 100%);
   }
 
-  /* КРУТЯЩИЙСЯ БЛОК */
+  /* ПОВОРОТНЫЙ БЛОК (важно: transform остаётся после анимации) */
   .spinner{
     width:230px;
     height:230px;
     display:grid;
     place-items:center;
     transform-origin:50% 50%;
-    will-change:transform;
-  }
-
-  .spin .spinner{
-    animation: spin 1.05s linear infinite;
-  }
-
-  @keyframes spin{
-    to{ transform: rotate(360deg); }
+    will-change: transform;
+    transform: rotate(0deg);
   }
 
   .spiral{
@@ -171,13 +165,9 @@
 
 <!-- ===== ФОН С АССЕТАМИ ===== -->
 <div class="bg">
-  <!-- 🔹 GIF -->
+  <!-- сюда вставляй свои ссылки (только https) -->
   <img src="assets/bg.gif" class="bg-gif" alt="">
-
-  <!-- 🔹 PNG 1 -->
   <img src="assets/bg1.png" class="bg-png-1" alt="">
-
-  <!-- 🔹 PNG 2 -->
   <img src="assets/bg2.png" class="bg-png-2" alt="">
 </div>
 
@@ -189,7 +179,7 @@
     <div class="spiral-wrap" id="spinZone">
       <div class="ball"></div>
 
-      <div class="spinner">
+      <div class="spinner" id="spinner">
         <svg class="spiral" viewBox="0 0 220 220">
           <path id="spiralPath"
             fill="none"
@@ -238,22 +228,53 @@ const PREDICTIONS=[
 const btn=document.getElementById("btn");
 const pred=document.getElementById("pred");
 const status=document.getElementById("status");
-const spinZone=document.getElementById("spinZone");
+const spinner=document.getElementById("spinner");
 
 const sleep=(ms)=>new Promise(r=>setTimeout(r,ms));
 const pick=()=>PREDICTIONS[Math.floor(Math.random()*PREDICTIONS.length)];
+
+/* ===== ВРАЩЕНИЕ: ОСТАНАВЛИВАЕТСЯ И ОСТАЁТСЯ НА МЕСТЕ ===== */
+let currentAngle = 0;   // накапливаем угол между кликами
+let anim = null;
+
+async function spinToNewAngle(){
+  // сколько оборотов сделать (2–4) + докрутить случайно 0–359
+  const turns = 2 + Math.floor(Math.random() * 3); // 2..4
+  const extra = Math.floor(Math.random() * 360);
+  const delta = turns * 360 + extra;
+
+  const start = currentAngle;
+  const end = currentAngle + delta;
+  currentAngle = end; // важное: сохраняем итоговый угол
+
+  // если вдруг предыдущая анимация ещё жива — остановим
+  if (anim) anim.cancel();
+
+  // Анимация вращения (easeOut, чтобы ощущалось как “остановка”)
+  anim = spinner.animate(
+    [
+      { transform: `rotate(${start}deg)` },
+      { transform: `rotate(${end}deg)` }
+    ],
+    {
+      duration: 1100 + Math.floor(Math.random() * 700),
+      easing: "cubic-bezier(.2,.9,.2,1)",
+      fill: "forwards"
+    }
+  );
+
+  await anim.finished;
+
+  // фиксируем transform инлайном (на случай, если WebView капризничает)
+  spinner.style.transform = `rotate(${end}deg)`;
+}
 
 btn.onclick=async()=>{
   btn.disabled=true;
   pred.textContent="…";
   status.textContent="Крутим спиральку…";
 
-  spinZone.classList.remove("spin");
-  void spinZone.offsetWidth; // перезапуск анимации
-  spinZone.classList.add("spin");
-
-  await sleep(1000+Math.random()*600);
-  spinZone.classList.remove("spin");
+  await spinToNewAngle();
 
   pred.textContent=pick();
   status.textContent="Готово";
@@ -293,4 +314,5 @@ for(let i=0;i<120;i++){
 
 </body>
 </html>
+
 
