@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Предсказание</title>
+  <style>
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; background:#0b0b0f; color:#fff; }
+    .wrap { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
+    .card { width: min(520px, 100%); background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius:24px; padding:20px; box-shadow: 0 20px 60px rgba(0,0,0,0.35); }
+    h1 { font-size:20px; margin:0 0 12px; font-weight:650; opacity:.95; }
+    .ball { height:140px; border-radius:20px; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25), rgba(255,255,255,0.06)); display:flex; align-items:center; justify-content:center; margin:14px 0; overflow:hidden; position:relative; }
+    .spark { position:absolute; inset:-40px; background: conic-gradient(from 120deg, rgba(255,255,255,.0), rgba(255,255,255,.18), rgba(255,255,255,.0)); filter: blur(6px); opacity:0; transform: rotate(0deg); }
+    .spark.on { animation: spin 1.2s linear infinite; opacity:1; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .btn { width:100%; padding:14px 16px; border:0; border-radius:16px; background:#ffffff; color:#0b0b0f; font-weight:700; font-size:16px; cursor:pointer; }
+    .btn:disabled { opacity:.55; cursor:not-allowed; }
+
+    .pred { margin-top:14px; padding:14px 14px; border-radius:16px; background: rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.10); line-height:1.35; min-height:64px; }
+    .muted { opacity:.7; font-size:13px; margin-top:10px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Предсказание на год</h1>
+
+      <div class="ball">
+        <div class="spark" id="spark"></div>
+        <div id="status" style="opacity:.85">Нажми кнопку — и посмотрим</div>
+      </div>
+
+      <button class="btn" id="btn">Получить предсказание</button>
+      <div class="pred" id="pred">…</div>
+      <div class="muted">Можно получать новое каждый раз.</div>
+    </div>
+  </div>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    const tg = window.Telegram?.WebApp;
+    if (tg) tg.ready();
+
+    // сюда вставишь свои 300+
+    const PREDICTIONS = [
+      "Год будет про скорость: найдёшь способ делать меньше — получать больше.",
+      "Появится человек, который откроет для тебя новую дверь. Не спорь с шансом.",
+      "Самый сильный апгрейд года — дисциплина на маленьких шагах.",
+      "В середине года будет развилка: выбери то, что страшно, но честно.",
+      "Твои идеи начнут приносить деньги, если перестанешь их прятать.",
+    ];
+
+    const btn = document.getElementById("btn");
+    const pred = document.getElementById("pred");
+    const status = document.getElementById("status");
+    const spark = document.getElementById("spark");
+
+    function pick() {
+      return PREDICTIONS[Math.floor(Math.random() * PREDICTIONS.length)];
+    }
+
+    async function animateAndShow() {
+      btn.disabled = true;
+      pred.textContent = "…";
+      status.textContent = "Смотрю в шар…";
+      spark.classList.add("on");
+
+      // небольшая “мистика”
+      await new Promise(r => setTimeout(r, 1300));
+      const text = pick();
+
+      spark.classList.remove("on");
+      status.textContent = "Готово";
+      pred.textContent = text;
+
+      // сигнал боту: “мини-апп открыли/получили предсказание”
+      // это нужно, чтобы бот мог удалить сообщение с кнопкой
+      if (tg) tg.sendData(JSON.stringify({ action: "opened", ts: Date.now() }));
+
+      btn.disabled = false;
+    }
+
+    btn.addEventListener("click", animateAndShow);
+  </script>
+</body>
+</html>
