@@ -32,26 +32,29 @@
   }
 
   /* 🔹 СЛОТ 1 — GIF */
-  .bg-tree{
+ .bg-tree{
   position: absolute;
-  left: -10px;
-  bottom: -18px;
+  left: -12px;
 
-  width: 160px;          /* размер */
-  opacity: 0.18;         /* чтобы не перетягивала внимание */
+  /* ⬇️ ключевая правка */
+  bottom: 96px;          /* выше кнопки */
+
+  width: 160px;
+  opacity: 0.16;
 
   filter:
-    blur(0.3px)
+    blur(0.4px)
     drop-shadow(0 8px 18px rgba(0,0,0,0.08));
 
   pointer-events: none;
 }
 
-/* на больших экранах чуть больше, но всё равно спокойно */
+/* На больших экранах */
 @media (min-width: 420px){
   .bg-tree{
     width: 190px;
-    opacity: 0.16;
+    bottom: 110px;
+    opacity: 0.14;
   }
 }
 
@@ -84,6 +87,9 @@
     justify-content:center;
     padding:20px;
     text-align:center;
+      /* новое */
+  padding-top: 48px;
+}
   }
 
   .ui{
