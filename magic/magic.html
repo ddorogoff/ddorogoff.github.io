@@ -5,44 +5,245 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Предсказание</title>
   <style>
-    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; background:#0b0b0f; color:#fff; }
-    .wrap { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
-    .card { width: min(520px, 100%); background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius:24px; padding:20px; box-shadow: 0 20px 60px rgba(0,0,0,0.35); }
-    h1 { font-size:20px; margin:0 0 12px; font-weight:650; opacity:.95; }
-    .ball { height:140px; border-radius:20px; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25), rgba(255,255,255,0.06)); display:flex; align-items:center; justify-content:center; margin:14px 0; overflow:hidden; position:relative; }
-    .spark { position:absolute; inset:-40px; background: conic-gradient(from 120deg, rgba(255,255,255,.0), rgba(255,255,255,.18), rgba(255,255,255,.0)); filter: blur(6px); opacity:0; transform: rotate(0deg); }
-    .spark.on { animation: spin 1.2s linear infinite; opacity:1; }
+    :root{
+      --bg0:#0b0b0f;
+      --bg1:#101018;
+      --card: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.12);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.70);
+
+      /* “еда-жёлтый” (на глаз, можно подправить под твой гайд) */
+      --ya-yellow: #ffde40;
+      --ya-yellow2:#ffe77a;
+      --shadow: rgba(0,0,0,0.35);
+    }
+
+    html, body { height:100%; }
+    body {
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: radial-gradient(1200px 800px at 20% 10%, #161624 0%, var(--bg0) 55%, #06060a 100%);
+      color: var(--text);
+      overflow:hidden;
+    }
+
+    /* Снежинки */
+    #snow {
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:0;
+      pointer-events:none;
+      opacity:0.9;
+    }
+
+    .wrap {
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      position:relative;
+      z-index:1;
+    }
+
+    .card {
+      width: min(560px, 100%);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 20px;
+      box-shadow: 0 20px 60px var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .top {
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    h1 {
+      font-size: 20px;
+      line-height:1.2;
+      margin:0;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .hint {
+      margin-top:6px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* Спиральный “шар” */
+    .stage {
+      margin-top: 16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 18px 12px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.15);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .orb {
+      width: 168px;
+      height: 168px;
+      border-radius: 999px;
+      position: relative;
+      box-shadow:
+        0 18px 50px rgba(0,0,0,0.55),
+        inset 0 0 0 1px rgba(255,255,255,0.12);
+      transform: translateZ(0);
+    }
+
+    /* “спиралька” через repeating-conic-gradient + подсветка */
+    .orb::before {
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:inherit;
+
+      background:
+        /* легкий объем */
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,0.22), rgba(255,255,255,0.00) 55%),
+        radial-gradient(circle at 60% 70%, rgba(0,0,0,0.35), rgba(0,0,0,0.00) 55%),
+
+        /* спиральные витки */
+        repeating-conic-gradient(
+          from 0deg,
+          rgba(0,0,0,0.00) 0deg 8deg,
+          rgba(0,0,0,0.34) 8deg 12deg
+        ),
+
+        /* желтая “масса” */
+        radial-gradient(circle at 50% 55%, var(--ya-yellow2), var(--ya-yellow) 55%, #f1c800 100%);
+
+      filter: saturate(1.08) contrast(1.05);
+    }
+
+    /* Блик поверх */
+    .orb::after {
+      content:"";
+      position:absolute;
+      inset:-18px;
+      border-radius:inherit;
+      background:
+        conic-gradient(from 90deg, rgba(255,255,255,0), rgba(255,255,255,0.14), rgba(255,255,255,0));
+      filter: blur(10px);
+      opacity: 0.0;
+      transform: rotate(0deg);
+      pointer-events:none;
+    }
+
+    /* Вращение во время “гадания” */
+    .orb.spinning { animation: spin 1.05s linear infinite; }
+    .orb.spinning::after {
+      opacity: 1;
+      animation: shimmer 1.05s linear infinite;
+    }
+
     @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes shimmer { to { transform: rotate(360deg); } }
 
-    .btn { width:100%; padding:14px 16px; border:0; border-radius:16px; background:#ffffff; color:#0b0b0f; font-weight:700; font-size:16px; cursor:pointer; }
-    .btn:disabled { opacity:.55; cursor:not-allowed; }
+    .status {
+      margin-top: 14px;
+      text-align:center;
+      font-size: 14px;
+      color: var(--muted);
+      min-height: 20px;
+    }
 
-    .pred { margin-top:14px; padding:14px 14px; border-radius:16px; background: rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.10); line-height:1.35; min-height:64px; }
-    .muted { opacity:.7; font-size:13px; margin-top:10px; }
+    .btn {
+      margin-top: 14px;
+      width: 100%;
+      padding: 14px 16px;
+      border: 0;
+      border-radius: 16px;
+      background: #ffffff;
+      color: #0b0b0f;
+      font-weight: 750;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform .06s ease;
+    }
+    .btn:active { transform: scale(0.99); }
+    .btn:disabled { opacity: 0.58; cursor:not-allowed; }
+
+    .pred {
+      margin-top: 14px;
+      padding: 14px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      line-height: 1.35;
+      min-height: 74px;
+      font-size: 16px;
+    }
+
+    .footer {
+      margin-top: 10px;
+      font-size: 12.5px;
+      color: var(--muted);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    /* Небольшая “пульсация” во время ожидания */
+    .pulse { animation: pulse 1.05s ease-in-out infinite; }
+    @keyframes pulse {
+      0%,100% { opacity: 0.80; }
+      50% { opacity: 1; }
+    }
   </style>
 </head>
+
 <body>
+  <canvas id="snow"></canvas>
+
   <div class="wrap">
     <div class="card">
-      <h1>Предсказание на год</h1>
-
-      <div class="ball">
-        <div class="spark" id="spark"></div>
-        <div id="status" style="opacity:.85">Нажми кнопку — и посмотрим</div>
+      <div class="top">
+        <div>
+          <h1>Предсказание на год</h1>
+          <div class="hint">Нажми кнопку, спиралька прокрутится и выдаст новое предсказание.</div>
+        </div>
       </div>
 
+      <div class="stage">
+        <div class="orb" id="orb" aria-hidden="true"></div>
+      </div>
+
+      <div class="status" id="status">Готов к гаданию</div>
+
       <button class="btn" id="btn">Получить предсказание</button>
+
       <div class="pred" id="pred">…</div>
-      <div class="muted">Можно получать новое каждый раз.</div>
+
+      <div class="footer">
+        <div>Каждый заход — новое.</div>
+        <div id="count"></div>
+      </div>
     </div>
   </div>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script>
+    // --- Telegram WebApp hook (опционально) ---
     const tg = window.Telegram?.WebApp;
     if (tg) tg.ready();
 
-    // сюда вставишь свои 300+
+    // --- Предсказания ---
     const PREDICTIONS = [
       "Год будет про скорость: найдёшь способ делать меньше — получать больше.",
       "Появится человек, который откроет для тебя новую дверь. Не спорь с шансом.",
@@ -51,37 +252,115 @@
       "Твои идеи начнут приносить деньги, если перестанешь их прятать.",
     ];
 
+    document.getElementById("count").textContent = `Вариантов: ${PREDICTIONS.length}`;
+
     const btn = document.getElementById("btn");
     const pred = document.getElementById("pred");
     const status = document.getElementById("status");
-    const spark = document.getElementById("spark");
+    const orb = document.getElementById("orb");
 
     function pick() {
       return PREDICTIONS[Math.floor(Math.random() * PREDICTIONS.length)];
     }
 
+    function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
     async function animateAndShow() {
       btn.disabled = true;
       pred.textContent = "…";
-      status.textContent = "Смотрю в шар…";
-      spark.classList.add("on");
+      status.textContent = "Спиралька крутится…";
+      status.classList.add("pulse");
+      orb.classList.add("spinning");
 
-      // небольшая “мистика”
-      await new Promise(r => setTimeout(r, 1300));
+      // “прокрутка” — чуть рандомная длительность, чтобы ощущалось живее
+      const t = 1100 + Math.floor(Math.random() * 700);
+      await sleep(t);
+
       const text = pick();
 
-      spark.classList.remove("on");
+      orb.classList.remove("spinning");
+      status.classList.remove("pulse");
       status.textContent = "Готово";
       pred.textContent = text;
 
-      // сигнал боту: “мини-апп открыли/получили предсказание”
-      // это нужно, чтобы бот мог удалить сообщение с кнопкой
+      // сигнал боту (если используешь удаление стартового сообщения)
       if (tg) tg.sendData(JSON.stringify({ action: "opened", ts: Date.now() }));
 
       btn.disabled = false;
     }
 
     btn.addEventListener("click", animateAndShow);
+
+    // --- Снежинки (canvas) ---
+    const canvas = document.getElementById("snow");
+    const ctx = canvas.getContext("2d");
+
+    let w = 0, h = 0, dpr = 1;
+    function resize(){
+      dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      w = Math.floor(window.innerWidth);
+      h = Math.floor(window.innerHeight);
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      canvas.style.width = w + "px";
+      canvas.style.height = h + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    const flakes = [];
+    const FLAKE_COUNT = Math.min(140, Math.floor((w*h) / 14000) + 60);
+
+    function rand(min, max){ return Math.random() * (max - min) + min; }
+
+    function makeFlake(){
+      return {
+        x: rand(0, w),
+        y: rand(-h, 0),
+        r: rand(1.2, 3.4),
+        vx: rand(-0.35, 0.35),
+        vy: rand(0.6, 1.8),
+        drift: rand(0, Math.PI * 2),
+        spin: rand(0.004, 0.012),
+        alpha: rand(0.35, 0.85)
+      };
+    }
+
+    for (let i=0; i<FLAKE_COUNT; i++) flakes.push(makeFlake());
+
+    function step(){
+      ctx.clearRect(0,0,w,h);
+
+      for (const f of flakes){
+        f.drift += f.spin;
+        f.x += f.vx + Math.sin(f.drift) * 0.25;
+        f.y += f.vy;
+
+        // рисуем “мягкую” снежинку
+        ctx.globalAlpha = f.alpha;
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI*2);
+        ctx.fillStyle = "#ffffff";
+        ctx.fill();
+
+        if (f.y - f.r > h){
+          // переиспользуем сверху
+          f.x = rand(0, w);
+          f.y = rand(-40, -10);
+          f.vy = rand(0.6, 1.8);
+          f.vx = rand(-0.35, 0.35);
+          f.r = rand(1.2, 3.4);
+          f.alpha = rand(0.35, 0.85);
+        }
+        if (f.x < -20) f.x = w + 20;
+        if (f.x > w + 20) f.x = -20;
+      }
+
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
   </script>
 </body>
 </html>
