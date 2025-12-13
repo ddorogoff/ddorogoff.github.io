@@ -19,65 +19,55 @@
   #snow{
     position:fixed;
     inset:0;
-    z-index:1;
-    pointer-events:none;
-  }
-
-  /* ---------- ФОН С АССЕТАМИ ---------- */
-  .bg{
-    position:fixed;
-    inset:0;
     z-index:0;
     pointer-events:none;
   }
 
-  /* 🔹 СЛОТ 1 — GIF */
- .bg-tree{
-  position: absolute;
-  left: -12px;
-
-  /* ⬇️ ключевая правка */
-  bottom: 96px;          /* выше кнопки */
-
-  width: 160px;
-  opacity: 0.16;
-
-  filter:
-    blur(0.4px)
-    drop-shadow(0 8px 18px rgba(0,0,0,0.08));
-
-  pointer-events: none;
-}
-
-/* На больших экранах */
-@media (min-width: 420px){
-  .bg-tree{
-    width: 190px;
-    bottom: 110px;
-    opacity: 0.14;
+  /* ---------- ФОН (рисуем кодом) ---------- */
+  .bg{
+    position:fixed;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
   }
-}
 
-
-  /* 🔹 СЛОТ 2 — PNG */
-  .bg-png-1{
+  /* мягкие световые пятна */
+  .bg-lights{
     position:absolute;
-    left: 20px;
-    bottom: 24px;
-    width: 120px;
-    opacity:0.25;
+    inset:0;
+    width:100%;
+    height:100%;
+    opacity:0.9;
   }
 
-  /* 🔹 СЛОТ 3 — PNG */
-  .bg-png-2{
+  /* ёлка — НЕ тянется, слева снизу, ненавязчиво */
+  .tree{
     position:absolute;
-    right: 20px;
-    top: 60px;
-    width: 110px;
-    opacity:0.25;
+    left: 18px;
+    bottom: 14px;
+    width: 170px;
+    height:auto;
+    opacity: 0.18;
+    filter: drop-shadow(0 10px 18px rgba(0,0,0,0.10));
+  }
+  @media (min-width: 520px){
+    .tree{ width: 200px; left: 26px; bottom: 18px; opacity:0.16; }
   }
 
-  /* ---------- КОНТЕНТ ---------- */
+  /* Мигающие огоньки */
+  .light{ opacity:0.35; }
+  .l1{ fill:#ff4d4d; animation: twinkle 1.2s infinite; }
+  .l2{ fill:#4da3ff; animation: twinkle 1.1s infinite; animation-delay: .15s; }
+  .l3{ fill:#ffd24d; animation: twinkle 1.3s infinite; animation-delay: .28s; }
+  .l4{ fill:#6bff9d; animation: twinkle 1.15s infinite; animation-delay: .42s; }
+  .l5{ fill:#b56bff; animation: twinkle 1.25s infinite; animation-delay: .55s; }
+
+  @keyframes twinkle{
+    0%,100% { opacity:0.25; filter: drop-shadow(0 0 0 rgba(255,255,255,0)); }
+    50% { opacity:0.95; filter: drop-shadow(0 0 10px rgba(255,255,255,0.55)); }
+  }
+
+  /* ---------- КОНТЕНТ (как было — по центру) ---------- */
   .wrap{
     position:relative;
     z-index:2;
@@ -87,9 +77,6 @@
     justify-content:center;
     padding:20px;
     text-align:center;
-      /* новое */
-  padding-top: 48px;
-}
   }
 
   .ui{
@@ -122,7 +109,6 @@
     filter: drop-shadow(0 18px 40px rgba(0,0,0,0.12));
   }
 
-  /* ШАР */
   .ball{
     position:absolute;
     inset:10px;
@@ -132,7 +118,6 @@
       radial-gradient(circle at 55% 65%, #FFEFA3 0%, #FFD900 55%, #F5C400 100%);
   }
 
-  /* ПОВОРОТНЫЙ БЛОК (важно: transform остаётся после анимации) */
   .spinner{
     width:230px;
     height:230px;
@@ -173,7 +158,6 @@
     color:#fff;
     cursor:pointer;
   }
-
   .btn:disabled{
     opacity:.6;
     cursor:not-allowed;
@@ -182,20 +166,51 @@
 </head>
 
 <body>
-
 <canvas id="snow"></canvas>
 
-<!-- ===== ФОН С АССЕТАМИ ===== -->
-<div class="bg">
-  <!-- ёлка -->
-  <img
-    src="https://i.ibb.co/cSnfSkTd/Chat-GPT-Image-14-2025-02-07-11.png"
-    class="bg-tree"
-    alt=""
-    onerror="this.style.display='none'"
-  >
-</div>
+<!-- ===== ФОН (кодом) ===== -->
+<div class="bg" aria-hidden="true">
+  <svg class="bg-lights" viewBox="0 0 1000 700" preserveAspectRatio="none">
+    <defs>
+      <radialGradient id="g1" cx="20%" cy="25%" r="60%">
+        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.70"/>
+        <stop offset="55%" stop-color="#ffffff" stop-opacity="0.10"/>
+        <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="g2" cx="78%" cy="35%" r="70%">
+        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.50"/>
+        <stop offset="60%" stop-color="#ffffff" stop-opacity="0.10"/>
+        <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect x="0" y="0" width="1000" height="700" fill="url(#g1)"/>
+    <rect x="0" y="0" width="1000" height="700" fill="url(#g2)"/>
+  </svg>
 
+  <svg class="tree" viewBox="0 0 260 340">
+    <g opacity="0.95">
+      <path d="M130 40 L55 150 H205 Z" fill="#2f7a40"/>
+      <path d="M130 95 L40 230 H220 Z" fill="#2b6b3a"/>
+      <path d="M130 155 L30 305 H230 Z" fill="#33884a"/>
+      <rect x="112" y="300" width="36" height="40" rx="10" fill="#7a4b2a"/>
+    </g>
+
+    <path d="M70 155 C 95 130, 115 170, 145 150 C 170 135, 190 175, 205 165"
+          fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="3" stroke-linecap="round"/>
+
+    <g class="lights">
+      <circle class="light l1" cx="82" cy="150" r="6"/>
+      <circle class="light l2" cx="110" cy="162" r="6"/>
+      <circle class="light l3" cx="140" cy="150" r="6"/>
+      <circle class="light l4" cx="168" cy="160" r="6"/>
+      <circle class="light l5" cx="196" cy="165" r="6"/>
+    </g>
+
+    <circle cx="105" cy="215" r="8" fill="#d43f3f" opacity="0.70"/>
+    <circle cx="165" cy="230" r="7" fill="#1e6bd6" opacity="0.65"/>
+    <circle cx="132" cy="265" r="9" fill="#d4a21f" opacity="0.65"/>
+  </svg>
+</div>
 
 <div class="wrap">
   <div class="ui">
@@ -208,11 +223,11 @@
       <div class="spinner" id="spinner">
         <svg class="spiral" viewBox="0 0 220 220">
           <path id="spiralPath"
-            fill="none"
-            stroke="#111"
-            stroke-width="12"
-            stroke-linecap="round"
-            stroke-linejoin="round"/>
+                fill="none"
+                stroke="#111"
+                stroke-width="12"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
         </svg>
       </div>
     </div>
@@ -256,27 +271,23 @@ const pred=document.getElementById("pred");
 const status=document.getElementById("status");
 const spinner=document.getElementById("spinner");
 
-const sleep=(ms)=>new Promise(r=>setTimeout(r,ms));
 const pick=()=>PREDICTIONS[Math.floor(Math.random()*PREDICTIONS.length)];
 
-/* ===== ВРАЩЕНИЕ: ОСТАНАВЛИВАЕТСЯ И ОСТАЁТСЯ НА МЕСТЕ ===== */
-let currentAngle = 0;   // накапливаем угол между кликами
+/* ===== ВРАЩЕНИЕ: ОСТАНАВЛИВАЕТСЯ И ОСТАЁТСЯ ===== */
+let currentAngle = 0;
 let anim = null;
 
 async function spinToNewAngle(){
-  // сколько оборотов сделать (2–4) + докрутить случайно 0–359
   const turns = 2 + Math.floor(Math.random() * 3); // 2..4
   const extra = Math.floor(Math.random() * 360);
   const delta = turns * 360 + extra;
 
   const start = currentAngle;
   const end = currentAngle + delta;
-  currentAngle = end; // важное: сохраняем итоговый угол
+  currentAngle = end;
 
-  // если вдруг предыдущая анимация ещё жива — остановим
   if (anim) anim.cancel();
 
-  // Анимация вращения (easeOut, чтобы ощущалось как “остановка”)
   anim = spinner.animate(
     [
       { transform: `rotate(${start}deg)` },
@@ -290,8 +301,6 @@ async function spinToNewAngle(){
   );
 
   await anim.finished;
-
-  // фиксируем transform инлайном (на случай, если WebView капризничает)
   spinner.style.transform = `rotate(${end}deg)`;
 }
 
@@ -310,34 +319,22 @@ btn.onclick=async()=>{
 /* ===== СНЕГ ===== */
 const c=document.getElementById("snow"),ctx=c.getContext("2d");
 let w,h; const flakes=[];
-function resize(){
-  w=c.width=innerWidth;
-  h=c.height=innerHeight;
-}
+function resize(){ w=c.width=innerWidth; h=c.height=innerHeight; }
 resize(); addEventListener("resize",resize);
 
 for(let i=0;i<120;i++){
-  flakes.push({
-    x:Math.random()*w,
-    y:Math.random()*h,
-    r:1+Math.random()*2,
-    v:0.5+Math.random()*1.5
-  });
+  flakes.push({ x:Math.random()*w, y:Math.random()*h, r:1+Math.random()*2, v:0.5+Math.random()*1.5 });
 }
 (function snow(){
   ctx.clearRect(0,0,w,h);
   for(const f of flakes){
-    f.y+=f.v;
-    if(f.y>h) f.y=-10;
-    ctx.beginPath();
-    ctx.arc(f.x,f.y,f.r,0,Math.PI*2);
-    ctx.fillStyle="#fff";
-    ctx.fill();
+    f.y+=f.v; if(f.y>h) f.y=-10;
+    ctx.beginPath(); ctx.arc(f.x,f.y,f.r,0,Math.PI*2);
+    ctx.fillStyle="#fff"; ctx.fill();
   }
   requestAnimationFrame(snow);
 })();
 </script>
-
 </body>
 </html>
 
