@@ -319,21 +319,46 @@ btn.onclick=async()=>{
 };
 
 /* ===== СНЕГ ===== */
-const c=document.getElementById("snow"),ctx=c.getContext("2d");
-let w,h; const flakes=[];
-function resize(){ w=c.width=innerWidth; h=c.height=innerHeight; }
-resize(); addEventListener("resize",resize);
+const c = document.getElementById("snow"), ctx = c.getContext("2d");
+let w, h;
+const flakes = [];
 
-for(let i=0;i<120;i++){
-  flakes.push({ x:Math.random()*w, y:Math.random()*h, r:1+Math.random()*2, v:0.5+Math.random()*1.5 });
+let SNOW_OFFSET = 160; // ← сколько пикселей снизу БЕЗ снега (поднимай/уменьшай)
+
+function resize(){
+  w = c.width = innerWidth;
+  h = c.height = innerHeight;
 }
+resize();
+addEventListener("resize", resize);
+
+// создаём снежинки только до границы (h - SNOW_OFFSET)
+for (let i = 0; i < 120; i++){
+  flakes.push({
+    x: Math.random() * w,
+    y: Math.random() * (h - SNOW_OFFSET),
+    r: 1 + Math.random() * 2,
+    v: 0.5 + Math.random() * 1.5
+  });
+}
+
 (function snow(){
-  ctx.clearRect(0,0,w,h);
-  for(const f of flakes){
-    f.y+=f.v; if(f.y>h) f.y=-10;
-    ctx.beginPath(); ctx.arc(f.x,f.y,f.r,0,Math.PI*2);
-    ctx.fillStyle="#fff"; ctx.fill();
+  ctx.clearRect(0, 0, w, h);
+
+  const bottomLimit = h - SNOW_OFFSET;
+
+  for (const f of flakes){
+    f.y += f.v;
+
+    // если снежинка дошла до "нижней границы" — отправляем наверх
+    if (f.y > bottomLimit) f.y = -10;
+
+    ctx.beginPath();
+    ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+    ctx.fillStyle = "#fff";
+    ctx.fill();
   }
+
   requestAnimationFrame(snow);
 })();
 </script>
