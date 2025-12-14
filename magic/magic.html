@@ -361,6 +361,25 @@ for (let i = 0; i < 120; i++){
 
   requestAnimationFrame(snow);
 })();
+function track(eventName){
+  const tg = window.Telegram?.WebApp;
+  const startParam =
+    tg?.initDataUnsafe?.start_param
+    || new URLSearchParams(location.search).get("tgWebAppStartParam")
+    || "";
+
+  const uid = tg?.initDataUnsafe?.user?.id || null;
+
+  fetch("http://127.0.0.1:8787/track", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      event: eventName,
+      startParam,
+      uid
+    })
+  }).catch(()=>{});
+}
 </script>
 </body>
 </html>
