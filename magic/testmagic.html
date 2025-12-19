@@ -184,18 +184,7 @@ h1{
 }
 
 /* ---------- КНОПКА ---------- */
-.btn{
-  width:min(360px,100%);
-  border:0;
-  border-radius:18px;
-  padding:14px 16px;
-  font-size:16px;
-  font-weight:800;
-  background:#111;
-  color:#fff;
-  cursor:pointer;
-}
-.btn:disabled{ opacity:.6; cursor:not-allowed; }
+
 </style>
 </head>
 
@@ -252,9 +241,8 @@ h1{
       </div>
     </div>
 
-    <div class="status" id="status">Каким будет 2026 год</div>
-    <div class="pred" id="pred">…</div>
-    <button class="btn" id="btn"></button>
+    <div class="status" id="status"></div>
+    <div class="pred" id="pred"></div>
   </div>
 </div>
 
@@ -303,34 +291,11 @@ const PRED = [
 ];
 
 
-const btn=document.getElementById("btn");
 const pred=document.getElementById("pred");
 const status=document.getElementById("status");
 const spinner=document.getElementById("spinner");
 
 let angle=0, anim=null;
-
-btn.onclick=async()=>{
-  btn.disabled=true;
-  pred.textContent="…";
-  status.textContent="Крутим спиральку…";
-
-  const delta=(2+Math.random()*2)*360+Math.random()*360;
-  const start=angle;
-  angle+=delta;
-
-  if(anim) anim.cancel();
-  anim=spinner.animate(
-    [{transform:`rotate(${start}deg)`},{transform:`rotate(${angle}deg)`}],
-    {duration:2200+Math.random()*800,easing:"cubic-bezier(.2,.9,.2,1)",fill:"forwards"}
-  );
-  await anim.finished;
-  spinner.style.transform=`rotate(${angle}deg)`;
-
-  pred.textContent=PRED[Math.floor(Math.random()*PRED.length)];
-  status.textContent="Готово";
-  btn.disabled=false;
-};
 
 /* ===== СНЕГ ===== */
 const c = document.getElementById("snow"), ctx = c.getContext("2d");
@@ -397,6 +362,10 @@ function track(eventName){
 </script>
 </body>
 </html>
+
+
+
+
 
 
 
