@@ -8,7 +8,8 @@
 <style>
 :root{
   --ink:#111;
-  --card: rgba(255,255,255,.55);
+  --cardTop: rgba(255,255,255,.62);
+  --cardBot: rgba(255,255,255,.26);
   --shadow: rgba(0,0,0,.18);
 }
 
@@ -85,7 +86,7 @@ html,body{
   50%{ opacity:.98; filter: drop-shadow(0 0 10px rgba(255,255,255,.55)); }
 }
 
-/* ---------- ГИРЛЯНДА (правый верхний угол, наклон 30°) ---------- */
+/* ---------- ГИРЛЯНДА ---------- */
 .garland{
   position:fixed;
   top:65px;
@@ -102,8 +103,8 @@ html,body{
 .garland svg{ width:100%; height:100%; display:block; }
 
 .wire{
-  stroke: rgba(20,20,20,.55);
-  stroke-width: 6;
+  stroke: rgba(10,10,10,.45);
+  stroke-width: 5;
   stroke-linecap: round;
   fill: none;
 }
@@ -142,10 +143,25 @@ html,body{
   gap:14px;
   padding:18px 18px 20px;
   border-radius:22px;
-  background: linear-gradient(180deg, var(--card) 0%, rgba(255,255,255,.32) 100%);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 18px 50px var(--shadow);
-  border: 1px solid rgba(255,255,255,.35);
+  background: linear-gradient(180deg, var(--cardTop) 0%, var(--cardBot) 100%);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 26px 70px rgba(0,0,0,.18);
+  border: 1px solid rgba(255,255,255,.45);
+  position: relative;
+  overflow:hidden;
+}
+
+/* блик сверху */
+.ui::before{
+  content:"";
+  position:absolute;
+  left:-10%;
+  right:-10%;
+  top:-35%;
+  height:60%;
+  background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.55), rgba(255,255,255,0) 60%);
+  transform: rotate(-8deg);
+  pointer-events:none;
 }
 
 h1{
@@ -178,7 +194,9 @@ h1{
   background:
     radial-gradient(circle at 30% 28%, rgba(255,255,255,.95), rgba(255,255,255,0) 45%),
     radial-gradient(circle at 55% 65%, #FFEFA3 0%, #FFD900 55%, #F5C400 100%);
-  box-shadow: inset 0 0 0 2px rgba(255,255,255,.25);
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,.25),
+    0 18px 35px rgba(0,0,0,.18);
 }
 
 .spinner{
@@ -225,6 +243,26 @@ h1{
 .btn:disabled{ opacity:.6; cursor:not-allowed; }
 .btn:active{ transform: translateY(1px); }
 </style>
+
+<!-- Yandex.Metrika counter (ID: 105995808) -->
+<script type="text/javascript">
+  (function(m,e,t,r,i,k,a){
+      m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+      m[i].l=1*new Date();
+      for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+      k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+  })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=105995808', 'ym');
+
+  ym(105995808, 'init', {
+    webvisor:false,
+    clickmap:true,
+    accurateTrackBounce:true,
+    trackLinks:true
+  });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/105995808" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
 </head>
 
 <body>
@@ -236,36 +274,36 @@ h1{
     <path class="wire" d="M10,30 C80,10 140,55 210,30 C270,12 310,40 350,22"/>
     <g>
       <g class="bulb">
-        <circle cx="40" cy="34" r="9" fill="#ff4d4d"/>
-        <circle cx="40" cy="46" r="6" fill="#ff4d4d"/>
+        <rect x="36.5" y="22" width="7" height="6" rx="2" fill="rgba(20,20,20,.55)"/>
+        <circle cx="40" cy="34" r="9" fill="#ff4d4d"/><circle cx="40" cy="46" r="6" fill="#ff4d4d"/>
       </g>
       <g class="bulb">
-        <circle cx="78" cy="28" r="9" fill="#ffd24d"/>
-        <circle cx="78" cy="40" r="6" fill="#ffd24d"/>
+        <rect x="74.5" y="16" width="7" height="6" rx="2" fill="rgba(20,20,20,.55)"/>
+        <circle cx="78" cy="28" r="9" fill="#ffd24d"/><circle cx="78" cy="40" r="6" fill="#ffd24d"/>
       </g>
       <g class="bulb">
-        <circle cx="118" cy="38" r="9" fill="#4da3ff"/>
-        <circle cx="118" cy="50" r="6" fill="#4da3ff"/>
+        <rect x="114.5" y="26" width="7" height="6" rx="2" fill="rgba(20,20,20,.55)"/>
+        <circle cx="118" cy="38" r="9" fill="#4da3ff"/><circle cx="118" cy="50" r="6" fill="#4da3ff"/>
       </g>
       <g class="bulb">
-        <circle cx="156" cy="46" r="9" fill="#6bff9d"/>
-        <circle cx="156" cy="58" r="6" fill="#6bff9d"/>
+        <rect x="152.5" y="34" width="7" height="6" rx="2" fill="rgba(20,20,20,.55)"/>
+        <circle cx="156" cy="46" r="9" fill="#6bff9d"/><circle cx="156" cy="58" r="6" fill="#6bff9d"/>
       </g>
       <g class="bulb">
-        <circle cx="196" cy="34" r="9" fill="#b56bff"/>
-        <circle cx="196" cy="46" r="6" fill="#b56bff"/>
+        <rect x="192.5" y="22" width="7" height="6" rx="2" fill="rgba(20,20,20,.55)"/>
+        <circle cx="196" cy="34" r="9" fill="#b56bff"/><circle cx="196" cy="46" r="6" fill="#b56bff"/>
       </g>
       <g class="bulb">
-        <circle cx="236" cy="28" r="9" fill="#ffd24d"/>
-        <circle cx="236" cy="40" r="6" fill="#ffd24d"/>
+        <rect x="232.5" y="16" width="7" height="6" rx="2" fill="rgba(20,20,20,.55)"/>
+        <circle cx="236" cy="28" r="9" fill="#ffd24d"/><circle cx="236" cy="40" r="6" fill="#ffd24d"/>
       </g>
       <g class="bulb">
-        <circle cx="276" cy="40" r="9" fill="#ff4d4d"/>
-        <circle cx="276" cy="52" r="6" fill="#ff4d4d"/>
+        <rect x="272.5" y="28" width="7" height="6" rx="2" fill="rgba(20,20,20,.55)"/>
+        <circle cx="276" cy="40" r="9" fill="#ff4d4d"/><circle cx="276" cy="52" r="6" fill="#ff4d4d"/>
       </g>
       <g class="bulb">
-        <circle cx="316" cy="30" r="9" fill="#4da3ff"/>
-        <circle cx="316" cy="42" r="6" fill="#4da3ff"/>
+        <rect x="312.5" y="18" width="7" height="6" rx="2" fill="rgba(20,20,20,.55)"/>
+        <circle cx="316" cy="30" r="9" fill="#4da3ff"/><circle cx="316" cy="42" r="6" fill="#4da3ff"/>
       </g>
     </g>
   </svg>
@@ -289,16 +327,13 @@ h1{
     <rect width="1000" height="700" fill="url(#g2)"/>
   </svg>
 
-  <!-- Ёлка -->
   <svg class="tree" viewBox="0 0 260 340">
     <path d="M130 40 L55 150 H205 Z" fill="#2f7a40"/>
     <path d="M130 95 L40 230 H220 Z" fill="#2b6b3a"/>
     <path d="M130 155 L30 305 H230 Z" fill="#33884a"/>
     <rect x="112" y="300" width="36" height="40" rx="10" fill="#7a4b2a"/>
-
     <path d="M70 155 C95 130 115 170 145 150 C170 135 190 175 205 165"
           fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="3" stroke-linecap="round"/>
-
     <circle class="light l1" cx="82" cy="150" r="6"/>
     <circle class="light l2" cx="110" cy="162" r="6"/>
     <circle class="light l3" cx="140" cy="150" r="6"/>
@@ -316,9 +351,9 @@ h1{
       <div class="ball"></div>
       <div class="spinner" id="spinner">
         <svg class="spiral" viewBox="0 0 220 220">
-          <!-- ✅ Спиралька снова жёлтая (как была “по вайбу”) -->
           <path id="spiralPath" fill="none" stroke="#111" stroke-width="12"
-                stroke-linecap="round" stroke-linejoin="round"/>
+                stroke-linecap="round" stroke-linejoin="round"
+                style="filter: drop-shadow(0 1px 0 rgba(255,255,255,.22));"/>
         </svg>
       </div>
     </div>
@@ -330,6 +365,34 @@ h1{
 </div>
 
 <script>
+/* ========= НАСТРОЙКИ ========= */
+const METRIKA_ID = 105995808;
+const LOCAL_LOG_ENDPOINT = "http://127.0.0.1:8787/event"; // optional
+/* ============================= */
+
+function track(eventName, payload={}){
+  if (typeof ym === "function" && METRIKA_ID){
+    try { ym(METRIKA_ID, "reachGoal", eventName, payload); } catch(e){}
+  }
+  // локальный лог — опционально (если логгер не запущен, просто молча игнорим)
+  try{
+    fetch(LOCAL_LOG_ENDPOINT, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({
+        event: eventName,
+        payload,
+        ts: new Date().toISOString(),
+        page: location.href,
+        ua: navigator.userAgent
+      })
+    }).catch(()=>{});
+  }catch(e){}
+}
+
+/* активация страницы */
+track("activation");
+
 /* ===== СПИРАЛЬ ===== */
 (function buildSpiral(){
   const cx=110, cy=110, a=2, b=3.55;
@@ -363,6 +426,8 @@ const spinner=document.getElementById("spinner");
 let angle=0, anim=null;
 
 btn.onclick=async()=>{
+  track("predict_click");
+
   btn.disabled=true;
   pred.textContent="…";
   status.textContent="Крутим спиральку…";
@@ -384,7 +449,7 @@ btn.onclick=async()=>{
   btn.disabled=false;
 };
 
-/* ===== СНЕГ (более насыщенный) ===== */
+/* ===== СНЕГ ===== */
 const c=document.getElementById("snow"),ctx=c.getContext("2d");
 let w,h;
 const flakes=[];
@@ -399,16 +464,16 @@ addEventListener("resize",resize);
 
 function seedSnow(){
   flakes.length=0;
-  const count = Math.round(Math.min(520, Math.max(260, (w*h)/6000)));
+  const count = Math.round(Math.min(560, Math.max(300, (w*h)/5600)));
   for(let i=0;i<count;i++){
     const layer = Math.random();
     flakes.push({
       x: Math.random()*w,
       y: Math.random()*h,
-      r: 0.9 + Math.random()*3.2 * (0.35 + layer),
-      v: 0.6 + Math.random()*2.4 * (0.30 + layer),
-      a: 0.35 + Math.random()*0.55 * (0.25 + layer),
-      sway: 0.4 + Math.random()*1.8,
+      r: 0.6 + Math.random()*3.8 * (0.25 + layer),
+      v: 0.4 + Math.random()*2.8 * (0.18 + layer),
+      a: 0.18 + Math.random()*0.65 * (0.20 + layer),
+      sway: 0.4 + Math.random()*1.9,
       phase: Math.random()*Math.PI*2
     });
   }
@@ -418,25 +483,25 @@ addEventListener("resize", seedSnow);
 
 (function snow(t=0){
   ctx.clearRect(0,0,w,h);
-  wind = Math.sin(t/1800)*0.9;
+  wind = Math.sin(t/1800)*0.95;
 
   for(const f of flakes){
     f.y += f.v;
     f.x += wind*0.7 + Math.sin(t/700 + f.phase)*f.sway*0.25;
 
-    if(f.y > h+12){ f.y = -12; f.x = Math.random()*w; }
-    if(f.x < -20) f.x = w+20;
-    if(f.x > w+20) f.x = -20;
+    if(f.y > h+14){ f.y = -14; f.x = Math.random()*w; }
+    if(f.x < -22) f.x = w+22;
+    if(f.x > w+22) f.x = -22;
 
     ctx.beginPath();
     ctx.arc(f.x, f.y, f.r, 0, Math.PI*2);
     ctx.fillStyle = `rgba(255,255,255,${f.a})`;
     ctx.fill();
 
-    if(f.r > 2.4 && Math.random() < 0.08){
+    if(f.r > 2.6 && Math.random() < 0.10){
       ctx.beginPath();
       ctx.arc(f.x - f.r*0.35, f.y - f.r*0.35, f.r*0.35, 0, Math.PI*2);
-      ctx.fillStyle = `rgba(255,255,255,${Math.min(1, f.a+0.25)})`;
+      ctx.fillStyle = `rgba(255,255,255,${Math.min(1, f.a+0.22)})`;
       ctx.fill();
     }
   }
@@ -445,8 +510,6 @@ addEventListener("resize", seedSnow);
 </script>
 </body>
 </html>
-
-
 
 
 
