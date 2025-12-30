@@ -213,6 +213,14 @@ h1{
   width:210px;
   height:210px;
 }
+@keyframes spinInfinite {
+  to { transform: rotate(360deg); }
+}
+
+/* спираль крутится всегда */
+.spinner {
+  animation: spinInfinite 8s linear infinite; /* 8s — можешь менять скорость */
+}
 
 /* ---------- ТЕКСТ ---------- */
 .status{
@@ -259,6 +267,7 @@ h1{
     accurateTrackBounce:true,
     trackLinks:true
   });
+  
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/105995808" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
@@ -358,9 +367,10 @@ h1{
       </div>
     </div>
 
-    <div class="status" id="status">Готово</div>
-    <div class="pred" id="pred">…</div>
-    <button class="btn" id="btn">Получить предсказание</button>
+    <div class="status" id="status">ㅤㅤㅤ</div>
+    <div class="pred" id="pred">
+    </div>
+    <button class="btn" id="btn">ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ</button>
   </div>
 </div>
 
@@ -423,31 +433,12 @@ const pred=document.getElementById("pred");
 const status=document.getElementById("status");
 const spinner=document.getElementById("spinner");
 
-let angle=0, anim=null;
-
-btn.onclick=async()=>{
+btn.onclick = ()=>{
   track("predict_click");
-
-  btn.disabled=true;
-  pred.textContent="…";
-  status.textContent="Крутим спиральку…";
-
-  const delta=(2+Math.random()*2)*360+Math.random()*360;
-  const start=angle;
-  angle+=delta;
-
-  if(anim) anim.cancel();
-  anim=spinner.animate(
-    [{transform:`rotate(${start}deg)`},{transform:`rotate(${angle}deg)`}],
-    {duration:2200+Math.random()*800,easing:"cubic-bezier(.2,.9,.2,1)",fill:"forwards"}
-  );
-  await anim.finished;
-  spinner.style.transform=`rotate(${angle}deg)`;
-
-  pred.textContent=PRED[Math.floor(Math.random()*PRED.length)];
-  status.textContent="Готово";
-  btn.disabled=false;
+  pred.textContent = PRED[Math.floor(Math.random()*PRED.length)];
+  status.textContent = "Готово";
 };
+
 
 /* ===== СНЕГ ===== */
 const c=document.getElementById("snow"),ctx=c.getContext("2d");
@@ -510,7 +501,6 @@ addEventListener("resize", seedSnow);
 </script>
 </body>
 </html>
-
 
 
 
