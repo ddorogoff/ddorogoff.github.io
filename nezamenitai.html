@@ -197,6 +197,25 @@ h3{ font-size:clamp(18px,2.2vw,22px); margin:24px 0 8px; line-height:1.4; }
   </div>
 
   <script>
+    // ===== METRIKA: 2 GOALS ONLY =====
+const MID = 106326536;
+
+function reach(goal, params) {
+  try {
+    if (typeof ym === "function") {
+      ym(MID, "reachGoal", goal, params || {});
+    }
+  } catch (e) {}
+}
+
+// miniapp_open — 1 раз за сессию (не спамим при hash-навигации)
+(function trackMiniappOpenOnce(){
+  const key = "ym_miniapp_open_sent";
+  if (sessionStorage.getItem(key) === "1") return;
+  reach("miniapp_open");
+  sessionStorage.setItem(key, "1");
+})();
+// =================================
    const themeBtn = document.getElementById('btn-theme');
 
 function applyTheme(t) {
@@ -869,8 +888,14 @@ function renderPage(slug) {
 
 function route() {
   const hash = location.hash.replace(/^#\/?/, '');
-  if (!hash) { renderHome(); return; }
+
+  if (!hash) {
+    renderHome();
+    return;
+  }
+
   renderPage(hash);
+  reach("page_open", { slug: hash });
 }
 
 window.addEventListener('hashchange', route);
